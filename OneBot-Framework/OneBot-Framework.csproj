@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CommandRoute\CommandModel.cs~RF7ed39cf.TMP" />
+    <None Remove="Services\Implements\CommandService.cs~RF2b1b128.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Scrutor" Version="3.3.0" />
+    <PackageReference Include="Sora" Version="0.5.1.1" />
+  </ItemGroup>
+
+</Project>
