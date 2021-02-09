@@ -1,1 +1,1 @@
-QQRobot-V2
+OneBot-Framework-Demo
