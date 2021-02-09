@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBot-UnitTest", "OneBot-UnitTest\OneBot-UnitTest.csproj", "{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
