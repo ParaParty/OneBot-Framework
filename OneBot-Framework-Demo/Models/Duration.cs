@@ -4,7 +4,9 @@ using System.Text.RegularExpressions;
 namespace OneBot.FrameworkDemo.Models
 {
     /// <summary>
-    /// 时长类型
+    /// 时长类型；
+    /// 这里是示例自定义参数类型；
+    /// 需实现一个从 String 或 CQCode 类型来的隐式转换函数才能触发类型解析。
     /// </summary>
     public class Duration
     {
