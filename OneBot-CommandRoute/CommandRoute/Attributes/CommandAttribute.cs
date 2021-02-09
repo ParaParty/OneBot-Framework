@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OneBot.CommandRoute.Models.Enumeration;
 
 namespace OneBot.CommandRoute.Attributes
@@ -28,7 +28,7 @@ namespace OneBot.CommandRoute.Attributes
         /// 指令路由
         /// </summary>
         /// <param name="pattern">指令格式</param>
-        public CommandAttribute(String pattern)
+        public CommandAttribute(string pattern)
         {
             Pattern = pattern;
         }

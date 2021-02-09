@@ -138,8 +138,8 @@ namespace OneBot.CommandRoute.Services.Implements
 
         private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, CommandAttribute attribute)
         {
-            List<String> command = attribute.Pattern.Trim().Split(' ').ToList();
-            List<String> aliasList = attribute.Alias.Trim().Split(',').Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
+            List<string> command = attribute.Pattern.Trim().Split(' ').ToList();
+            List<string> aliasList = attribute.Alias.Trim().Split(',').Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
 
             try
             {
@@ -174,7 +174,7 @@ namespace OneBot.CommandRoute.Services.Implements
             List<int> parametersMatchingType = new List<int>();
 
             // 被全字匹配的字符串或参数名
-            List<String> parametersName = new List<string>();
+            List<string> parametersName = new List<string>();
 
             // 这个参数是否被用过了
             List<bool> parametersUsed = new List<bool>();     
@@ -185,7 +185,7 @@ namespace OneBot.CommandRoute.Services.Implements
             // 从指令定义中解析出 参数匹配类型 和 参数匹配字符串或参数名
             var withOptional = false;
             foreach (var s in matchPattern)  {
-                parametersType.Add(typeof(String));
+                parametersType.Add(typeof(string));
                 parametersUsed.Add(false);
                 parameterPositionMapping.Add(-1);
 
