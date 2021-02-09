@@ -223,6 +223,16 @@ namespace OneBot.CommandRoute.Models.Entities
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
+                if (ParameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs)
+                {
+                    functionArgs[i] = baseSoraEventArgs;
+                    continue;
+                }
+                if (ParameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
+                {
+                    functionArgs[i] = baseSoraEventArgs;
+                    continue;
+                }
 
                 // 判断是否需要传递 Scope 信息
                 if (ParameterType == typeof(IServiceScope))
