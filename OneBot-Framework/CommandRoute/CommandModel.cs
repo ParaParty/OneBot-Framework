@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,19 +12,74 @@ using Sora.Entities;
 
 namespace QQRobot.CommandRoute
 {
+    /// <summary>
+    /// 指令信息
+    /// </summary>
     public class CommandModel
     {
+        /// <summary>
+        /// 指令对象（单例）
+        /// </summary>
         public IQQRobotService CommandObj { get; private set; }
+
+        /// <summary>
+        /// 指令方法
+        /// </summary>
         public MethodInfo CommandMethod { get; private set; }
+
+        /// <summary>
+        /// 匹配的指令参数类型
+        /// </summary>
         public List<Type> ParametersType { get; private set; }
+
+        /// <summary>
+        /// 指令匹配类型
+        ///     0 全字匹配 /
+        ///     1 参数 /
+        ///     2 可选参数 /
+        /// </summary>
         public List<int> ParametersMatchingType { get; private set; }
+
+        /// <summary>
+        /// 指令参数名
+        /// </summary>
         public List<string> ParametersName { get; private set; }
+
+        /// <summary>
+        /// 匹配到的参数与方法参数的映射关系
+        /// y = ParameterPositionMapping[x]
+        /// x 是指令参数位置
+        /// y 是函数参数位置
+        /// </summary>
         public List<int> ParameterPositionMapping { get; private set; }
+
+        /// <summary>
+        /// 这个指令方法的属性
+        /// </summary>
         public CommandAttribute Attribute { get; private set; }
 
+        /// <summary>
+        /// 全字匹配和必选参数的个数和
+        /// </summary>
         public int WeightA { get; private set; }
+
+        /// <summary>
+        /// 可选参数的个数
+        /// </summary>
         public int WeightB { get; private set; }
 
+        /// <summary>
+        /// 构造函数
+        ///
+        /// 需保证匹配类型中可选参数必须全部在最后
+        /// </summary>
+        /// <param name="commandObj">指令对象</param>
+        /// <param name="commandMethod">指令方法</param>
+        /// <param name="parametersType">指令参数类型</param>
+        /// <param name="parametersMatchingType">指令匹配类型</param>
+        /// <param name="parametersName">指令参数名</param>
+        /// <param name="parameterPositionMapping">指令参数位置到方法参数位置的映射关系</param>
+        /// <param name="attribute">指令方法的属性</param>
         public CommandModel(IQQRobotService commandObj, MethodInfo commandMethod, List<Type> parametersType,
             List<int> parametersMatchingType, List<string> parametersName, List<int> parameterPositionMapping,
             CommandAttribute attribute)
@@ -41,8 +96,17 @@ namespace QQRobot.CommandRoute
             WeightB = parametersMatchingType.Count(s => s == 2);
         }
 
-        public int Invoke(IServiceScope scope, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandParser parser)
+        /// <summary>
+        /// 尝试调用这个函数
+        /// </summary>
+        /// <param name="scope">事件上下文</param>
+        /// <param name="sender">事件触发者</param>
+        /// <param name="baseSoraEventArgs">Sora 事件对象</param>
+        /// <param name="laxer">指令解析器</param>
+        /// <returns>0 继续 / 1 阻断</returns>
+        public int Invoke(IServiceScope scope, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLaxer laxer)
         {
+            // 检查事件类型是否正确
             if (baseSoraEventArgs is PrivateMessageEventArgs &&
                 (Attribute.EventType & EventType.PrivateMessage) == 0)
             {
@@ -57,10 +121,10 @@ namespace QQRobot.CommandRoute
 
 
             // 尝试解析剩下的所有参数
-            int step = parser.ParsedArguments.Count;
+            int step = laxer.ParsedArguments.Count;
 
             List<object> matchedArgs = new List<object>();
-            matchedArgs.AddRange(parser.ParsedArguments);
+            matchedArgs.AddRange(laxer.ParsedArguments);
             for (int i = step; i < ParametersName.Count; i++)
             {
                 matchedArgs.Add(null);
@@ -69,7 +133,7 @@ namespace QQRobot.CommandRoute
             bool needExecute = true;
             for (int i = step; i < ParametersName.Count; i++)
             {
-                var newParser = parser.Clone();
+                var newParser = laxer.Clone();
                 // 解析一个新的
 
                 object newArg = null;
@@ -105,10 +169,12 @@ namespace QQRobot.CommandRoute
                 if (succeed)
                 {
                     matchedArgs[i] = newArg;
-                    parser = newParser;
+                    laxer = newParser;
                 }
                 else
                 {
+                    // 如果解析失败就判断是否需要继续执行
+                    // 如果当前已经匹配到了可选参数那就可以继续执行
                     needExecute = ParametersMatchingType[i] == 2;
                     break;
                 }
@@ -139,7 +205,7 @@ namespace QQRobot.CommandRoute
                 {
                     if (ParameterType == typeof(object[]))
                     {
-                        functionArgs[i] = parser.GetNowParsedArguments().ToArray();
+                        functionArgs[i] = laxer.GetNowParsedToken().ToArray();
                     }
                     else
                     {
@@ -166,6 +232,8 @@ namespace QQRobot.CommandRoute
                 functionArgs[i] = scope.ServiceProvider.GetService(ParameterType);
             }
 
+            // TODO 判断是否有基本类型但是是 NOTNULL 的。
+
             if (CommandMethod.ReturnType == typeof(int))
             {
                 return (int) CommandMethod.Invoke(CommandObj, functionArgs);
@@ -176,13 +244,13 @@ namespace QQRobot.CommandRoute
         }
 
         /// <summary>
-        /// 
+        /// 尝试解析一个参数
         /// </summary>
-        /// <param name="baseSoraEventArgs">消息事件对象，这个你不用管</param>
+        /// <param name="baseSoraEventArgs">Sora 事件对象</param>
         /// <param name="arg">被 cast 的值</param>
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
-        /// <returns></returns>
+        /// <returns>真: 成功 / 假: 失败</returns>
         private bool TryParseType(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object result)
         {
             result = null;
@@ -217,6 +285,14 @@ namespace QQRobot.CommandRoute
             return false;
         }
 
+        /// <summary>
+        /// 尝试解析 CQ 码
+        /// </summary>
+        /// <param name="baseSoraEventArgs">Sora 事件对象</param>
+        /// <param name="arg">被 cast 的值</param>
+        /// <param name="type">要 cast 的类型</param>
+        /// <param name="result">cast 结果</param>
+        /// <returns>真: 成功 / 假: 失败</returns>
         private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, CQCode arg, Type type, out object result)
         {
             bool ret = false;
@@ -274,6 +350,14 @@ namespace QQRobot.CommandRoute
             return ret;
         }
 
+        /// <summary>
+        /// 尝试解析字符串
+        /// </summary>
+        /// <param name="baseSoraEventArgs">Sora 事件对象</param>
+        /// <param name="arg">被 cast 的值</param>
+        /// <param name="type">要 cast 的类型</param>
+        /// <param name="result">cast 结果</param>
+        /// <returns>真: 成功 / 假: 失败</returns>
         private bool TryParseString(BaseSoraEventArgs baseSoraEventArgs, string arg, Type type, out object result)
         {
             bool ret = false;

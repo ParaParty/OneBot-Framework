@@ -74,7 +74,7 @@ namespace QQRobot.QQRobot
         private ValueTask EventOnPrivateMessage(object sender, PrivateMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-            if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandParser(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+            if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
             OnGeneralEvent(sender, e);
             return ValueTask.CompletedTask;
         }
@@ -88,7 +88,7 @@ namespace QQRobot.QQRobot
         private ValueTask EventOnGroupMessage(object sender, GroupMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-            if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandParser(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+            if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
             OnGeneralEvent(sender, e);
             return ValueTask.CompletedTask;
         }

@@ -1,31 +1,53 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using QQRobot.Attribute;
 using Sora.Entities.CQCodes;
 using Sora.Entities.CQCodes.CQCodeModel;
 using Sora.Enumeration;
 
 namespace QQRobot.CommandRoute
 {
-    public class CommandParser
+    /// <summary>
+    /// 指令解析器
+    /// </summary>
+    public class CommandLaxer
     {
+        /// <summary>
+        /// 空白字符
+        /// </summary>
         private const string BLANKCHARACTER = "\r\n\t ";
 
+        /// <summary>
+        /// 源信息
+        /// </summary>
         public List<CQCode> SourceCommand { get; private set; }
 
+        /// <summary>
+        /// 已经解析了的参数信息
+        /// </summary>
         public List<object> ParsedArguments { get; private set; } = new List<object>();
 
+        /// <summary>
+        /// 当前扫描到 <code>SourceCommand</code> 的哪一个位置。
+        /// </summary>
         public int ScanObjectPointer { get; private set; } = 0;
 
+        /// <summary>
+        /// 如果当前扫描到的 <code>SourceCommand</code> 是 <code>CQFunction.Text</code> 的话当前字符串扫描到哪一个位置。
+        /// </summary>
         public int ScanStringPointer { get; private set; } = 0;
 
-        public CommandParser(List<CQCode> s)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="s">被解析的字符串</param>
+        public CommandLaxer(List<CQCode> s)
         {
             SourceCommand = s;
         }
 
+        /// <summary>
+        /// 检查被解析的字符串是否有效
+        /// </summary>
+        /// <returns>真: 有效/假: 无效</returns>
         public bool IsValid()
         {
             if (ScanObjectPointer != 0 || ScanStringPointer != 0) return true;
@@ -38,8 +60,13 @@ namespace QQRobot.CommandRoute
             return true;
         }
 
+        /// <summary>
+        /// 获取下一个 Token
+        /// </summary>
+        /// <returns>下一个 Token</returns>
         public object GetNext()
         {
+            // 检查是否扫描到末尾
             if (ScanObjectPointer >= SourceCommand.Count)
             {
                 throw new ParserToTheEndException();
@@ -80,6 +107,7 @@ namespace QQRobot.CommandRoute
             }
 
             // 解析中间的字符
+            // TODO 双引号
             while (ScanStringPointer < str.Length && (!BLANKCHARACTER.Contains(str[ScanStringPointer])))
             {
                 token += str[ScanStringPointer];
@@ -96,7 +124,11 @@ namespace QQRobot.CommandRoute
             return token;
         }
 
-        public List<object> GetNowParsedArguments()
+        /// <summary>
+        /// 获得现在已经得到的 Token 列表
+        /// </summary>
+        /// <returns>已获得的 Token 列表</returns>
+        public List<object> GetNowParsedToken()
         {
             List<object> ret = new List<object>(ParsedArguments);
 
@@ -115,9 +147,13 @@ namespace QQRobot.CommandRoute
             return ret;
         }
 
-        public CommandParser Clone()
+        /// <summary>
+        /// 克隆 Laxer 的当前状态
+        /// </summary>
+        /// <returns>新的 Laxer</returns>
+        public CommandLaxer Clone()
         {
-            CommandParser ret = new CommandParser(SourceCommand);
+            CommandLaxer ret = new CommandLaxer(SourceCommand);
             ret.ParsedArguments = new List<object>(ParsedArguments);
             ret.ScanObjectPointer = ScanObjectPointer;
             ret.ScanStringPointer = ScanStringPointer;
