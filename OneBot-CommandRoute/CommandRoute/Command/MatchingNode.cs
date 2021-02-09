@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +39,7 @@ namespace OneBot.CommandRoute.Command
         /// <summary>
         /// 待匹配的子结点
         /// </summary>
-        SortedDictionary<String, MatchingNode> Children = new SortedDictionary<string, MatchingNode>();
+        SortedDictionary<string, MatchingNode> Children = new SortedDictionary<string, MatchingNode>();
 
         /// <summary>
         /// 处理指令匹配

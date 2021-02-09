@@ -157,7 +157,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 if (succeed) { 
                     if (ParametersMatchingType[i] == 0)
                     {
-                        succeed = (newArg is String) && ((String)newArg) == ParametersName[i];
+                        succeed = (newArg is string) && ((string)newArg) == ParametersName[i];
                     }
                     else
                     {
@@ -388,12 +388,12 @@ namespace OneBot.CommandRoute.Models.Entities
             }
             else if (type == typeof(double))
             {
-                ret = Double.TryParse(arg, out double number);
+                ret = double.TryParse(arg, out double number);
                 result = number;
             }
             else if (type == typeof(decimal))
             {
-                ret = Decimal.TryParse(arg, out decimal number);
+                ret = decimal.TryParse(arg, out decimal number);
                 result = number;
             }
             else if (type == typeof(string))

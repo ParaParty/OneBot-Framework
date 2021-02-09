@@ -13,7 +13,7 @@ namespace OneBot.FrameworkDemo.Models
         /// <summary>
         /// 时长
         /// </summary>
-        public Int64 Seconds { get; private set; }
+        public long Seconds { get; private set; }
         public Duration(long seconds)
         {
             Seconds = seconds;
@@ -23,7 +23,7 @@ namespace OneBot.FrameworkDemo.Models
         /// 实现一个从数字到 Duration 的隐式转换
         /// </summary>
         /// <param name="seconds">时长</param>
-        public static implicit operator Duration(Int32 seconds)
+        public static implicit operator Duration(int seconds)
         {
             if (seconds < 0)
             {
@@ -37,7 +37,7 @@ namespace OneBot.FrameworkDemo.Models
         /// 实现一个从数字到 Duration 的隐式转换
         /// </summary>
         /// <param name="seconds">时长</param>
-        public static implicit operator Duration(Int64 seconds)
+        public static implicit operator Duration(long seconds)
         {
             if (seconds < 0)
             {
@@ -116,7 +116,7 @@ namespace OneBot.FrameworkDemo.Models
         {
             duration = null;
             if (s == null) return false;
-            if (Int64.TryParse(s, out Int64 number))
+            if (long.TryParse(s, out long number))
             {
                 duration = number;
             }
