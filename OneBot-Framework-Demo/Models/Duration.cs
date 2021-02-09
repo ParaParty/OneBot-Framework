@@ -128,5 +128,25 @@ namespace OneBot.FrameworkDemo.Models
             return true;
         }
 
+        /// <summary>
+        /// 返回可用 ^(\d*d)?(\d*h)?(\d*m)?(\d*s)?$ 匹配的最简时长表达式
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            var temp = Seconds;
+            var ret = "";
+            var day = temp / 86400;
+            if (day > 0) ret += $"{day}d";
+            temp %= 86400;
+            var hour = temp / 3600;
+            if (hour > 0) ret += $"{hour}h";
+            temp %= 3600;
+            var min = temp / 60;
+            if (min > 0) ret += $"{min}m";
+            temp %= 60;
+            if (temp > 0) ret += $"{temp}s";
+            return ret;
+        }
     }
 }
