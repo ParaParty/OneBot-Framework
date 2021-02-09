@@ -2,9 +2,11 @@ using Sora.Server;
 
 namespace OneBot.CommandRoute.Services
 {
+    /// <summary>
+    /// OneBot å®¢æˆ·ç«¯ï¼ˆSoraï¼‰
+    /// </summary>
     public interface IBotService
     {
-        //³õÊ¼»¯·þÎñÆ÷ÊµÀý
         SoraWSServer Server { get; set; }
         void Start();
     }

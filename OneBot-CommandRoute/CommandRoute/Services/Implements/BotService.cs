@@ -6,12 +6,24 @@ using Sora.Server;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
+    /// <summary>
+    /// CQHTTP 客户端（Sora）
+    /// </summary>
     public class BotService: IBotService
     {
+        /// <summary>
+        /// Sora WS 服务器
+        /// </summary>
         public SoraWSServer Server { get; set; }
 
+        /// <summary>
+        /// Sora WS 服务器设置
+        /// </summary>
         private ServerConfig ServerConfig { get; set; }
 
+        /// <summary>
+        /// 依赖注入服务
+        /// </summary>
         private IServiceProvider ServiceProvider { get; set; }
 
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
