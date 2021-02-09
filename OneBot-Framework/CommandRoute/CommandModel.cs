@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -253,8 +253,16 @@ namespace QQRobot.CommandRoute
                 try
                 {
                     var converter = type.GetMethod("op_Implicit", new[] { arg.GetType() });
-                    result = converter.Invoke(null, new[] { arg });
-                    ret = true;
+                    if (converter != null)
+                    {
+                        result = converter.Invoke(null, new[] { arg });
+                        ret = true;
+                    }
+                    else
+                    {
+                        result = null;
+                        ret = false;
+                    }
                 }
                 catch (Exception)
                 {
@@ -315,8 +323,16 @@ namespace QQRobot.CommandRoute
                 try
                 {
                     var converter = type.GetMethod("op_Implicit", new[] { typeof(string) });
-                    result = converter.Invoke(null, new[] { arg });
-                    ret = true;
+                    if (converter != null)
+                    {
+                        result = converter.Invoke(null, new[] { arg });
+                        ret = true;
+                    }
+                    else
+                    {
+                        result = null;
+                        ret = false;
+                    }
                 }
                 catch (Exception)
                 {
