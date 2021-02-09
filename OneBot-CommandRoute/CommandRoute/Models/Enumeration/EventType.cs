@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 
 namespace OneBot.CommandRoute.Models.Enumeration
 {
+    /// <summary>
+    /// 指令类型
+    /// </summary>
     [Flags]
     public enum EventType
     {
@@ -28,11 +31,13 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 讨论组
         /// </summary>
+        [Obsolete]
         DiscussMessage = 0x4,
 
         /// <summary>
         /// 讨论组
         /// </summary>
+        [Obsolete]
         DM = 0x4
     }
 }
