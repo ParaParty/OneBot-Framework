@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Framework", "OneBot-Framework\OneBot-Framework.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
 EndProject
