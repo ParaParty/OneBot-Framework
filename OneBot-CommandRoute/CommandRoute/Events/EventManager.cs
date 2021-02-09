@@ -127,6 +127,14 @@ namespace OneBot.CommandRoute.Events
             return Fire<GroupMessageEventArgs>(scope, groupMessageEventArgs,
                 OnGroupMessageReceived?.GetInvocationList());
         }
+        
+        public event ExceptionDelegate OnException;
 
+        public delegate void ExceptionDelegate(IServiceScope scope, BaseSoraEventArgs e, Exception exception);
+
+        public void FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
+        {
+            OnException?.Invoke(scope, e, exception);
+        }
     }
 }

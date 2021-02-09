@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Command;
 using OneBot.CommandRoute.Events;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Sora.Entities;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
@@ -34,14 +36,20 @@ namespace OneBot.CommandRoute.Services.Implements
         private readonly IServiceScopeFactory _scopeFactory;
 
         /// <summary>
+        /// 日志
+        /// </summary>
+        private ILogger<CommandService> _logger;
+
+        /// <summary>
         /// 事件中心
         /// </summary>
         public EventManager Event { get; set; }
 
-        public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory)
+        public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory, ILogger<CommandService> logger)
         {
             ServiceProvider = serviceProvider;
             _scopeFactory = scopeFactory;
+            _logger = logger;
             Event = new EventManager();
 
             bot.Server.Event.OnClientConnect += OnGeneralEvent;
@@ -66,6 +74,27 @@ namespace OneBot.CommandRoute.Services.Implements
         }
 
         /// <summary>
+        /// 错误处理
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="e"></param>
+        /// <param name="exception"></param>
+        private void EventOnException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
+        {
+            try
+            {
+                Event.FireException(scope, e, exception);
+            }
+            catch (Exception e1)
+            {
+                _logger.LogError(
+                    $"{exception.Message} : \n" +
+                    $"{exception.StackTrace}"
+                );
+            }
+        }
+
+        /// <summary>
         /// 通用事件
         /// </summary>
         /// <param name="sender"></param>
@@ -74,7 +103,18 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-            Event.Fire(scope, e);
+
+            Exception exception = null;
+            try
+            {
+                Event.Fire(scope, e);
+            }
+            catch (Exception e1)
+            {
+                exception = e1;
+            }
+            if (exception != null) EventOnException(scope, e, exception);
+
             return ValueTask.CompletedTask;
         }
 
@@ -89,12 +129,25 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask EventOnPrivateMessage(object sender, PrivateMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-            if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-            if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+
+            Exception exception = null;
+            try
+            {
+                if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                    new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+            }
+            catch (Exception e1)
+            {
+                exception = e1;
+            }
+            if (exception != null) EventOnException(scope, e, exception);
+
+
             OnGeneralEvent(sender, e);
             return ValueTask.CompletedTask;
         }
-
+        
         /// <summary>
         /// 群聊消息分发
         /// </summary>
@@ -104,8 +157,20 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask EventOnGroupMessage(object sender, GroupMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-            if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-            if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+
+            Exception exception = null;
+            try
+            {
+                if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+            }
+            catch (Exception e1)
+            {
+                exception = e1;
+            }
+            if (exception != null) EventOnException(scope, e, exception);
+
+
             OnGeneralEvent(sender, e);
             return ValueTask.CompletedTask;
         }
@@ -147,7 +212,10 @@ namespace OneBot.CommandRoute.Services.Implements
             }
             catch (ArgumentException e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(
+                    $"{e.Message} : \n" +
+                    $"{e.StackTrace}"
+                );
             }
             
             foreach (var c in aliasList.Select(s => s.Split(' ').ToList()))
@@ -158,7 +226,10 @@ namespace OneBot.CommandRoute.Services.Implements
                 }
                 catch (ArgumentException e)
                 {
-                    Console.WriteLine(e);
+                    _logger.LogError(
+                        $"{e.Message} : \n" +
+                        $"{e.StackTrace}"
+                    );
                 }
                 
             }

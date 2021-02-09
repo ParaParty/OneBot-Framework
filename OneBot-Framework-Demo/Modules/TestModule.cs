@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Models.Enumeration;
 using OneBot.CommandRoute.Services;
@@ -13,15 +14,20 @@ namespace OneBot.FrameworkDemo.Modules
     /// </summary>
     public class TestModule : IOneBotController
     {
-        public TestModule(ICommandService commandService)
+        public TestModule(ICommandService commandService, ILogger<TestModule> logger)
         {
             // 通过构造函数获得指令路由服务对象
             // 绑定自己的处理事件
             commandService.Event.OnGroupMessage += (scope, args) =>
             {
                 // 在控制台中复读群里的信息
-                Console.WriteLine($"{args.SourceGroup.Id} : {args.Sender.Id} : {args.Message.RawText}");
+                logger.LogInformation($"{args.SourceGroup.Id} : {args.Sender.Id} : {args.Message.RawText}");
                 return 0;
+            };
+
+            commandService.Event.OnException += (scope, args, exception) =>
+            {
+                logger.LogError($"{exception.Message}");
             };
         }
 
@@ -55,6 +61,15 @@ namespace OneBot.FrameworkDemo.Modules
         {
             if (duration == null) duration = new Duration(600);
             Console.WriteLine($"禁言 {gid.Id} 群里的 {uid.Id} 用户 {duration.Seconds} 秒。");
+        }  
+        
+        /// <summary>
+        /// 全局异常处理函数测试
+        /// </summary>
+        [Command("exception", EventType = EventType.GroupMessage | EventType.PrivateMessage)]
+        public void ExceptionTest()
+        {
+            throw new Exception("测试全局异常处理");
         }
     }
 
