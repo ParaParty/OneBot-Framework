@@ -1,4 +1,4 @@
-﻿using OneBot.CommandRoute.Events;
+using OneBot.CommandRoute.Events;
 
 namespace OneBot.CommandRoute.Services
 {

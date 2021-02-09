@@ -13,22 +13,31 @@ using System.Threading.Tasks;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
+    /// <summary>
+    /// 指令路由服务
+    /// </summary>
     public class CommandService: ICommandService
     {
+        /// <summary>
+        /// CQHTTP 服务
+        /// </summary>
         private IServiceProvider ServiceProvider { get; set; }
 
+        /// <summary>
+        /// 指令匹配树根节点
+        /// </summary>
         private readonly MatchingNode _matchingRootNode = new MatchingNode();
 
+        /// <summary>
+        /// Scope 工厂
+        /// </summary>
         private readonly IServiceScopeFactory _scopeFactory;
 
+        /// <summary>
+        /// 事件中心
+        /// </summary>
         public EventManager Event { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bot"></param>
-        /// <param name="serviceProvider"></param>
-        /// <param name="scopeFactory"></param>
         public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory)
         {
             ServiceProvider = serviceProvider;
@@ -56,6 +65,12 @@ namespace OneBot.CommandRoute.Services.Implements
             bot.Server.Event.OnPrivateMessage += EventOnPrivateMessage;
         }
 
+        /// <summary>
+        /// 通用事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
@@ -74,6 +89,7 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask EventOnPrivateMessage(object sender, PrivateMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
+            if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
             if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
             OnGeneralEvent(sender, e);
             return ValueTask.CompletedTask;
@@ -88,6 +104,7 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask EventOnGroupMessage(object sender, GroupMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
+            if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
             if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
             OnGeneralEvent(sender, e);
             return ValueTask.CompletedTask;

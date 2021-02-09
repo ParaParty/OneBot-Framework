@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Sora.EventArgs.SoraEvent;
 
@@ -8,10 +8,14 @@ namespace OneBot.CommandRoute.Events
     {
         /// <summary>客户端链接完成事件</summary>
         public event EventManager.EventAsyncCallBackHandler<ConnectEventArgs> OnClientConnect;
-        /// <summary>群聊事件</summary>
+        /// <summary>群聊事件（触发指令之后）</summary>
         public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs> OnGroupMessage;
-        /// <summary>私聊事件</summary>
+        /// <summary>群聊事件（触发指令之前）</summary>
+        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs> OnGroupMessageReceived;
+        /// <summary>私聊事件（触发指令之后）</summary>
         public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs> OnPrivateMessage;
+        /// <summary>私聊事件（触发指令之前）</summary>
+        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs> OnPrivateMessageReceived;
         /// <summary>群申请事件</summary>
         public event EventManager.EventAsyncCallBackHandler<AddGroupRequestEventArgs> OnGroupRequest;
         /// <summary>好友申请事件</summary>
@@ -48,6 +52,11 @@ namespace OneBot.CommandRoute.Events
             TEventArgs eventArgs)
             where TEventArgs : System.EventArgs;
 
+        /// <summary>
+        /// 分发事件
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="eventArgs"></param>
         public void Fire(IServiceScope scope, BaseSoraEventArgs eventArgs)
         {
             if (eventArgs is ConnectEventArgs) { Fire<ConnectEventArgs>(scope, eventArgs, OnClientConnect?.GetInvocationList()); }
@@ -74,15 +83,49 @@ namespace OneBot.CommandRoute.Events
             }
         }
 
-        private void Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[] listeners) where T : BaseSoraEventArgs
+        /// <summary>
+        /// 触发事件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="scope"></param>
+        /// <param name="eventArgs"></param>
+        /// <param name="listeners"></param>
+        /// <returns></returns>
+        private int Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[] listeners) where T : BaseSoraEventArgs
         {
-            if (listeners == null) return;
+            if (listeners == null) return 0;
 
             for (int counter = listeners.Length - 1; counter >= 0; counter--)
             {
                 int ret = ((EventAsyncCallBackHandler<T>)(listeners[counter]))(scope, (T)eventArgs);
-                if (ret != 0) break;
+                if (ret != 0) return ret;
             }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// 分发接收到私聊消息后处理指令前事件
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="privateMessageEventArgs"></param>
+        /// <returns></returns>
+        public int FirePrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs privateMessageEventArgs)
+        {
+            return Fire<PrivateMessageEventArgs>(scope, privateMessageEventArgs,
+                OnPrivateMessageReceived?.GetInvocationList());
+        }
+
+        /// <summary>
+        /// 分发接收到群聊消息后处理指令前事件
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="groupMessageEventArgs"></param>
+        /// <returns></returns>
+        public int FireGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs groupMessageEventArgs)
+        {
+            return Fire<GroupMessageEventArgs>(scope, groupMessageEventArgs,
+                OnGroupMessageReceived?.GetInvocationList());
         }
 
     }
