@@ -38,7 +38,7 @@ namespace OneBot.FrameworkDemo.Modules
         /// </summary>
         /// <param name="duration">禁言时长</param>
         /// <param name="args">全参数列表</param>
-        /// <param name="uid">被禁言用户</param>
+        /// <param name="userInfo">被禁言用户</param>
         [Command("mute <uid> [duration]", Alias = "禁言 <uid> [duration], 口球 <uid> [duration],", EventType = EventType.GroupMessage)]
         [DemoBeforeCommand]
         public void MuteInGroupWithDuration(Duration duration, [ParsedArguments] object[] args, [CommandParameter("uid")] User userInfo)
