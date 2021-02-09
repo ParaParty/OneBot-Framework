@@ -5,6 +5,13 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Framework", "OneBot-Framework\OneBot-Framework.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +22,10 @@ Global
 		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64442450-B821-4036-8993-3FC3FFE06CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64442450-B821-4036-8993-3FC3FFE06CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64442450-B821-4036-8993-3FC3FFE06CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64442450-B821-4036-8993-3FC3FFE06CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

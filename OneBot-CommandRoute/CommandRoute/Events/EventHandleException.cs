@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QQRobot.CommandRoute.Events
+namespace OneBot.CommandRoute.Events
 {
     class EventHandleException : Exception
     {

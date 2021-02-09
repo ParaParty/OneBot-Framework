@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 
-namespace QQRobot.Models.Model
+namespace OneBot.FrameworkDemo.Models
 {
+    /// <summary>
+    /// 时长类型
+    /// </summary>
     public class Duration
     {
         /// <summary>
@@ -14,6 +17,10 @@ namespace QQRobot.Models.Model
             Seconds = seconds;
         }
 
+        /// <summary>
+        /// 实现一个从数字到 Duration 的隐式转换
+        /// </summary>
+        /// <param name="seconds">时长</param>
         public static implicit operator Duration(Int32 seconds)
         {
             if (seconds < 0)
@@ -24,6 +31,10 @@ namespace QQRobot.Models.Model
             return new Duration(seconds);
         }
 
+        /// <summary>
+        /// 实现一个从数字到 Duration 的隐式转换
+        /// </summary>
+        /// <param name="seconds">时长</param>
         public static implicit operator Duration(Int64 seconds)
         {
             if (seconds < 0)
@@ -34,6 +45,11 @@ namespace QQRobot.Models.Model
             return new Duration(seconds);
         }
 
+        /// <summary>
+        /// 实现一个从字符串到 Duration 的隐式转换。
+        /// 1d2h3m4s -> 1天2小时3分钟4秒
+        /// </summary>
+        /// <param name="value">时长</param>
         public static implicit operator Duration(string value)
         {
             if (!CanParse(value))
@@ -78,11 +94,22 @@ namespace QQRobot.Models.Model
             return new Duration(ret);
         }
 
+        /// <summary>
+        /// 判断能否解析
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static bool CanParse(string s)
         {
             return s != null && Regex.IsMatch(s, @"^(\d*d)?(\d*h)?(\d*m)?(\d*s)?$");
         }
 
+        /// <summary>
+        /// 尝试解析
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
         public static bool TryParse(string s, out Duration duration)
         {
             duration = null;

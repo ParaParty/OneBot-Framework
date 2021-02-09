@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using QQRobot.Attribute;
-using QQRobot.CommandRoute.MatchingNode;
-using QQRobot.Services;
+using OneBot.CommandRoute.Attributes;
+using OneBot.CommandRoute.Command;
+using OneBot.CommandRoute.Events;
+using OneBot.CommandRoute.Laxer;
+using OneBot.CommandRoute.Models.Entities;
 using Sora.EventArgs.SoraEvent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using QQRobot.CommandRoute;
-using QQRobot.CommandRoute.Events;
 
-namespace QQRobot.QQRobot
+namespace OneBot.CommandRoute.Services.Implements
 {
     public class CommandService: ICommandService
     {

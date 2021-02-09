@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using OneBot.CommandRoute.Laxer;
+using OneBot.CommandRoute.Models.Entities;
 using Sora.EventArgs.SoraEvent;
 
-namespace QQRobot.CommandRoute.MatchingNode
+namespace OneBot.CommandRoute.Command
 {
     /// <summary>
     /// 匹配结点

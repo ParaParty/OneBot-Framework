@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Sora.Server;
 
-namespace QQRobot.VO
+namespace OneBot.CommandRoute.Models.VO
 {
     public class CQHttpServerConfigModel
     {

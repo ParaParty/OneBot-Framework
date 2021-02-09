@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QQRobot.CommandRoute
+namespace OneBot.CommandRoute.Models.Enumeration
 {
     [Flags]
     public enum EventType

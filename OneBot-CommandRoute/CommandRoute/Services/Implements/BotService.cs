@@ -1,18 +1,18 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using QQRobot.VO;
+using OneBot.CommandRoute.Models.VO;
 using Sora.Server;
 
-namespace QQRobot.Services.Implements
+namespace OneBot.CommandRoute.Services.Implements
 {
     public class BotService: IBotService
     {
         public SoraWSServer Server { get; set; }
 
         private ServerConfig ServerConfig { get; set; }
-        private IServiceProvider ServiceProvider { get; set; }
 
+        private IServiceProvider ServiceProvider { get; set; }
 
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
         {

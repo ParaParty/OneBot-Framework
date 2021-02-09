@@ -1,7 +1,7 @@
 ﻿using System;
-using QQRobot.CommandRoute;
+using OneBot.CommandRoute.Models.Enumeration;
 
-namespace QQRobot.Attribute
+namespace OneBot.CommandRoute.Attributes
 {
     /// <summary>
     /// 指令路由

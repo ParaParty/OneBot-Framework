@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace QQRobot.Attribute
+namespace OneBot.CommandRoute.Attributes
 {
     /// <summary>
     /// 获取全部的参数列表
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    internal class ParsedArgumentsAttribute : System.Attribute
+    public class ParsedArgumentsAttribute : System.Attribute
     {
 
     }

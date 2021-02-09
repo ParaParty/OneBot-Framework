@@ -1,9 +1,9 @@
-﻿namespace QQRobot.Attribute
+﻿namespace OneBot.CommandRoute.Attributes
 {
     /// <summary>
     /// 指令参数绑定
     /// </summary>
-    internal class CommandParameterAttribute: System.Attribute
+    public class CommandParameterAttribute: System.Attribute
     {
         /// <summary>
         /// 参数名

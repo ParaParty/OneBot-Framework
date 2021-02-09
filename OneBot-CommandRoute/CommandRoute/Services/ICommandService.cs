@@ -1,6 +1,6 @@
-﻿using QQRobot.CommandRoute.Events;
+﻿using OneBot.CommandRoute.Events;
 
-namespace QQRobot.Services
+namespace OneBot.CommandRoute.Services
 {
     public interface ICommandService
     {

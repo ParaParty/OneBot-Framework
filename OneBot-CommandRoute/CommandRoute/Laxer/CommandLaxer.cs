@@ -3,7 +3,7 @@ using Sora.Entities.CQCodes;
 using Sora.Entities.CQCodes.CQCodeModel;
 using Sora.Enumeration;
 
-namespace QQRobot.CommandRoute
+namespace OneBot.CommandRoute.Laxer
 {
     /// <summary>
     /// 指令解析器

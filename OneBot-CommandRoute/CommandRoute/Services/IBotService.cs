@@ -1,6 +1,6 @@
 using Sora.Server;
 
-namespace QQRobot.Services
+namespace OneBot.CommandRoute.Services
 {
     public interface IBotService
     {

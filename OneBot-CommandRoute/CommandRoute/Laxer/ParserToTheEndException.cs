@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QQRobot.CommandRoute
+namespace OneBot.CommandRoute.Laxer
 {
     class ParserToTheEndException : Exception
     {

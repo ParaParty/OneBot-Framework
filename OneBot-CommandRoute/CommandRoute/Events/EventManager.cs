@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Sora.EventArgs.SoraEvent;
-using Sora.Server.ServerInterface;
 
-namespace QQRobot.CommandRoute.Events
+namespace OneBot.CommandRoute.Events
 {
     public class EventManager
     {

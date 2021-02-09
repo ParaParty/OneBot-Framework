@@ -1,16 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using QQRobot.Attribute;
-using QQRobot.Services;
 using Sora.Entities.CQCodes;
 using Sora.Enumeration;
 using Sora.EventArgs.SoraEvent;
 using Sora.Entities;
+using OneBot.CommandRoute.Services;
+using OneBot.CommandRoute.Attributes;
+using OneBot.CommandRoute.Laxer;
+using OneBot.CommandRoute.Models.Enumeration;
 
-namespace QQRobot.CommandRoute
+namespace OneBot.CommandRoute.Models.Entities
 {
     /// <summary>
     /// 指令信息
@@ -20,7 +22,7 @@ namespace QQRobot.CommandRoute
         /// <summary>
         /// 指令对象（单例）
         /// </summary>
-        public IQQRobotService CommandObj { get; private set; }
+        public IOnebotController CommandObj { get; private set; }
 
         /// <summary>
         /// 指令方法
@@ -80,7 +82,7 @@ namespace QQRobot.CommandRoute
         /// <param name="parametersName">指令参数名</param>
         /// <param name="parameterPositionMapping">指令参数位置到方法参数位置的映射关系</param>
         /// <param name="attribute">指令方法的属性</param>
-        public CommandModel(IQQRobotService commandObj, MethodInfo commandMethod, List<Type> parametersType,
+        public CommandModel(IOnebotController commandObj, MethodInfo commandMethod, List<Type> parametersType,
             List<int> parametersMatchingType, List<string> parametersName, List<int> parameterPositionMapping,
             CommandAttribute attribute)
         {

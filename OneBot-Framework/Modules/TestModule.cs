@@ -1,13 +1,13 @@
-﻿using System;
-using QQRobot.Attribute;
-using QQRobot.CommandRoute;
-using QQRobot.Models.Model;
-using QQRobot.Services;
+using System;
+using OneBot.CommandRoute.Attributes;
+using OneBot.CommandRoute.Models.Enumeration;
+using OneBot.CommandRoute.Services;
+using OneBot.FrameworkDemo.Models;
 using Sora.Entities;
 
-namespace QQRobot.QQRobot
+namespace OneBot.FrameworkDemo.Modules
 {
-    public class TestModule : IQQRobotService
+    public class TestModule : IOnebotController
     {
         public TestModule(ICommandService commandService)
         {
