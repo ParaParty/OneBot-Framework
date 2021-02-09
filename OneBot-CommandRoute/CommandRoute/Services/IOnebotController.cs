@@ -1,6 +1,6 @@
-﻿namespace OneBot.CommandRoute.Services
+namespace OneBot.CommandRoute.Services
 {
-    public interface IOnebotController
+    public interface IOneBotController
     {
         
     }

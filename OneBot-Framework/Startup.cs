@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using OneBot.CommandRoute.Models.VO;
 using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Services.Implements;
+using OneBot.FrameworkDemo.Modules;
 
 
 namespace OneBot.FrameworkDemo
@@ -35,17 +36,8 @@ namespace OneBot.FrameworkDemo
             // 设置指令路由服务
             services.AddSingleton<ICommandService, CommandService>();
 
-            // 配置机器人模块
-
-            // 使用 Scrutor 一次性将所有的 IOnebotController 都加入到服务容器
-            services.Scan(scan => scan
-                .FromAssemblyOf<IOnebotController>()
-                .AddClasses()
-                .AsImplementedInterfaces()
-                .WithSingletonLifetime());
-
-            // 手动模式
-            // services.AddSingleton<IOnebotController, TestModule>();
+            // 添加指令 / 事件
+            services.AddSingleton<IOneBotController, TestModule>();
             // 一行一行地将指令模块加进去
         }
 

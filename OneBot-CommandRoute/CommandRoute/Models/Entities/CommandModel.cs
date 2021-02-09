@@ -22,7 +22,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <summary>
         /// 指令对象（单例）
         /// </summary>
-        public IOnebotController CommandObj { get; private set; }
+        public IOneBotController CommandObj { get; private set; }
 
         /// <summary>
         /// 指令方法
@@ -82,7 +82,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="parametersName">指令参数名</param>
         /// <param name="parameterPositionMapping">指令参数位置到方法参数位置的映射关系</param>
         /// <param name="attribute">指令方法的属性</param>
-        public CommandModel(IOnebotController commandObj, MethodInfo commandMethod, List<Type> parametersType,
+        public CommandModel(IOneBotController commandObj, MethodInfo commandMethod, List<Type> parametersType,
             List<int> parametersMatchingType, List<string> parametersName, List<int> parameterPositionMapping,
             CommandAttribute attribute)
         {

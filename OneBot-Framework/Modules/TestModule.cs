@@ -7,7 +7,7 @@ using Sora.Entities;
 
 namespace OneBot.FrameworkDemo.Modules
 {
-    public class TestModule : IOnebotController
+    public class TestModule : IOneBotController
     {
         public TestModule(ICommandService commandService)
         {

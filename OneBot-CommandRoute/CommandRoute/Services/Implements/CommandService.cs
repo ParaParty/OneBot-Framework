@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Command;
 using OneBot.CommandRoute.Events;
@@ -102,8 +102,8 @@ namespace OneBot.CommandRoute.Services.Implements
         /// </summary>
         public void RegisterCommand()
         {
-            var qqRobotService = ServiceProvider.GetServices<IQQRobotService>();
-            foreach (var s in qqRobotService)
+            var onebotController = ServiceProvider.GetServices<IOneBotController>();
+            foreach (var s in onebotController)
             {
                 var clazz = s.GetType();
                 var methods = clazz.GetMethods();
@@ -119,7 +119,7 @@ namespace OneBot.CommandRoute.Services.Implements
             }
         }
 
-        private void RegisterCommand(IQQRobotService commandObj, MethodInfo commandMethod, CommandAttribute attribute)
+        private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, CommandAttribute attribute)
         {
             List<String> command = attribute.Pattern.Trim().Split(' ').ToList();
             List<String> aliasList = attribute.Alias.Trim().Split(',').Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
@@ -148,7 +148,7 @@ namespace OneBot.CommandRoute.Services.Implements
             
         }
 
-        private void RegisterCommand(IQQRobotService commandObj, MethodInfo commandMethod, List<string> matchPattern, CommandAttribute attribute)
+        private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, List<string> matchPattern, CommandAttribute attribute)
         {
             // 参数类型
             List<Type> parametersType = new List<Type>();
