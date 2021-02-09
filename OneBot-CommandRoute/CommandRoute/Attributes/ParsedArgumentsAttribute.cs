@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace OneBot.CommandRoute.Attributes
 {
@@ -6,7 +6,7 @@ namespace OneBot.CommandRoute.Attributes
     /// 获取全部的参数列表
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class ParsedArgumentsAttribute : System.Attribute
+    public class ParsedArgumentsAttribute : Attribute
     {
 
     }

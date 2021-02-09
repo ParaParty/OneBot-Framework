@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OneBot.CommandRoute.Models.Enumeration;
 
 namespace OneBot.CommandRoute.Attributes
@@ -7,7 +7,7 @@ namespace OneBot.CommandRoute.Attributes
     /// 指令路由
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class CommandAttribute : System.Attribute
+    public class CommandAttribute : Attribute
     {
         /// <summary>
         /// 指令格式

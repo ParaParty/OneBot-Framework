@@ -11,6 +11,7 @@ using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Laxer;
 using OneBot.CommandRoute.Models.Enumeration;
+using OneBot_CommandRoute.CommandRoute.Attributes;
 
 namespace OneBot.CommandRoute.Models.Entities
 {
@@ -236,6 +237,17 @@ namespace OneBot.CommandRoute.Models.Entities
 
             // TODO 判断是否有基本类型但是是 NOTNULL 的。
 
+            // 在调用前执行
+            if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
+            {
+                var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
+                for (int i = 0; i < attrs.Length; i++)
+                {
+                    (attrs[i] as BeforeCommandAttribute)?.Invoke(scope, baseSoraEventArgs);
+                }
+            }
+
+            // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
                 return (int) CommandMethod.Invoke(CommandObj, functionArgs);
