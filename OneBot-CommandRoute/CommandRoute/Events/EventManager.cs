@@ -132,9 +132,13 @@ namespace OneBot.CommandRoute.Events
 
         public delegate void ExceptionDelegate(IServiceScope scope, BaseSoraEventArgs e, Exception exception);
 
-        public void FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
+        public bool FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
         {
+            if (OnException == null) return false;
+
             OnException?.Invoke(scope, e, exception);
+            return true;
+
         }
     }
 }

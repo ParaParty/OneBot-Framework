@@ -83,13 +83,24 @@ namespace OneBot.CommandRoute.Services.Implements
         {
             try
             {
-                Event.FireException(scope, e, exception);
+                if (!Event.FireException(scope, e, exception))
+                {
+                    _logger.LogError(
+                        $"{exception.Message} : \n" +
+                        $"{exception.StackTrace}"
+                    );
+                };
             }
             catch (Exception e1)
             {
                 _logger.LogError(
                     $"{exception.Message} : \n" +
                     $"{exception.StackTrace}"
+                );
+
+                _logger.LogError(
+                    $"{e1.Message} : \n" +
+                    $"{e1.StackTrace}"
                 );
             }
         }
