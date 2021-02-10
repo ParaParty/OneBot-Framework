@@ -37,6 +37,7 @@ namespace OneBot.FrameworkDemo
             services.AddSingleton<ICommandService, CommandService>();
 
             // 添加指令 / 事件
+            // 推荐使用单例模式（而实际上框架代码也是当单例模式使用的）
             services.AddSingleton<IOneBotController, TestModule>();
             // 一行一行地将指令模块加进去
         }
