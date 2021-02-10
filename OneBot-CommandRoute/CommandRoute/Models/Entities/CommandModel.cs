@@ -386,22 +386,22 @@ namespace OneBot.CommandRoute.Models.Entities
         {
             bool ret = false;
 
-            if (type == typeof(int))
+            if (type == typeof(int) || type == typeof(int?))
             {
                 ret = int.TryParse(arg, out int number);
                 result = number;
             }
-            else if (type == typeof(long))
+            else if (type == typeof(long) || type == typeof(long?))
             {
                 ret = long.TryParse(arg, out long number);
                 result = number;
             }
-            else if (type == typeof(double))
+            else if (type == typeof(double) || type == typeof(double?))
             {
                 ret = double.TryParse(arg, out double number);
                 result = number;
             }
-            else if (type == typeof(decimal))
+            else if (type == typeof(decimal) || type == typeof(decimal?))
             {
                 ret = decimal.TryParse(arg, out decimal number);
                 result = number;
