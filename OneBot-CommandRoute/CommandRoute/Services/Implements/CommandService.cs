@@ -74,7 +74,7 @@ namespace OneBot.CommandRoute.Services.Implements
         }
 
         /// <summary>
-        /// 错误处理
+        /// 异常处理
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="e"></param>
@@ -113,7 +113,19 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
         {
-            using var scope = this._scopeFactory.CreateScope();
+            return OnGeneralEvent(sender, e, null);
+        }
+
+        /// <summary>
+        /// 通用事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e, IServiceScope scope)
+        {
+            if (scope == null) scope = this._scopeFactory.CreateScope();
 
             Exception exception = null;
             try
@@ -140,7 +152,7 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask EventOnPrivateMessage(object sender, PrivateMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-
+            
             Exception exception = null;
             try
             {
@@ -155,7 +167,7 @@ namespace OneBot.CommandRoute.Services.Implements
             if (exception != null) EventOnException(scope, e, exception);
 
 
-            OnGeneralEvent(sender, e);
+            OnGeneralEvent(sender, e, scope);
             return ValueTask.CompletedTask;
         }
         
@@ -182,7 +194,7 @@ namespace OneBot.CommandRoute.Services.Implements
             if (exception != null) EventOnException(scope, e, exception);
 
 
-            OnGeneralEvent(sender, e);
+            OnGeneralEvent(sender, e, scope);
             return ValueTask.CompletedTask;
         }
 
