@@ -51,6 +51,7 @@ namespace OneBot.CommandRoute.Services.Implements
             _scopeFactory = scopeFactory;
             _logger = logger;
             Event = new EventManager();
+            _matchingRootNode.IsRoot = true;
 
             bot.Server.Event.OnClientConnect += OnGeneralEvent;
             bot.Server.Event.OnGroupRequest += OnGeneralEvent;

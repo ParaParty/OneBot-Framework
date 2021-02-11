@@ -27,6 +27,11 @@ namespace OneBot.CommandRoute.Command
     public class MatchingNode
     {
         /// <summary>
+        /// 为根节点
+        /// </summary>
+        public bool IsRoot = false;
+
+        /// <summary>
         /// 指令前缀
         /// </summary>
         private const string COMMAND_PREFIX = "！!/";
@@ -70,7 +75,7 @@ namespace OneBot.CommandRoute.Command
                 {
                     var nextStep = s.Key.ToUpper();
                     var tokenUpper = token.ToUpper();
-                    if (nextStep[0] >= 'A' && nextStep[0] <= 'Z')
+                    if (IsRoot && nextStep[0] >= 'A' && nextStep[0] <= 'Z')
                     {
                         if (!COMMAND_PREFIX.Contains(token[0])) continue;
                         if (nextStep != tokenUpper.Substring(1)) continue;
