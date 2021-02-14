@@ -69,6 +69,7 @@ namespace OneBot.CommandRoute.Services.Implements
             bot.Server.Event.OnHonorEvent += OnGeneralEvent;
             bot.Server.Event.OnOfflineFileEvent += OnGeneralEvent;
             bot.Server.Event.OnClientStatusChangeEvent += OnGeneralEvent;
+            bot.Server.Event.OnEssenceChange += OnGeneralEvent;
 
             bot.Server.Event.OnGroupMessage += EventOnGroupMessage;
             bot.Server.Event.OnPrivateMessage += EventOnPrivateMessage;

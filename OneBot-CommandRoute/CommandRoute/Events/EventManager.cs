@@ -46,6 +46,8 @@ namespace OneBot.CommandRoute.Events
         public event EventManager.EventAsyncCallBackHandler<OfflineFileEventArgs> OnOfflineFileEvent;
         /// <summary>其他客户端在线状态变更事件</summary>
         public event EventManager.EventAsyncCallBackHandler<ClientStatusChangeEventArgs> OnClientStatusChangeEvent;
+        /// <summary>其他客户端在线状态变更事件</summary>
+        public event EventManager.EventAsyncCallBackHandler<EssenceChangeEventArgs> OnEssenceChange;
 
         public delegate int EventAsyncCallBackHandler<in TEventArgs>(
             IServiceScope scope,
@@ -77,6 +79,7 @@ namespace OneBot.CommandRoute.Events
             else if (eventArgs is HonorEventArgs) { Fire<HonorEventArgs>(scope, eventArgs, OnHonorEvent?.GetInvocationList()); }
             else if (eventArgs is OfflineFileEventArgs) { Fire<OfflineFileEventArgs>(scope, eventArgs, OnOfflineFileEvent?.GetInvocationList()); }
             else if (eventArgs is ClientStatusChangeEventArgs) { Fire<ClientStatusChangeEventArgs>(scope, eventArgs, OnClientStatusChangeEvent?.GetInvocationList()); }
+            else if (eventArgs is EssenceChangeEventArgs) { Fire<EssenceChangeEventArgs>(scope, eventArgs, OnEssenceChange?.GetInvocationList()); }
             else
             {
                 throw new EventHandleException("不存在这样的事件。");
