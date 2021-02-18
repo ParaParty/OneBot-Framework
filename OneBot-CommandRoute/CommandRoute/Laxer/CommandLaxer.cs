@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Sora.Entities.CQCodes;
 using Sora.Entities.CQCodes.CQCodeModel;
 using Sora.Enumeration;
@@ -71,9 +71,11 @@ namespace OneBot.CommandRoute.Laxer
             {
                 throw new ParserToTheEndException();
             }
+            
+            // 当前扫描到的消息段
             var s = SourceCommand[ScanObjectPointer];
 
-            // 跨越消息段
+            // 如果当前扫描到的消息段不是文本消息段则返回当前消息段
             if (s.Function != CQFunction.Text)
             {
                 ScanObjectPointer++;
@@ -82,28 +84,42 @@ namespace OneBot.CommandRoute.Laxer
                 return s;
             }
 
+            // 获取当前消息段的文本
             var str = ((Text)(s.CQData)).Content;
             var token = "";
 
-            // 舍弃开头的空白字符
             while (ScanStringPointer < str.Length && BLANKCHARACTER.Contains(str[ScanStringPointer]))
             {
-                ScanStringPointer++;
-            }
-
-            // 如果开头的空白字符删完之后没了那就表示下一个消息段必定不是文本
-            if (ScanStringPointer >= str.Length)
-            {
-                ScanObjectPointer++;
-                ScanStringPointer = 0;
-                if (ScanObjectPointer >= SourceCommand.Count)
+                // 舍弃开头的空白字符
+                while (ScanStringPointer < str.Length && BLANKCHARACTER.Contains(str[ScanStringPointer]))
                 {
-                    throw new ParserToTheEndException();
+                    ScanStringPointer++;
                 }
-                var ret = SourceCommand[ScanObjectPointer];
-                ScanObjectPointer++;
-                ParsedArguments.Add(ret);
-                return ret;
+
+                // 如果开头的空白字符删完之后没了就要从下一个消息段继续扫描
+                if (ScanStringPointer >= str.Length)
+                {
+                    ScanObjectPointer++;
+                    ScanStringPointer = 0;
+                    if (ScanObjectPointer >= SourceCommand.Count)
+                    {
+                        throw new ParserToTheEndException();
+                    }
+
+                    // 获取下一个消息段
+                    var ret = SourceCommand[ScanObjectPointer];
+
+                    // 如果下一个消息段不是文本则返回
+                    if (ret.Function != CQFunction.Text) { 
+                        ScanObjectPointer++;
+                        ParsedArguments.Add(ret);
+                        return ret;
+                    }
+
+                    // 如果下一个消息段是文本则继续扫描
+                    s = ret;
+                    str = ((Text)(s.CQData)).Content;
+                }
             }
 
             // 解析中间的字符
