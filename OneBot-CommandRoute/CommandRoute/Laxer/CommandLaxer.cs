@@ -50,13 +50,89 @@ namespace OneBot.CommandRoute.Laxer
         /// <returns>真: 有效/假: 无效</returns>
         public bool IsValid()
         {
+            // 如果已经开始扫描了那必然合法
             if (ScanObjectPointer != 0 || ScanStringPointer != 0) return true;
-            if (SourceCommand.Count == 0) return false;
-            if (SourceCommand[0].Function != CQFunction.Text) return false;
-            var s = (Text)(SourceCommand[0].CQData);
-            if (s.Content.Length == 0) return false;
-            if (BLANKCHARACTER.Contains((s.Content[0]))) return false;
 
+            var scanObjectPointer = 0;
+            var scanStringPointer = 0;
+
+            // 空消息不合法
+            if (SourceCommand.Count == 0) return false;
+
+            // 如果第一个消息段为回复消息
+            if (SourceCommand[0].Function == CQFunction.Reply)
+            {
+                // 如果消息段长度只有1则不合法
+                if (SourceCommand.Count < 2) return false;
+                scanObjectPointer = 1;
+            }
+
+
+            string s;
+            var flag = false;
+
+            // 兼容 回复+At+(空格+正文) 的奇怪设计
+            if (scanObjectPointer == 1 && SourceCommand[scanObjectPointer].Function == CQFunction.At)
+            {
+                if (SourceCommand[scanObjectPointer].Function == CQFunction.At)
+                {
+                    // 如果消息段长度只有2则不合法
+                    if (SourceCommand.Count < 3) return false;
+                    scanObjectPointer = 2;
+                }
+
+                flag = true;
+            }
+
+            // 如果扫描起始消息段不为文本则不合法
+            if (SourceCommand[scanObjectPointer].Function != CQFunction.Text) return false;
+            s = ((Text)(SourceCommand[scanObjectPointer].CQData)).Content;
+            
+            // 兼容 回复+空格+At+正文 的奇怪设计
+            if (scanObjectPointer == 1 && string.IsNullOrWhiteSpace(s))
+            {
+                if (SourceCommand.Count < 4) return false;
+                if (SourceCommand[2].Function != CQFunction.At) return false;
+                if (SourceCommand[3].Function != CQFunction.Text) return false;
+
+                scanObjectPointer = 3;
+                s = ((Text)(SourceCommand[scanObjectPointer].CQData)).Content;
+
+                flag = true;
+            }
+
+            if (flag)
+            {
+                // 舍弃空白段
+                while (SourceCommand[scanObjectPointer].Function == CQFunction.Text)
+                {
+                    if (!string.IsNullOrWhiteSpace(((Text)SourceCommand[scanObjectPointer].CQData).Content)) break;
+                    scanObjectPointer++;
+                    if (scanObjectPointer == SourceCommand.Count) return false;
+                }
+
+                // 如果舍弃空白段后不是文本段则不合法
+                if (SourceCommand[scanObjectPointer].Function != CQFunction.Text) return false;
+                s = ((Text)(SourceCommand[scanObjectPointer].CQData)).Content;
+
+                // 舍弃开头空白字符
+                while (scanStringPointer < s.Length && BLANKCHARACTER.Contains(s[scanStringPointer]))
+                {
+                    scanStringPointer++;
+                }
+            }
+
+            // 普通发言支持
+            if (scanObjectPointer == 0) {
+                // 空消息不合法
+                if (s.Length == 0) return false;
+
+                // 空白符号开头不合法
+                if (BLANKCHARACTER.Contains((s[0]))) return false;
+            }
+
+            ScanObjectPointer = scanObjectPointer;
+            ScanStringPointer = scanStringPointer;
             return true;
         }
 
