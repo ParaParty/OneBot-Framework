@@ -4,6 +4,5 @@ namespace OneBot.CommandRoute.Laxer
 {
     class ParserToTheEndException : Exception
     {
-
     }
 }

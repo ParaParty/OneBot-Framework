@@ -5,6 +5,5 @@ namespace OneBot.CommandRoute.Services
     /// </summary>
     public interface IOneBotController
     {
-        
     }
 }

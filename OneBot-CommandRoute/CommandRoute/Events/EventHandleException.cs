@@ -4,9 +4,8 @@ namespace OneBot.CommandRoute.Events
 {
     class EventHandleException : Exception
     {
-        public EventHandleException(string msg): base(msg)
+        public EventHandleException(string msg) : base(msg)
         {
-            
         }
     }
 }

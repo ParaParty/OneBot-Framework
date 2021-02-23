@@ -67,8 +67,8 @@ namespace OneBot.CommandRoute.Command
             }
             catch (ParserToTheEndException)
             {
-                
             }
+
             if (nextToken is string token)
             {
                 foreach (var s in Children)
@@ -95,6 +95,7 @@ namespace OneBot.CommandRoute.Command
                 var ret = s.Invoke(scope, sender, e, oldParser);
                 if (ret != 0) return ret;
             }
+
             return 0;
         }
 
@@ -114,7 +115,8 @@ namespace OneBot.CommandRoute.Command
                 return;
             }
 
-            if (command.ParametersMatchingType[i] != 0) {
+            if (command.ParametersMatchingType[i] != 0)
+            {
                 // 参数部分就不进入匹配了
                 Command.Add(command);
                 Command = Command.OrderByDescending(s => s.WeightA).ThenByDescending(s => s.WeightB).ToList();
@@ -128,8 +130,8 @@ namespace OneBot.CommandRoute.Command
                 tmp = new MatchingNode();
                 Children[command.ParametersName[i]] = tmp;
             }
-            tmp.Register(command, i + 1);
 
+            tmp.Register(command, i + 1);
         }
     }
 }

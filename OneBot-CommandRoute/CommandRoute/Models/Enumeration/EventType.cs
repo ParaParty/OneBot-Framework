@@ -31,13 +31,11 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 讨论组
         /// </summary>
-        [Obsolete]
-        DiscussMessage = 0x4,
+        [Obsolete] DiscussMessage = 0x4,
 
         /// <summary>
         /// 讨论组
         /// </summary>
-        [Obsolete]
-        DM = 0x4
+        [Obsolete] DM = 0x4
     }
 }

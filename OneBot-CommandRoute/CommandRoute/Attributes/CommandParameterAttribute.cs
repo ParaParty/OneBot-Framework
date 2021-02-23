@@ -5,7 +5,7 @@ namespace OneBot.CommandRoute.Attributes
     /// <summary>
     /// 指令参数绑定
     /// </summary>
-    public class CommandParameterAttribute: Attribute
+    public class CommandParameterAttribute : Attribute
     {
         /// <summary>
         /// 参数名

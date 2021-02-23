@@ -8,6 +8,5 @@ namespace OneBot.CommandRoute.Attributes
     [AttributeUsage(AttributeTargets.Parameter)]
     public class ParsedArgumentsAttribute : Attribute
     {
-
     }
 }

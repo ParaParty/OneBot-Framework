@@ -17,7 +17,7 @@ namespace OneBot.CommandRoute.Services.Implements
     /// <summary>
     /// 指令路由服务
     /// </summary>
-    public class CommandService: ICommandService
+    public class CommandService : ICommandService
     {
         /// <summary>
         /// CQHTTP 服务
@@ -44,7 +44,8 @@ namespace OneBot.CommandRoute.Services.Implements
         /// </summary>
         public EventManager Event { get; set; }
 
-        public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory, ILogger<CommandService> logger)
+        public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory,
+            ILogger<CommandService> logger)
         {
             ServiceProvider = serviceProvider;
             _scopeFactory = scopeFactory;
@@ -107,7 +108,9 @@ namespace OneBot.CommandRoute.Services.Implements
                         $"{exception.Message} : \n" +
                         $"{exception.StackTrace}"
                     );
-                };
+                }
+
+                ;
             }
             catch (Exception e1)
             {
@@ -154,6 +157,7 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 exception = e1;
             }
+
             if (exception != null) EventOnException(scope, e, exception);
 
             return ValueTask.CompletedTask;
@@ -172,7 +176,7 @@ namespace OneBot.CommandRoute.Services.Implements
         private ValueTask EventOnPrivateMessage(object sender, PrivateMessageEventArgs e)
         {
             using var scope = this._scopeFactory.CreateScope();
-            
+
             Exception exception = null;
             try
             {
@@ -184,12 +188,13 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 exception = e1;
             }
+
             if (exception != null) EventOnException(scope, e, exception);
 
             OnGeneralEvent(sender, e, scope);
             return ValueTask.CompletedTask;
         }
-        
+
         /// <summary>
         /// 群聊消息分发
         /// </summary>
@@ -204,12 +209,14 @@ namespace OneBot.CommandRoute.Services.Implements
             try
             {
                 if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e, new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                    new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
                 exception = e1;
             }
+
             if (exception != null) EventOnException(scope, e, exception);
 
 
@@ -236,9 +243,12 @@ namespace OneBot.CommandRoute.Services.Implements
                     var methodAttributes = method.CustomAttributes;
                     if (System.Attribute.IsDefined(method, typeof(CommandAttribute)))
                     {
-                        var attr = (CommandAttribute)System.Attribute.GetCustomAttribute(method, typeof(CommandAttribute));
+                        var attr = (CommandAttribute) System.Attribute.GetCustomAttribute(method,
+                            typeof(CommandAttribute));
                         RegisterCommand(s, method, attr);
-                    };
+                    }
+
+                    ;
                 }
             }
         }
@@ -246,7 +256,8 @@ namespace OneBot.CommandRoute.Services.Implements
         private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, CommandAttribute attribute)
         {
             List<string> command = attribute.Pattern.Trim().Split(' ').ToList();
-            List<string> aliasList = attribute.Alias.Trim().Split(',').Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
+            List<string> aliasList = attribute.Alias.Trim().Split(',').Select(s => s.Trim()).Where(s => s.Length > 0)
+                .ToList();
 
             try
             {
@@ -259,7 +270,7 @@ namespace OneBot.CommandRoute.Services.Implements
                     $"{e.StackTrace}"
                 );
             }
-            
+
             foreach (var c in aliasList.Select(s => s.Split(' ').ToList()))
             {
                 try
@@ -273,12 +284,11 @@ namespace OneBot.CommandRoute.Services.Implements
                         $"{e.StackTrace}"
                     );
                 }
-                
             }
-            
         }
 
-        private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, List<string> matchPattern, CommandAttribute attribute)
+        private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, List<string> matchPattern,
+            CommandAttribute attribute)
         {
             // 参数类型
             List<Type> parametersType = new List<Type>();
@@ -290,14 +300,15 @@ namespace OneBot.CommandRoute.Services.Implements
             List<string> parametersName = new List<string>();
 
             // 这个参数是否被用过了
-            List<bool> parametersUsed = new List<bool>();     
-            
+            List<bool> parametersUsed = new List<bool>();
+
             // 这个参数对应函数的形参列表哪一位。负数表示不映射。
             List<int> parameterPositionMapping = new List<int>();
 
             // 从指令定义中解析出 参数匹配类型 和 参数匹配字符串或参数名
             var withOptional = false;
-            foreach (var s in matchPattern)  {
+            foreach (var s in matchPattern)
+            {
                 parametersType.Add(typeof(string));
                 parametersUsed.Add(false);
                 parameterPositionMapping.Add(-1);
@@ -309,6 +320,7 @@ namespace OneBot.CommandRoute.Services.Implements
                     {
                         throw new ArgumentException($"我觉得你的指令定义有问题。可选参数只能写在末尾哦。");
                     }
+
                     parametersMatchingType.Add(1);
                     var paraName = s.Substring(1, s.Length - 2);
                     for (var j = 0; j < parametersName.Count; j++)
@@ -319,6 +331,7 @@ namespace OneBot.CommandRoute.Services.Implements
                             throw new ArgumentException($"我觉得你的指令定义有问题。参数名必须互异。");
                         }
                     }
+
                     parametersName.Add(paraName);
                     continue;
                 }
@@ -337,9 +350,9 @@ namespace OneBot.CommandRoute.Services.Implements
                             throw new ArgumentException($"我觉得你的指令定义有问题。参数名必须互异。");
                         }
                     }
+
                     parametersName.Add(paraName);
                     continue;
-
                 }
 
                 // 全字匹配
@@ -347,10 +360,13 @@ namespace OneBot.CommandRoute.Services.Implements
                 {
                     throw new ArgumentException($"我觉得你的指令定义有问题。可选参数只能写在末尾哦。");
                 }
+
                 parametersMatchingType.Add(0);
                 parametersName.Add(s);
                 continue;
-            };
+            }
+
+            ;
 
             // 先检查属性
             var functionParametersList = commandMethod.GetParameters();
@@ -359,7 +375,8 @@ namespace OneBot.CommandRoute.Services.Implements
                 var type = functionParametersList[i];
                 if (System.Attribute.IsDefined(type, typeof(CommandParameterAttribute)))
                 {
-                    var attr = (CommandParameterAttribute)System.Attribute.GetCustomAttribute(type, typeof(CommandParameterAttribute));
+                    var attr = (CommandParameterAttribute) System.Attribute.GetCustomAttribute(type,
+                        typeof(CommandParameterAttribute));
                     var paraName = attr.Name;
 
                     var idx = -1;
@@ -405,8 +422,8 @@ namespace OneBot.CommandRoute.Services.Implements
             }
 
             _matchingRootNode.Register(
-                new CommandModel (commandObj, commandMethod, 
-                    parametersType, parametersMatchingType, parametersName, parameterPositionMapping, 
+                new CommandModel(commandObj, commandMethod,
+                    parametersType, parametersMatchingType, parametersName, parameterPositionMapping,
                     attribute)
                 , 0);
         }

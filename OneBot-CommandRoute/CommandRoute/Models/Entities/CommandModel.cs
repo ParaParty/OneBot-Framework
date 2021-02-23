@@ -154,16 +154,17 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
 
                 // 类型转换
-                if (succeed) { 
+                if (succeed)
+                {
                     if (ParametersMatchingType[i] == 0)
                     {
-                        succeed = (newArg is string) && ((string)newArg) == ParametersName[i];
+                        succeed = (newArg is string) && ((string) newArg) == ParametersName[i];
                     }
                     else
                     {
                         succeed = TryParseType(baseSoraEventArgs, newArg, ParametersType[i], out object result);
                         if (succeed)
-                        { 
+                        {
                             newArg = result;
                         }
                     }
@@ -214,20 +215,23 @@ namespace OneBot.CommandRoute.Models.Entities
                     {
                         Console.Error.WriteLine("[ParsedArguments] 属性仅接受 object[] 类型。");
                     }
+
                     continue;
                 }
-                
+
                 // 判断是否需要传递事件信息
                 if (ParameterType == typeof(BaseSoraEventArgs))
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
+
                 if (ParameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs)
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
+
                 if (ParameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
                 {
                     functionArgs[i] = baseSoraEventArgs;
@@ -303,7 +307,6 @@ namespace OneBot.CommandRoute.Models.Entities
                 {
                     return false;
                 }
-                
             }
 
             return false;
@@ -327,7 +330,7 @@ namespace OneBot.CommandRoute.Models.Entities
             }
             else if (arg.Function == CQFunction.At)
             {
-                var cast = (Sora.Entities.CQCodes.CQCodeModel.At)arg.CQData;
+                var cast = (Sora.Entities.CQCodes.CQCodeModel.At) arg.CQData;
                 var succeed = long.TryParse(cast.Traget, out long uid);
                 if (!succeed)
                 {
@@ -352,10 +355,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] { arg.GetType() });
+                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] { arg });
+                        result = converter.Invoke(null, new[] {arg});
                         ret = true;
                     }
                     else
@@ -416,12 +419,12 @@ namespace OneBot.CommandRoute.Models.Entities
                 ret = Duration.TryParse(arg, out Duration duration);
                 result = duration;
             }*/
-            else if(type == typeof(User))
+            else if (type == typeof(User))
             {
                 ret = long.TryParse(arg, out long cast);
                 result = baseSoraEventArgs.SoraApi.GetUser(cast);
             }
-            else if(type == typeof(Group))
+            else if (type == typeof(Group))
             {
                 ret = long.TryParse(arg, out long cast);
                 result = baseSoraEventArgs.SoraApi.GetGroup(cast);
@@ -430,10 +433,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] { typeof(string) });
+                    var converter = type.GetMethod("op_Implicit", new[] {typeof(string)});
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] { arg });
+                        result = converter.Invoke(null, new[] {arg});
                         ret = true;
                     }
                     else
@@ -448,6 +451,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     ret = false;
                 }
             }
+
             return ret;
         }
     }

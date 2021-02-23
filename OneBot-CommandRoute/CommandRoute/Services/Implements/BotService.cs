@@ -9,7 +9,7 @@ namespace OneBot.CommandRoute.Services.Implements
     /// <summary>
     /// CQHTTP 客户端（Sora）
     /// </summary>
-    public class BotService: IBotService
+    public class BotService : IBotService
     {
         /// <summary>
         /// Sora WS 服务器
@@ -36,7 +36,7 @@ namespace OneBot.CommandRoute.Services.Implements
             // 配置指令
             ServiceProvider = serviceProvider;
         }
-        
+
         public void Start()
         {
             // 初始化指令系统
