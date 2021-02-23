@@ -12,6 +12,8 @@ namespace OneBot.CommandRoute.Events
         public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs> OnGroupMessage;
         /// <summary>群聊事件（触发指令之前）</summary>
         public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs> OnGroupMessageReceived;
+        /// <summary> 登录账号发送消息事件 </summary>
+        public event EventAsyncCallBackHandler<GroupMessageEventArgs> OnSelfMessage;
         /// <summary>私聊事件（触发指令之后）</summary>
         public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs> OnPrivateMessage;
         /// <summary>私聊事件（触发指令之前）</summary>
@@ -59,7 +61,7 @@ namespace OneBot.CommandRoute.Events
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="eventArgs"></param>
-        public void Fire(IServiceScope scope, BaseSoraEventArgs eventArgs)
+        internal void Fire(IServiceScope scope, BaseSoraEventArgs eventArgs)
         {
             if (eventArgs is ConnectEventArgs) { Fire<ConnectEventArgs>(scope, eventArgs, OnClientConnect?.GetInvocationList()); }
             else if (eventArgs is GroupMessageEventArgs) { Fire<GroupMessageEventArgs>(scope, eventArgs, OnGroupMessage?.GetInvocationList()); }
@@ -94,7 +96,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="eventArgs"></param>
         /// <param name="listeners"></param>
         /// <returns></returns>
-        private int Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[] listeners) where T : BaseSoraEventArgs
+        internal int Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[] listeners) where T : BaseSoraEventArgs
         {
             if (listeners == null) return 0;
 
@@ -113,7 +115,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="scope"></param>
         /// <param name="privateMessageEventArgs"></param>
         /// <returns></returns>
-        public int FirePrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs privateMessageEventArgs)
+        internal int FirePrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs privateMessageEventArgs)
         {
             return Fire<PrivateMessageEventArgs>(scope, privateMessageEventArgs,
                 OnPrivateMessageReceived?.GetInvocationList());
@@ -125,23 +127,43 @@ namespace OneBot.CommandRoute.Events
         /// <param name="scope"></param>
         /// <param name="groupMessageEventArgs"></param>
         /// <returns></returns>
-        public int FireGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs groupMessageEventArgs)
+        internal int FireGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs groupMessageEventArgs)
         {
             return Fire<GroupMessageEventArgs>(scope, groupMessageEventArgs,
                 OnGroupMessageReceived?.GetInvocationList());
         }
         
+        /// <summary>
+        /// 异常处理事件
+        /// </summary>
         public event ExceptionDelegate OnException;
 
         public delegate void ExceptionDelegate(IServiceScope scope, BaseSoraEventArgs e, Exception exception);
 
-        public bool FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
+        /// <summary>
+        /// 分发异常
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="e"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        internal bool FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
         {
             if (OnException == null) return false;
 
             OnException?.Invoke(scope, e, exception);
             return true;
-
         }
+
+        /// <summary>
+        /// 分发登录账号发送消息事件
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="eventArgs"></param>
+        internal void FireSelfMessage(IServiceScope scope, GroupMessageEventArgs eventArgs)
+        {
+            Fire<EssenceChangeEventArgs>(scope, eventArgs, OnSelfMessage?.GetInvocationList());
+        }
+
     }
 }

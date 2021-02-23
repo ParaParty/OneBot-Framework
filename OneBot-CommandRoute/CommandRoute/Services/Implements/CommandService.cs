@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Sora.Entities;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
@@ -73,6 +72,23 @@ namespace OneBot.CommandRoute.Services.Implements
 
             bot.Server.Event.OnGroupMessage += EventOnGroupMessage;
             bot.Server.Event.OnPrivateMessage += EventOnPrivateMessage;
+
+            bot.Server.Event.OnSelfMessage += EventOnSelfMessage;
+        }
+
+        #region 事件处理
+
+        /// <summary>
+        /// 登录账号发送消息事件
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="eventargs"></param>
+        /// <returns></returns>
+        private ValueTask EventOnSelfMessage(string type, GroupMessageEventArgs e)
+        {
+            using var scope = this._scopeFactory.CreateScope();
+            Event.FireSelfMessage(scope, e);
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -143,6 +159,8 @@ namespace OneBot.CommandRoute.Services.Implements
             return ValueTask.CompletedTask;
         }
 
+        #endregion 事件处理
+
         #region 指令路由
 
         /// <summary>
@@ -167,7 +185,6 @@ namespace OneBot.CommandRoute.Services.Implements
                 exception = e1;
             }
             if (exception != null) EventOnException(scope, e, exception);
-
 
             OnGeneralEvent(sender, e, scope);
             return ValueTask.CompletedTask;
