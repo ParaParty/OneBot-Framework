@@ -213,7 +213,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     }
                     else
                     {
-                        Console.Error.WriteLine("[ParsedArguments] 属性仅接受 object[] 类型。");
+                        throw new ArgumentException($"[ParsedArguments] 属性仅接受 object[] 类型。");
                     }
 
                     continue;

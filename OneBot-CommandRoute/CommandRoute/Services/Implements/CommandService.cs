@@ -87,8 +87,9 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnSelfMessage(string type, GroupMessageEventArgs e)
         {
-            using var scope = this._scopeFactory.CreateScope();
-            Event.FireSelfMessage(scope, e);
+            using (var scope = this._scopeFactory.CreateScope()) {
+                Event.FireSelfMessage(scope, e);
+            };
             return ValueTask.CompletedTask;
         }
 
@@ -134,35 +135,21 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
         {
-            return OnGeneralEvent(sender, e, null);
-        }
+            using (var scope = this._scopeFactory.CreateScope()) {
+                Exception exception = null;
+                try
+                {
+                    Event.Fire(scope, e);
+                }
+                catch (Exception e1)
+                {
+                    exception = e1;
+                }
 
-        /// <summary>
-        /// 通用事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <param name="scope"></param>
-        /// <returns></returns>
-        private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e, IServiceScope scope)
-        {
-            if (scope == null) scope = this._scopeFactory.CreateScope();
-
-            Exception exception = null;
-            try
-            {
-                Event.Fire(scope, e);
+                if (exception != null) EventOnException(scope, e, exception);
             }
-            catch (Exception e1)
-            {
-                exception = e1;
-            }
-
-            if (exception != null) EventOnException(scope, e, exception);
-
             return ValueTask.CompletedTask;
         }
-
         #endregion 事件处理
 
         #region 指令路由
@@ -175,23 +162,22 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnPrivateMessage(object sender, PrivateMessageEventArgs e)
         {
-            using var scope = this._scopeFactory.CreateScope();
+            using (var scope = this._scopeFactory.CreateScope()) {
+                Exception exception = null;
+                try
+                {
+                    if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
+                    if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                        new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+                    Event.Fire(scope, e);
+                }
+                catch (Exception e1)
+                {
+                    exception = e1;
+                }
 
-            Exception exception = null;
-            try
-            {
-                if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
-                    new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+                if (exception != null) EventOnException(scope, e, exception);
             }
-            catch (Exception e1)
-            {
-                exception = e1;
-            }
-
-            if (exception != null) EventOnException(scope, e, exception);
-
-            OnGeneralEvent(sender, e, scope);
             return ValueTask.CompletedTask;
         }
 
@@ -203,24 +189,22 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnGroupMessage(object sender, GroupMessageEventArgs e)
         {
-            using var scope = this._scopeFactory.CreateScope();
+            using (var scope = this._scopeFactory.CreateScope()) {
+                Exception exception = null;
+                try
+                {
+                    if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
+                    if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                        new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+                    Event.Fire(scope, e);
+                }
+                catch (Exception e1)
+                {
+                    exception = e1;
+                }
 
-            Exception exception = null;
-            try
-            {
-                if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
-                    new CommandLaxer(e.Message.MessageList)) != 0) return ValueTask.CompletedTask;
+                if (exception != null) EventOnException(scope, e, exception);
             }
-            catch (Exception e1)
-            {
-                exception = e1;
-            }
-
-            if (exception != null) EventOnException(scope, e, exception);
-
-
-            OnGeneralEvent(sender, e, scope);
             return ValueTask.CompletedTask;
         }
 
@@ -247,8 +231,6 @@ namespace OneBot.CommandRoute.Services.Implements
                             typeof(CommandAttribute));
                         RegisterCommand(s, method, attr);
                     }
-
-                    ;
                 }
             }
         }
