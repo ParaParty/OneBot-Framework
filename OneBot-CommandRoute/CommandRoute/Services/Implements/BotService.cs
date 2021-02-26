@@ -2,7 +2,9 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneBot.CommandRoute.Models.VO;
+using OneBot_CommandRoute.CommandRoute.Utils;
 using Sora.Server;
+using YukariToolBox.FormatLog;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
@@ -28,13 +30,16 @@ namespace OneBot.CommandRoute.Services.Implements
 
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
         {
+            ServiceProvider = serviceProvider;
+
+            // 配置日志
+            var logger = ServiceProvider.GetService<ILogService>();
+            if (logger != null) YukariToolBox.FormatLog.Log.SetLoggerService(logger);
+
             // 配置 CQHTTP
             var cqHttpConfig = cqHttpServerConfigModel?.Value;
             ServerConfig = cqHttpConfig == null ? new ServerConfig() : cqHttpConfig.ToServerConfig();
             Server = new SoraWSServer(ServerConfig);
-
-            // 配置指令
-            ServiceProvider = serviceProvider;
         }
 
         public void Start()

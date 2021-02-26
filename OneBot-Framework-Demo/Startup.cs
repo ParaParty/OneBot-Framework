@@ -36,6 +36,9 @@ namespace OneBot.FrameworkDemo
             // 设置指令路由服务
             services.AddSingleton<ICommandService, CommandService>();
 
+            // 设置日志服务，将 Sora 日志服务设置 Microsoft.Extensions.Logging.ILogger
+            services.AddSingleton<ILogService, YukariToolBoxLogger>();
+
             // 添加指令 / 事件
             // 推荐使用单例模式（而实际上框架代码也是当单例模式使用的）
             services.AddSingleton<IOneBotController, TestModule>();
