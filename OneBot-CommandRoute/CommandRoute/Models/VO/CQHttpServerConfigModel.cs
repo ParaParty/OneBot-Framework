@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Sora.Server;
 
 namespace OneBot.CommandRoute.Models.VO
@@ -54,7 +54,8 @@ namespace OneBot.CommandRoute.Models.VO
                 EventPath = EventPath,
                 UniversalPath = UniversalPath,
                 HeartBeatTimeOut = HeartBeatTimeOut,
-                ApiTimeOut = ApiTimeOut
+                ApiTimeOut = ApiTimeOut,
+                EnableSoraCommandManager = false
             };
         }
     }
