@@ -42,7 +42,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// CQ:Json 路由
         /// </summary>
-        private ICQJsonRouterService? _jsonRouterService;
+        private ICQJsonRouterService _jsonRouterService;
 
         /// <summary>
         /// 事件中心
@@ -241,12 +241,14 @@ namespace OneBot.CommandRoute.Services.Implements
                     {
                         if (_jsonRouterService == null)
                         {
-                            _logger.LogWarning($"检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。${clazz.FullName}::${method.Name}");
+                            _logger.LogWarning($"检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。{clazz.FullName}::{method.Name}");
                         }
                         else
                         {
                             var attr = (CQJsonAttribute) Attribute.GetCustomAttribute(method, typeof(CQJsonAttribute));
                             _jsonRouterService.Register(s, method, attr);
+                            // ReSharper disable once PossibleNullReferenceException
+                            _logger.LogDebug($"成功添加 CQ:Json ：{attr.AppId}\r\n{clazz.FullName}::{method.Name}");
                         }
                     }
                 }
@@ -440,6 +442,7 @@ namespace OneBot.CommandRoute.Services.Implements
                     parametersType, parametersMatchingType, parametersName, parameterPositionMapping,
                     attribute)
                 , 0);
+            _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}");
         }
 
         #endregion 注册指令
