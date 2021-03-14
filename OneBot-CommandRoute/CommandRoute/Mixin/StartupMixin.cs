@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Services.Implements;
+using OneBot_CommandRoute.CommandRoute.OneBotControllers;
 using OneBot_CommandRoute.CommandRoute.Utils;
 using YukariToolBox.FormatLog;
 
@@ -9,14 +10,22 @@ namespace OneBot_CommandRoute.CommandRoute.Mixin
     public static class StartupMixin
     {
         /// <summary>
-        /// 将 OneBot 服务注册到服务容器。包含：注册 OneBot 服务、指令服务、CQ:Json 服务和日志服务。
+        /// 将 OneBot 服务注册到服务容器。包含：OneBot 服务、指令服务、CQ:Json 服务和日志服务。
         /// </summary>
         /// <param name="services"></param>
         public static void ConfigureOneBot(this IServiceCollection services)
-        {            
+        {   
+            // OneBot
             services.AddSingleton<IBotService, BotService>();
+            
+            // 指令路由服务
             services.AddSingleton<ICommandService, CommandService>();
+            
+            // CQ:Json 路由服务
             services.AddSingleton<ICQJsonRouterService, CQJsonRouterService>();
+            services.AddSingleton<IOneBotController, CQJsonRouterController>();
+            
+            // 日志服务
             services.AddSingleton<ILogService, YukariToolBoxLogger>();
         }
     }
