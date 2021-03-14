@@ -20,7 +20,7 @@ namespace OneBot_CommandRoute.CommandRoute.OneBotControllers
         /// <summary>
         /// 路由服务
         /// </summary>
-        private readonly ICQJsonRouterService? _routeService;
+        private readonly ICQJsonRouterService _routeService;
 
         public CQJsonRouterController(ICommandService commandService, IServiceProvider serviceProvider)
         {
