@@ -17,8 +17,7 @@ namespace OneBot.CommandRoute.Attributes
         /// <summary>
         /// 指令别名
         /// </summary>
-        [Obsolete("Alias will be remove in future version. Please use multiple [Command] instead.")]
-        public string Alias { get; set; } = "";
+        public string[] Alias { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// 事件类型

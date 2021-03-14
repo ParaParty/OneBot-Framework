@@ -262,7 +262,7 @@ namespace OneBot.CommandRoute.Services.Implements
         private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, CommandAttribute attribute)
         {
             List<string> command = attribute.Pattern.Trim().Split(' ').ToList();
-            List<string> aliasList = attribute.Alias.Trim().Split(',').Select(s => s.Trim()).Where(s => s.Length > 0)
+            List<string> aliasList = attribute.Alias.Select(s => s.Trim()).Where(s => s.Length > 0)
                 .ToList();
 
             try
