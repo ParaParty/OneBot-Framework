@@ -20,9 +20,9 @@ namespace OneBot.CommandRoute.Services.Implements
     public class CommandService : ICommandService
     {
         /// <summary>
-        /// CQHTTP 服务
+        /// 服务容器
         /// </summary>
-        private IServiceProvider ServiceProvider { get; set; }
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// 指令匹配树根节点
@@ -40,6 +40,11 @@ namespace OneBot.CommandRoute.Services.Implements
         private ILogger<CommandService> _logger;
 
         /// <summary>
+        /// CQ:Json 路由
+        /// </summary>
+        private ICQJsonRouterService? _jsonRouterService;
+
+        /// <summary>
         /// 事件中心
         /// </summary>
         public EventManager Event { get; set; }
@@ -47,7 +52,8 @@ namespace OneBot.CommandRoute.Services.Implements
         public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory,
             ILogger<CommandService> logger)
         {
-            ServiceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
+            _jsonRouterService = _serviceProvider.GetService<ICQJsonRouterService>();
             _scopeFactory = scopeFactory;
             _logger = logger;
             Event = new EventManager();
@@ -217,7 +223,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// </summary>
         public void RegisterCommand()
         {
-            var onebotController = ServiceProvider.GetServices<IOneBotController>();
+            var onebotController = _serviceProvider.GetServices<IOneBotController>();
             foreach (var s in onebotController)
             {
                 var clazz = s.GetType();
@@ -225,16 +231,34 @@ namespace OneBot.CommandRoute.Services.Implements
                 foreach (var method in methods)
                 {
                     var methodAttributes = method.CustomAttributes;
-                    if (System.Attribute.IsDefined(method, typeof(CommandAttribute)))
+                    if (Attribute.IsDefined(method, typeof(CommandAttribute)))
                     {
-                        var attr = (CommandAttribute) System.Attribute.GetCustomAttribute(method,
-                            typeof(CommandAttribute));
+                        var attr = (CommandAttribute) Attribute.GetCustomAttribute(method, typeof(CommandAttribute));
                         RegisterCommand(s, method, attr);
+                    }
+                    
+                    if (Attribute.IsDefined(method, typeof(CQJsonAttribute)))
+                    {
+                        if (_jsonRouterService == null)
+                        {
+                            _logger.LogWarning($"检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。${clazz.FullName}::${method.Name}");
+                        }
+                        else
+                        {
+                            var attr = (CQJsonAttribute) Attribute.GetCustomAttribute(method, typeof(CQJsonAttribute));
+                            _jsonRouterService.Register(s, method, attr);
+                        }
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// 将 [Command] 中的 pattern 和 alias 拆解为多个 pattern。
+        /// </summary>
+        /// <param name="commandObj"></param>
+        /// <param name="commandMethod"></param>
+        /// <param name="attribute"></param>
         private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, CommandAttribute attribute)
         {
             List<string> command = attribute.Pattern.Trim().Split(' ').ToList();
@@ -269,6 +293,14 @@ namespace OneBot.CommandRoute.Services.Implements
             }
         }
 
+        /// <summary>
+        /// 将 pattern 拆解为多个参数。
+        /// </summary>
+        /// <param name="commandObj"></param>
+        /// <param name="commandMethod"></param>
+        /// <param name="matchPattern"></param>
+        /// <param name="attribute"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, List<string> matchPattern,
             CommandAttribute attribute)
         {

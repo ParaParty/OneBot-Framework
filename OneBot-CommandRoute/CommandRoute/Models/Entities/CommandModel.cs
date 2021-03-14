@@ -109,19 +109,13 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <returns>0 继续 / 1 阻断</returns>
         public int Invoke(IServiceScope scope, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLaxer laxer)
         {
-            // 检查事件类型是否正确
-            if (baseSoraEventArgs is PrivateMessageEventArgs &&
-                (Attribute.EventType & EventType.PrivateMessage) == 0)
+            switch (baseSoraEventArgs)
             {
-                return 0;
+                // 检查事件类型是否正确
+                case PrivateMessageEventArgs when (Attribute.EventType & EventType.PrivateMessage) == 0:
+                case GroupMessageEventArgs when (Attribute.EventType & EventType.GroupMessage) == 0:
+                    return 0;
             }
-
-            if (baseSoraEventArgs is GroupMessageEventArgs &&
-                (Attribute.EventType & EventType.GroupMessage) == 0)
-            {
-                return 0;
-            }
-
 
             // 尝试解析剩下的所有参数
             int step = laxer.ParsedArguments.Count;
@@ -202,12 +196,12 @@ namespace OneBot.CommandRoute.Models.Entities
                 if (functionArgs[i] != null) continue;
 
                 var parameter = functionParametersList[i];
-                var ParameterType = parameter.ParameterType;
+                var parameterType = parameter.ParameterType;
 
                 // 判断是否需要传递所有的参数
                 if (System.Attribute.IsDefined(parameter, typeof(ParsedArgumentsAttribute)))
                 {
-                    if (ParameterType == typeof(object[]))
+                    if (parameterType == typeof(object[]))
                     {
                         functionArgs[i] = laxer.GetNowParsedToken().ToArray();
                     }
@@ -220,33 +214,33 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
 
                 // 判断是否需要传递事件信息
-                if (ParameterType == typeof(BaseSoraEventArgs))
+                if (parameterType == typeof(BaseSoraEventArgs))
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
 
-                if (ParameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs)
+                if (parameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs)
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
 
-                if (ParameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
+                if (parameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
 
                 // 判断是否需要传递 Scope 信息
-                if (ParameterType == typeof(IServiceScope))
+                if (parameterType == typeof(IServiceScope))
                 {
                     functionArgs[i] = scope;
                     continue;
                 }
 
                 // 从 Scope 中获得参数
-                functionArgs[i] = scope.ServiceProvider.GetService(ParameterType);
+                functionArgs[i] = scope.ServiceProvider.GetService(parameterType);
             }
 
             // TODO 判断是否有基本类型但是是 NOTNULL 的。
@@ -264,6 +258,7 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
+                // ReSharper disable once PossibleNullReferenceException
                 return (int) CommandMethod.Invoke(CommandObj, functionArgs);
             }
 

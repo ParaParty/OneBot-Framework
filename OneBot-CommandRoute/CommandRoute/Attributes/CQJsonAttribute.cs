@@ -4,21 +4,15 @@ using OneBot.CommandRoute.Models.Enumeration;
 namespace OneBot.CommandRoute.Attributes
 {
     /// <summary>
-    /// 指令路由
+    /// CQ:Json 路由
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class CommandAttribute : Attribute
+    public class CQJsonAttribute : Attribute
     {
         /// <summary>
         /// 指令格式
         /// </summary>
-        public string Pattern { get; private set; } = "";
-
-        /// <summary>
-        /// 指令别名
-        /// </summary>
-        [Obsolete("Alias will be remove in future version. Please use multiple [Command] instead.")]
-        public string Alias { get; set; } = "";
+        public string AppId { get; private set; } = "";
 
         /// <summary>
         /// 事件类型
@@ -26,12 +20,12 @@ namespace OneBot.CommandRoute.Attributes
         public EventType EventType { get; set; } = EventType.GroupMessage;
 
         /// <summary>
-        /// 指令路由
+        /// CQ:Json 路由
         /// </summary>
-        /// <param name="pattern">指令格式</param>
-        public CommandAttribute(string pattern)
+        /// <param name="appId">AppId</param>
+        public CQJsonAttribute(string appId)
         {
-            Pattern = pattern;
+            AppId = appId;
         }
     }
 }
