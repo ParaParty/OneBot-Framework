@@ -9,7 +9,7 @@ namespace OneBot.CommandRoute.Models.VO
     {
         /// <summary>模式 ws / reverse_ws</summary>
         [JsonProperty("Mode")]
-        public string Mode { get; set; } = "ws";
+        public string Mode { get; set; }
 
         /// <summary>反向服务器监听地址</summary>
         [JsonProperty("Location")]
@@ -48,11 +48,11 @@ namespace OneBot.CommandRoute.Models.VO
         public ISoraConfig ToServiceConfig()
         {
             var mode = Mode?.ToLower();
-            if (mode == null && string.IsNullOrEmpty(Location))
+            if (mode == null && !string.IsNullOrEmpty(Location))
             {
                 mode = "reverse_ws";
             }
-            if (mode == null && string.IsNullOrEmpty(Host))
+            if (mode == null && !string.IsNullOrEmpty(Host))
             {
                 mode = "ws";
             }
@@ -71,7 +71,7 @@ namespace OneBot.CommandRoute.Models.VO
                 };
             }
             
-            if (Mode == "ws" && !string.IsNullOrEmpty(Host))
+            if (mode == "ws" && !string.IsNullOrEmpty(Host))
             {
                 return new ClientConfig
                 {
