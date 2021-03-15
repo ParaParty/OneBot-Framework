@@ -1,5 +1,6 @@
 using System;
 using Newtonsoft.Json;
+using Sora.Interfaces;
 using Sora.OnebotModel;
 
 namespace OneBot.CommandRoute.Models.VO
@@ -44,7 +45,7 @@ namespace OneBot.CommandRoute.Models.VO
         [JsonProperty("ApiTimeOut")]
         public uint ApiTimeOut { get; set; } = 1000;
 
-        public object ToServerConfig()
+        public ISoraConfig ToServiceConfig()
         {
             var mode = Mode?.ToLower();
             if (mode == null && string.IsNullOrEmpty(Location))

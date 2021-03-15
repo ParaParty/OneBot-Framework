@@ -2,8 +2,9 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneBot.CommandRoute.Models.VO;
-using OneBot_CommandRoute.CommandRoute.Utils;
-using Sora.Server;
+using Sora.Interfaces;
+using Sora.Net;
+using Sora.OnebotModel;
 using YukariToolBox.FormatLog;
 
 namespace OneBot.CommandRoute.Services.Implements
@@ -16,12 +17,12 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// Sora WS 服务器
         /// </summary>
-        public SoraWSServer Server { get; set; }
+        public ISoraService SoraService { get; set; }
 
         /// <summary>
         /// Sora WS 服务器设置
         /// </summary>
-        private ServerConfig ServerConfig { get; set; }
+        private ISoraConfig ServiceConfig { get; set; }
 
         /// <summary>
         /// 依赖注入服务
@@ -34,22 +35,29 @@ namespace OneBot.CommandRoute.Services.Implements
 
             // 配置日志
             var logger = ServiceProvider.GetService<ILogService>();
-            if (logger != null) YukariToolBox.FormatLog.Log.SetLoggerService(logger);
+            if (logger != null) Log.SetLoggerService(logger);
 
-            // 配置 CQHTTP
+            // 配置 CQHTTP Sora
             var cqHttpConfig = cqHttpServerConfigModel?.Value;
-            ServerConfig = cqHttpConfig == null ? new ServerConfig() : cqHttpConfig.ToServerConfig();
-            Server = new SoraWSServer(ServerConfig);
+            ServiceConfig = cqHttpConfig == null ? new ServerConfig() : cqHttpConfig.ToServiceConfig();
+            // SoraService = SoraServiceFactory.CreateInstance(ServiceConfig);
+            SoraService =  ServiceConfig switch
+            {
+                ClientConfig s1 => new SoraWebsocketClient(s1),
+                ServerConfig s2 => new SoraWebsocketServer(s2),
+                _ => throw new ArgumentException("接收到了不认识的 Sora 配置对象。")
+            };
         }
 
         public void Start()
         {
             // 初始化指令系统
             var commandService = ServiceProvider.GetService<ICommandService>();
+            // ReSharper disable once PossibleNullReferenceException
             commandService.RegisterCommand();
 
             // 启动 CQHTTP
-            Server.StartServer();
+            SoraService.StartService();
         }
     }
 }

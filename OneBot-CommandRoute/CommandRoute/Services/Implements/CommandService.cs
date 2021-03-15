@@ -59,28 +59,28 @@ namespace OneBot.CommandRoute.Services.Implements
             Event = new EventManager();
             _matchingRootNode.IsRoot = true;
 
-            bot.Server.Event.OnClientConnect += OnGeneralEvent;
-            bot.Server.Event.OnGroupRequest += OnGeneralEvent;
-            bot.Server.Event.OnFriendRequest += OnGeneralEvent;
-            bot.Server.Event.OnFileUpload += OnGeneralEvent;
-            bot.Server.Event.OnGroupAdminChange += OnGeneralEvent;
-            bot.Server.Event.OnGroupMemberChange += OnGeneralEvent;
-            bot.Server.Event.OnGroupMemberMute += OnGeneralEvent;
-            bot.Server.Event.OnFriendAdd += OnGeneralEvent;
-            bot.Server.Event.OnGroupRecall += OnGeneralEvent;
-            bot.Server.Event.OnFriendRecall += OnGeneralEvent;
-            bot.Server.Event.OnGroupCardUpdate += OnGeneralEvent;
-            bot.Server.Event.OnGroupPoke += OnGeneralEvent;
-            bot.Server.Event.OnLuckyKingEvent += OnGeneralEvent;
-            bot.Server.Event.OnHonorEvent += OnGeneralEvent;
-            bot.Server.Event.OnOfflineFileEvent += OnGeneralEvent;
-            bot.Server.Event.OnClientStatusChangeEvent += OnGeneralEvent;
-            bot.Server.Event.OnEssenceChange += OnGeneralEvent;
+            bot.SoraService.Event.OnClientConnect += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupRequest += OnGeneralEvent;
+            bot.SoraService.Event.OnFriendRequest += OnGeneralEvent;
+            bot.SoraService.Event.OnFileUpload += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupAdminChange += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupMemberChange += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupMemberMute += OnGeneralEvent;
+            bot.SoraService.Event.OnFriendAdd += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupRecall += OnGeneralEvent;
+            bot.SoraService.Event.OnFriendRecall += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupCardUpdate += OnGeneralEvent;
+            bot.SoraService.Event.OnGroupPoke += OnGeneralEvent;
+            bot.SoraService.Event.OnLuckyKingEvent += OnGeneralEvent;
+            bot.SoraService.Event.OnHonorEvent += OnGeneralEvent;
+            bot.SoraService.Event.OnOfflineFileEvent += OnGeneralEvent;
+            bot.SoraService.Event.OnClientStatusChangeEvent += OnGeneralEvent;
+            bot.SoraService.Event.OnEssenceChange += OnGeneralEvent;
 
-            bot.Server.Event.OnGroupMessage += EventOnGroupMessage;
-            bot.Server.Event.OnPrivateMessage += EventOnPrivateMessage;
+            bot.SoraService.Event.OnGroupMessage += EventOnGroupMessage;
+            bot.SoraService.Event.OnPrivateMessage += EventOnPrivateMessage;
 
-            bot.Server.Event.OnSelfMessage += EventOnSelfMessage;
+            bot.SoraService.Event.OnSelfMessage += EventOnSelfMessage;
         }
 
         #region 事件处理

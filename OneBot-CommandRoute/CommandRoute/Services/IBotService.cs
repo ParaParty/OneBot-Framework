@@ -1,4 +1,4 @@
-using Sora.Server;
+using Sora.Interfaces;
 
 namespace OneBot.CommandRoute.Services
 {
@@ -7,7 +7,8 @@ namespace OneBot.CommandRoute.Services
     /// </summary>
     public interface IBotService
     {
-        SoraWSServer Server { get; set; }
+        ISoraService SoraService { get; set; }
+        
         void Start();
     }
 }
