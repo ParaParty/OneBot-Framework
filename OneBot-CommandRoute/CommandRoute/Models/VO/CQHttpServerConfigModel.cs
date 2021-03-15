@@ -11,11 +11,7 @@ namespace OneBot.CommandRoute.Models.VO
         [JsonProperty("Mode")]
         public string Mode { get; set; }
 
-        /// <summary>反向服务器监听地址</summary>
-        [JsonProperty("Location")]
-        public string Location { get; set; } = null;
-
-        /// <summary>反向服务器监听地址</summary>
+        /// <summary>反向连接服务器监听地址 / 正向连接服务器目标地址</summary>
         [JsonProperty("Host")]
         public string Host { get; set; } = null;
 
@@ -48,44 +44,31 @@ namespace OneBot.CommandRoute.Models.VO
         public ISoraConfig ToServiceConfig()
         {
             var mode = Mode?.ToLower();
-            if (mode == null && !string.IsNullOrEmpty(Location))
-            {
-                mode = "reverse_ws";
-            }
-            if (mode == null && !string.IsNullOrEmpty(Host))
-            {
-                mode = "ws";
-            }
 
-            if (mode == "reverse_ws" && !string.IsNullOrEmpty(Location))
+            return mode switch
             {
-                return new ServerConfig
-                {
-                    Location = Location,
-                    Port = Port,
-                    AccessToken = AccessToken,
-                    UniversalPath = UniversalPath,
-                    HeartBeatTimeOut = HeartBeatTimeOut,
-                    ApiTimeOut = ApiTimeOut,
-                    EnableSoraCommandManager = false
-                };
-            }
-            
-            if (mode == "ws" && !string.IsNullOrEmpty(Host))
-            {
-                return new ClientConfig
+                "reverse_ws" => new ServerConfig
                 {
                     Host = Host,
                     Port = Port,
                     AccessToken = AccessToken,
                     UniversalPath = UniversalPath,
-                    HeartBeatTimeOut = HeartBeatTimeOut,
-                    ApiTimeOut = ApiTimeOut,
+                    HeartBeatTimeOut = TimeSpan.FromSeconds(HeartBeatTimeOut),
+                    ApiTimeOut = TimeSpan.FromMilliseconds(ApiTimeOut),
                     EnableSoraCommandManager = false
-                };
-            }
-
-            throw new ArgumentException(@"There is something wrong in OneBot settings.");
+                },
+                "ws" => new ClientConfig
+                {
+                    Host = Host,
+                    Port = Port,
+                    AccessToken = AccessToken,
+                    UniversalPath = UniversalPath,
+                    HeartBeatTimeOut = TimeSpan.FromSeconds(HeartBeatTimeOut),
+                    ApiTimeOut = TimeSpan.FromMilliseconds(ApiTimeOut),
+                    EnableSoraCommandManager = false
+                },
+                _ => throw new ArgumentException(@"There is something wrong in OneBot settings.")
+            };
         }
     }
 }
