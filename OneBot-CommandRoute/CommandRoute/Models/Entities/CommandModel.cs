@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Sora.Entities.CQCodes;
 using Sora.Enumeration;
 using Sora.EventArgs.SoraEvent;
 using Sora.Entities;
@@ -12,6 +11,7 @@ using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Laxer;
 using OneBot.CommandRoute.Models.Enumeration;
 using OneBot_CommandRoute.CommandRoute.Attributes;
+using Sora.Entities.MessageElement;
 
 namespace OneBot.CommandRoute.Models.Entities
 {
@@ -293,7 +293,7 @@ namespace OneBot.CommandRoute.Models.Entities
 
             if (arg is CQCode)
             {
-                var s = arg as CQCode;
+                var s = (CQCode)arg;
                 try
                 {
                     return TryParseCQCode(baseSoraEventArgs, s, type, out result);
@@ -318,14 +318,14 @@ namespace OneBot.CommandRoute.Models.Entities
         private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, CQCode arg, Type type, out object result)
         {
             bool ret = false;
-            if (type == arg.CQData.GetType())
+            if (type == arg.DataObject.GetType())
             {
                 ret = true;
                 result = arg;
             }
-            else if (arg.Function == CQFunction.At)
+            else if (arg.MessageType == CQType.At)
             {
-                var cast = (Sora.Entities.CQCodes.CQCodeModel.At) arg.CQData;
+                var cast = (Sora.Entities.MessageElement.CQModel.At) arg.DataObject;
                 var succeed = long.TryParse(cast.Traget, out long uid);
                 if (!succeed)
                 {
@@ -348,25 +348,27 @@ namespace OneBot.CommandRoute.Models.Entities
             }
             else
             {
-                try
-                {
-                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
-                    if (converter != null)
-                    {
-                        result = converter.Invoke(null, new[] {arg});
-                        ret = true;
-                    }
-                    else
-                    {
-                        result = null;
-                        ret = false;
-                    }
-                }
-                catch (Exception)
-                {
-                    result = null;
-                    ret = false;
-                }
+                // try
+                // {
+                //     var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                //     if (converter != null)
+                //     {
+                //         result = converter.Invoke(null, new[] {arg});
+                //         ret = true;
+                //     }
+                //     else
+                //     {
+                //         result = null;
+                //         ret = false;
+                //     }
+                // }
+                // catch (Exception)
+                // {
+                //     result = null;
+                //     ret = false;
+                // }
+                result = null;
+                return false;
             }
 
             return ret;

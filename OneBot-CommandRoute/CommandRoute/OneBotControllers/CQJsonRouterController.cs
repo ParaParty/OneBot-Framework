@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OneBot.CommandRoute.Services;
-using Sora.Entities.CQCodes;
+using Sora.Entities.MessageElement;
+using Sora.Entities.MessageElement.CQModel;
 using Sora.Enumeration;
 using Sora.EventArgs.SoraEvent;
 
@@ -36,13 +37,13 @@ namespace OneBot_CommandRoute.CommandRoute.OneBotControllers
 
         private int EventOnGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs eventArgs)
         {
-            var p = eventArgs.Message.MessageList.FirstOrDefault();
+            var p = eventArgs.Message.MessageBody.FirstOrDefault();
             return p == null ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
         private int EventOnPrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs eventArgs)
         {
-            var p = eventArgs.Message.MessageList.FirstOrDefault();
+            var p = eventArgs.Message.MessageBody.FirstOrDefault();
             return p == null ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
@@ -53,9 +54,9 @@ namespace OneBot_CommandRoute.CommandRoute.OneBotControllers
 
             try
             {
-                if (firstElement.Function == CQFunction.Json)
+                if (firstElement.MessageType == CQType.Json)
                 {
-                    var jsonData = ((Sora.Entities.CQCodes.CQCodeModel.Code)firstElement.CQData).Content;
+                    var jsonData = ((Code)firstElement.DataObject).Content;
                     var jObject = JObject.Parse(jsonData);
 
                     if (jObject.TryGetValue("app", out var jToken))

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Sora.Entities.CQCodes;
-using Sora.Entities.CQCodes.CQCodeModel;
+using Sora.Entities.MessageElement.CQModel;
+using Sora.Entities.MessageElement;
 using Sora.Enumeration;
 
 namespace OneBot.CommandRoute.Laxer
@@ -18,7 +18,7 @@ namespace OneBot.CommandRoute.Laxer
         /// <summary>
         /// 源信息
         /// </summary>
-        public List<CQCode> SourceCommand { get; private set; }
+        public IList<CQCode> SourceCommand { get; private set; }
 
         /// <summary>
         /// 已经解析了的参数信息
@@ -39,7 +39,7 @@ namespace OneBot.CommandRoute.Laxer
         /// 构造函数
         /// </summary>
         /// <param name="s">被解析的字符串</param>
-        public CommandLaxer(List<CQCode> s)
+        public CommandLaxer(IList<CQCode> s)
         {
             SourceCommand = s;
         }
@@ -60,7 +60,7 @@ namespace OneBot.CommandRoute.Laxer
             if (SourceCommand.Count == 0) return false;
 
             // 如果第一个消息段为回复消息
-            if (SourceCommand[0].Function == CQFunction.Reply)
+            if (SourceCommand[0].MessageType == CQType.Reply)
             {
                 // 如果消息段长度只有1则不合法
                 if (SourceCommand.Count < 2) return false;
@@ -72,9 +72,9 @@ namespace OneBot.CommandRoute.Laxer
             var flag = false;
 
             // 兼容 回复+At+(空格+正文) 的奇怪设计
-            if (scanObjectPointer == 1 && SourceCommand[scanObjectPointer].Function == CQFunction.At)
+            if (scanObjectPointer == 1 && SourceCommand[scanObjectPointer].MessageType == CQType.At)
             {
-                if (SourceCommand[scanObjectPointer].Function == CQFunction.At)
+                if (SourceCommand[scanObjectPointer].MessageType == CQType.At)
                 {
                     // 如果消息段长度只有2则不合法
                     if (SourceCommand.Count < 3) return false;
@@ -85,18 +85,18 @@ namespace OneBot.CommandRoute.Laxer
             }
 
             // 如果扫描起始消息段不为文本则不合法
-            if (SourceCommand[scanObjectPointer].Function != CQFunction.Text) return false;
-            s = ((Text) (SourceCommand[scanObjectPointer].CQData)).Content;
+            if (SourceCommand[scanObjectPointer].MessageType != CQType.Text) return false;
+            s = ((Text) SourceCommand[scanObjectPointer].DataObject).Content;
 
             // 兼容 回复+空格+At+正文 的奇怪设计
             if (scanObjectPointer == 1 && string.IsNullOrWhiteSpace(s))
             {
                 if (SourceCommand.Count < 4) return false;
-                if (SourceCommand[2].Function != CQFunction.At) return false;
-                if (SourceCommand[3].Function != CQFunction.Text) return false;
+                if (SourceCommand[2].MessageType != CQType.At) return false;
+                if (SourceCommand[3].MessageType != CQType.Text) return false;
 
                 scanObjectPointer = 3;
-                s = ((Text) (SourceCommand[scanObjectPointer].CQData)).Content;
+                s = ((Text) SourceCommand[scanObjectPointer].DataObject).Content;
 
                 flag = true;
             }
@@ -104,16 +104,16 @@ namespace OneBot.CommandRoute.Laxer
             if (flag)
             {
                 // 舍弃空白段
-                while (SourceCommand[scanObjectPointer].Function == CQFunction.Text)
+                while (SourceCommand[scanObjectPointer].MessageType == CQType.Text)
                 {
-                    if (!string.IsNullOrWhiteSpace(((Text) SourceCommand[scanObjectPointer].CQData).Content)) break;
+                    if (!string.IsNullOrWhiteSpace(((Text) SourceCommand[scanObjectPointer].DataObject).Content)) break;
                     scanObjectPointer++;
                     if (scanObjectPointer == SourceCommand.Count) return false;
                 }
 
                 // 如果舍弃空白段后不是文本段则不合法
-                if (SourceCommand[scanObjectPointer].Function != CQFunction.Text) return false;
-                s = ((Text) (SourceCommand[scanObjectPointer].CQData)).Content;
+                if (SourceCommand[scanObjectPointer].MessageType != CQType.Text) return false;
+                s = ((Text) (SourceCommand[scanObjectPointer].DataObject)).Content;
 
                 // 舍弃开头空白字符
                 while (scanStringPointer < s.Length && BLANKCHARACTER.Contains(s[scanStringPointer]))
@@ -153,7 +153,7 @@ namespace OneBot.CommandRoute.Laxer
             var s = SourceCommand[ScanObjectPointer];
 
             // 如果当前扫描到的消息段不是文本消息段则返回当前消息段
-            if (s.Function != CQFunction.Text)
+            if (s.MessageType != CQType.Text)
             {
                 ScanObjectPointer++;
                 ScanStringPointer = 0;
@@ -162,7 +162,7 @@ namespace OneBot.CommandRoute.Laxer
             }
 
             // 获取当前消息段的文本
-            var str = ((Text) (s.CQData)).Content;
+            var str = ((Text) (s.DataObject)).Content;
             var token = "";
 
             while (ScanStringPointer < str.Length && BLANKCHARACTER.Contains(str[ScanStringPointer]))
@@ -187,7 +187,7 @@ namespace OneBot.CommandRoute.Laxer
                     var ret = SourceCommand[ScanObjectPointer];
 
                     // 如果下一个消息段不是文本则返回
-                    if (ret.Function != CQFunction.Text)
+                    if (ret.MessageType != CQType.Text)
                     {
                         ScanObjectPointer++;
                         ParsedArguments.Add(ret);
@@ -196,7 +196,7 @@ namespace OneBot.CommandRoute.Laxer
 
                     // 如果下一个消息段是文本则继续扫描
                     s = ret;
-                    str = ((Text) (s.CQData)).Content;
+                    str = ((Text) (s.DataObject)).Content;
                 }
             }
 
@@ -228,7 +228,7 @@ namespace OneBot.CommandRoute.Laxer
 
             if (ScanStringPointer != 0)
             {
-                ret.Add(((Text) (SourceCommand[ScanObjectPointer].CQData)).Content.Substring(ScanStringPointer));
+                ret.Add(((Text) (SourceCommand[ScanObjectPointer].DataObject)).Content.Substring(ScanStringPointer));
             }
             else
             {
