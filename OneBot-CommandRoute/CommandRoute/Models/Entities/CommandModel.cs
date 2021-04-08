@@ -315,17 +315,17 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, CQCode arg, Type type, out object result)
+        private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object result)
         {
             bool ret = false;
-            if (type == arg.DataObject.GetType())
+            if (type == ((CQCode)arg).DataObject.GetType())
             {
                 ret = true;
                 result = arg;
             }
-            else if (arg.MessageType == CQType.At)
+            else if (((CQCode)arg).MessageType == CQType.At)
             {
-                var cast = (Sora.Entities.MessageElement.CQModel.At) arg.DataObject;
+                var cast = (Sora.Entities.MessageElement.CQModel.At) ((CQCode)arg).DataObject;
                 var succeed = long.TryParse(cast.Traget, out long uid);
                 if (!succeed)
                 {
@@ -348,25 +348,25 @@ namespace OneBot.CommandRoute.Models.Entities
             }
             else
             {
-                // try
-                // {
-                //     var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
-                //     if (converter != null)
-                //     {
-                //         result = converter.Invoke(null, new[] {arg});
-                //         ret = true;
-                //     }
-                //     else
-                //     {
-                //         result = null;
-                //         ret = false;
-                //     }
-                // }
-                // catch (Exception)
-                // {
-                //     result = null;
-                //     ret = false;
-                // }
+                try
+                {
+                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                    if (converter != null)
+                    {
+                        result = converter.Invoke(null, new[] {arg});
+                        ret = true;
+                    }
+                    else
+                    {
+                        result = null;
+                        ret = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    result = null;
+                    ret = false;
+                }
                 result = null;
                 return false;
             }
