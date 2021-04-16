@@ -40,7 +40,7 @@ namespace OneBot.CommandRoute.Services.Implements
             // 配置 CQHTTP Sora
             var cqHttpConfig = cqHttpServerConfigModel?.Value;
             ServiceConfig = cqHttpConfig == null ? new ServerConfig() : cqHttpConfig.ToServiceConfig();
-            SoraService = SoraServiceFactory.CreateInstance(ServiceConfig);
+            SoraService = SoraServiceFactory.CreateService(ServiceConfig);
         }
 
         public void Start()
