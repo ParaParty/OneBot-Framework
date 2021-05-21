@@ -8,7 +8,7 @@ using Sora.EventArgs.SoraEvent;
 using Sora.Entities;
 using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Attributes;
-using OneBot.CommandRoute.Laxer;
+using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Enumeration;
 using OneBot_CommandRoute.CommandRoute.Attributes;
 using Sora.Entities.MessageElement;
@@ -105,9 +105,9 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="scope">事件上下文</param>
         /// <param name="sender">事件触发者</param>
         /// <param name="baseSoraEventArgs">Sora 事件对象</param>
-        /// <param name="laxer">指令解析器</param>
+        /// <param name="lexer">指令解析器</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int Invoke(IServiceScope scope, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLaxer laxer)
+        public int Invoke(IServiceScope scope, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLexer lexer)
         {
             switch (baseSoraEventArgs)
             {
@@ -118,10 +118,10 @@ namespace OneBot.CommandRoute.Models.Entities
             }
 
             // 尝试解析剩下的所有参数
-            int step = laxer.ParsedArguments.Count;
+            int step = lexer.ParsedArguments.Count;
 
             List<object> matchedArgs = new List<object>();
-            matchedArgs.AddRange(laxer.ParsedArguments);
+            matchedArgs.AddRange(lexer.ParsedArguments);
             for (int i = step; i < ParametersName.Count; i++)
             {
                 matchedArgs.Add(null);
@@ -130,7 +130,7 @@ namespace OneBot.CommandRoute.Models.Entities
             bool needExecute = true;
             for (int i = step; i < ParametersName.Count; i++)
             {
-                var newParser = laxer.Clone();
+                var newParser = lexer.Clone();
                 // 解析一个新的
 
                 object newArg = null;
@@ -167,7 +167,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 if (succeed)
                 {
                     matchedArgs[i] = newArg;
-                    laxer = newParser;
+                    lexer = newParser;
                 }
                 else
                 {
@@ -203,7 +203,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 {
                     if (parameterType == typeof(object[]))
                     {
-                        functionArgs[i] = laxer.GetNowParsedToken().ToArray();
+                        functionArgs[i] = lexer.GetNowParsedToken().ToArray();
                     }
                     else
                     {

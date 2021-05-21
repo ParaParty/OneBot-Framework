@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot.CommandRoute.Laxer;
+using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Entities;
 using Sora.EventArgs.SoraEvent;
 
@@ -52,18 +52,18 @@ namespace OneBot.CommandRoute.Command
         /// <param name="scope">事件上下文</param>
         /// <param name="sender">事件触发者</param>
         /// <param name="e">Sora 事件对象</param>
-        /// <param name="laxer">指令解析器</param>
+        /// <param name="lexer">指令解析器</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLaxer laxer)
+        public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer)
         {
-            if (!laxer.IsValid()) return 0;
+            if (!lexer.IsValid()) return 0;
 
-            var oldParser = laxer.Clone();
+            var oldParser = lexer.Clone();
 
             object nextToken = null;
             try
             {
-                nextToken = laxer.GetNext();
+                nextToken = lexer.GetNext();
             }
             catch (ParserToTheEndException)
             {
@@ -85,7 +85,7 @@ namespace OneBot.CommandRoute.Command
                         if (nextStep != tokenUpper) continue;
                     }
 
-                    var ret = s.Value.ProcessingCommandMapping(scope, sender, e, laxer);
+                    var ret = s.Value.ProcessingCommandMapping(scope, sender, e, lexer);
                     if (ret != 0) return ret;
                 }
             }

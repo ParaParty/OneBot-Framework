@@ -3,12 +3,12 @@ using Sora.Entities.MessageElement.CQModel;
 using Sora.Entities.MessageElement;
 using Sora.Enumeration;
 
-namespace OneBot.CommandRoute.Laxer
+namespace OneBot.CommandRoute.Lexer
 {
     /// <summary>
     /// 指令解析器
     /// </summary>
-    public class CommandLaxer
+    public class CommandLexer
     {
         /// <summary>
         /// 空白字符
@@ -39,7 +39,7 @@ namespace OneBot.CommandRoute.Laxer
         /// 构造函数
         /// </summary>
         /// <param name="s">被解析的字符串</param>
-        public CommandLaxer(IList<CQCode> s)
+        public CommandLexer(IList<CQCode> s)
         {
             SourceCommand = s;
         }
@@ -242,12 +242,12 @@ namespace OneBot.CommandRoute.Laxer
         }
 
         /// <summary>
-        /// 克隆 Laxer 的当前状态
+        /// 克隆 Lexer 的当前状态
         /// </summary>
-        /// <returns>新的 Laxer</returns>
-        public CommandLaxer Clone()
+        /// <returns>新的 Lexer</returns>
+        public CommandLexer Clone()
         {
-            CommandLaxer ret = new CommandLaxer(SourceCommand);
+            CommandLexer ret = new CommandLexer(SourceCommand);
             ret.ParsedArguments = new List<object>(ParsedArguments);
             ret.ScanObjectPointer = ScanObjectPointer;
             ret.ScanStringPointer = ScanStringPointer;

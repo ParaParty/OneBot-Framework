@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Command;
 using OneBot.CommandRoute.Events;
-using OneBot.CommandRoute.Laxer;
+using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Entities;
 using Sora.EventArgs.SoraEvent;
 using System;
@@ -174,7 +174,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 {
                     if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
                     if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
-                        new CommandLaxer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
+                        new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
                     Event.Fire(scope, e);
                 }
                 catch (Exception e1)
@@ -201,7 +201,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 {
                     if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
                     if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
-                        new CommandLaxer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
+                        new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
                     Event.Fire(scope, e);
                 }
                 catch (Exception e1)

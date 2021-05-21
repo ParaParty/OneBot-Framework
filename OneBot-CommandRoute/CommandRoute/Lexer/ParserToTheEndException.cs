@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OneBot.CommandRoute.Laxer
+namespace OneBot.CommandRoute.Lexer
 {
     class ParserToTheEndException : Exception
     {
