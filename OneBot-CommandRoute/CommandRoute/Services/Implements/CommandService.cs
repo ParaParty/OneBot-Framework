@@ -57,7 +57,7 @@ namespace OneBot.CommandRoute.Services.Implements
             _scopeFactory = scopeFactory;
             _logger = logger;
             Event = new EventManager();
-            _matchingRootNode.IsRoot = true;
+            _matchingRootNode.IsRoot = false;
 
             bot.SoraService.Event.OnClientConnect += OnGeneralEvent;
             bot.SoraService.Event.OnGroupRequest += OnGeneralEvent;
