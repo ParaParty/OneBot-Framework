@@ -13,7 +13,6 @@ namespace OneBot_CommandRoute.CommandRoute.OneBotControllers
 {
     public class CQJsonRouterController: IOneBotController
     {
-        public int Priority => 98;
         /// <summary>
         /// 服务容器
         /// </summary>

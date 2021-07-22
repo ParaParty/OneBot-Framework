@@ -25,6 +25,10 @@ namespace OneBot.CommandRoute.Attributes
         public EventType EventType { get; set; } = EventType.GroupMessage;
 
         /// <summary>
+        /// 是否可以被拦截
+        /// </summary>
+        public bool CanStop { get; set; } = true;
+        /// <summary>
         /// 指令路由
         /// </summary>
         /// <param name="pattern">指令格式</param>

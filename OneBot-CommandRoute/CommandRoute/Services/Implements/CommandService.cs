@@ -172,7 +172,12 @@ namespace OneBot.CommandRoute.Services.Implements
                 Exception exception = null;
                 try
                 {
-                    if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
+                    if (Event.FirePrivateMessageReceived(scope, e) != 0)
+                    {
+                        _matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                            new CommandLexer(e.Message.MessageBody), false);
+                        return ValueTask.CompletedTask;
+                    }
                     if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
                         new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
                     Event.Fire(scope, e);
@@ -199,7 +204,12 @@ namespace OneBot.CommandRoute.Services.Implements
                 Exception exception = null;
                 try
                 {
-                    if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
+                    if (Event.FireGroupMessageReceived(scope, e) != 0)
+                    {
+                        _matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                            new CommandLexer(e.Message.MessageBody),false);
+                        return ValueTask.CompletedTask;
+                    }
                     if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
                         new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
                     Event.Fire(scope, e);
@@ -224,7 +234,7 @@ namespace OneBot.CommandRoute.Services.Implements
         public void RegisterCommand()
         {
             var onebotController = _serviceProvider.GetServices<IOneBotController>();
-            foreach (var s in onebotController.OrderByDescending(p=>p.Priority))
+            foreach (var s in onebotController)
             {
                 var clazz = s.GetType();
                 var methods = clazz.GetMethods();
@@ -442,7 +452,8 @@ namespace OneBot.CommandRoute.Services.Implements
                     parametersType, parametersMatchingType, parametersName, parameterPositionMapping,
                     attribute)
                 , 0);
-            _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}");
+            _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}::{attribute.CanStop}");
+            Console.WriteLine($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}::{attribute.CanStop}");
         }
 
         #endregion 注册指令

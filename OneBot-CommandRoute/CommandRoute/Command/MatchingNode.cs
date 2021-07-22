@@ -53,8 +53,9 @@ namespace OneBot.CommandRoute.Command
         /// <param name="sender">事件触发者</param>
         /// <param name="e">Sora 事件对象</param>
         /// <param name="lexer">指令解析器</param>
+        /// <param name="canStop">处理那种指令 可拦截/不可拦截</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer)
+        public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer,bool canStop=true)
         {
             if (!lexer.IsValid()) return 0;
 
@@ -85,12 +86,12 @@ namespace OneBot.CommandRoute.Command
                         if (nextStep != tokenUpper) continue;
                     }
 
-                    var ret = s.Value.ProcessingCommandMapping(scope, sender, e, lexer);
+                    var ret = s.Value.ProcessingCommandMapping(scope, sender, e, lexer,canStop);
                     if (ret != 0) return ret;
                 }
             }
 
-            foreach (var s in Command)
+            foreach (var s in Command.Where(p=>p.Attribute.CanStop==canStop))
             {
                 var ret = s.Invoke(scope, sender, e, oldParser);
                 if (ret != 0) return ret;
@@ -108,6 +109,7 @@ namespace OneBot.CommandRoute.Command
         {
             if (i >= command.ParametersName.Count)
             {
+                
                 // 完全匹配完力
                 Command.Add(command);
                 // 保证先匹配更严格的指令再匹配宽松的指令
