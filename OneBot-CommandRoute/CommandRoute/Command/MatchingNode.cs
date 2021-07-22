@@ -57,8 +57,12 @@ namespace OneBot.CommandRoute.Command
         /// <returns>0 继续 / 1 阻断</returns>
         public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer,bool canStop=true)
         {
+            
             if (!lexer.IsValid()) return 0;
-
+            if (Command.All(p => p.Attribute.CanStop != canStop))
+            {
+                return 0;
+            }
             var oldParser = lexer.Clone();
 
             object nextToken = null;
