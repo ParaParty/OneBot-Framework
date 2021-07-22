@@ -59,10 +59,6 @@ namespace OneBot.CommandRoute.Command
         {
             
             if (!lexer.IsValid()) return 0;
-            if (Command.All(p => p.Attribute.CanStop != canStop))
-            {
-                return 0;
-            }
             var oldParser = lexer.Clone();
 
             object nextToken = null;
