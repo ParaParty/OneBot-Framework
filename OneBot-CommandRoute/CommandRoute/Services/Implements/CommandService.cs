@@ -224,7 +224,7 @@ namespace OneBot.CommandRoute.Services.Implements
         public void RegisterCommand()
         {
             var onebotController = _serviceProvider.GetServices<IOneBotController>();
-            foreach (var s in onebotController)
+            foreach (var s in onebotController.OrderByDescending(p=>p.Priority))
             {
                 var clazz = s.GetType();
                 var methods = clazz.GetMethods();

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
@@ -79,9 +81,10 @@ namespace OneBot.CommandRoute.Models.Entities
             if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
             {
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
-                for (int i = 0; i < attrs.Length; i++)
+                if (attrs.Select(t => (t as BeforeCommandAttribute)?.Invoke(scope, baseSoraEventArgs)).Any(beforeReturn => beforeReturn.HasValue && !beforeReturn.Value))
                 {
-                    (attrs[i] as BeforeCommandAttribute)?.Invoke(scope, baseSoraEventArgs);
+                    //拦截一波，返回false 则不进行指令执行，拦截掉
+                    return 1;
                 }
             }
 

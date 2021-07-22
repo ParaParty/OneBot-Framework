@@ -7,6 +7,6 @@ namespace OneBot_CommandRoute.CommandRoute.Attributes
     [AttributeUsage(AttributeTargets.Method)]
     public abstract class BeforeCommandAttribute : Attribute
     {
-        public abstract void Invoke(IServiceScope scope, BaseSoraEventArgs baseSoraEventArgs);
+        public abstract bool Invoke(IServiceScope scope, BaseSoraEventArgs baseSoraEventArgs);
     }
 }
