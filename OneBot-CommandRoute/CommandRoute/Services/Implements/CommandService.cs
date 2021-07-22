@@ -453,7 +453,6 @@ namespace OneBot.CommandRoute.Services.Implements
                     attribute)
                 , 0);
             _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}::{attribute.CanStop}");
-            Console.WriteLine($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}::{attribute.CanStop}");
         }
 
         #endregion 注册指令
