@@ -172,10 +172,10 @@ namespace OneBot.CommandRoute.Services.Implements
                 Exception exception = null;
                 try
                 {
+                    _matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                        new CommandLexer(e.Message.MessageBody), false);
                     if (Event.FirePrivateMessageReceived(scope, e) != 0)
                     {
-                        _matchingRootNode.ProcessingCommandMapping(scope, sender, e,
-                            new CommandLexer(e.Message.MessageBody), false);
                         return ValueTask.CompletedTask;
                     }
                     if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
@@ -204,10 +204,10 @@ namespace OneBot.CommandRoute.Services.Implements
                 Exception exception = null;
                 try
                 {
+                    _matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                        new CommandLexer(e.Message.MessageBody),false);
                     if (Event.FireGroupMessageReceived(scope, e) != 0)
                     {
-                        _matchingRootNode.ProcessingCommandMapping(scope, sender, e,
-                            new CommandLexer(e.Message.MessageBody),false);
                         return ValueTask.CompletedTask;
                     }
                     if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
@@ -453,6 +453,7 @@ namespace OneBot.CommandRoute.Services.Implements
                     attribute)
                 , 0);
             _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}::{attribute.CanStop}");
+            Console.WriteLine($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}::{attribute.CanStop}");
         }
 
         #endregion 注册指令
