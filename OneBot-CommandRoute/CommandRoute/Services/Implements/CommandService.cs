@@ -20,6 +20,11 @@ namespace OneBot.CommandRoute.Services.Implements
     public class CommandService : ICommandService
     {
         /// <summary>
+        /// 机器人服务
+        /// </summary>
+        private readonly IBotService _bot;
+
+        /// <summary>`
         /// 服务容器
         /// </summary>
         private readonly IServiceProvider _serviceProvider;
@@ -27,7 +32,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 指令匹配树根节点
         /// </summary>
-        private readonly MatchingNode _matchingRootNode = new MatchingNode();
+        private readonly MatchingNode _matchingRootNode;
 
         /// <summary>
         /// Scope 工厂
@@ -42,7 +47,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// CQ:Json 路由
         /// </summary>
-        private ICQJsonRouterService _jsonRouterService;
+        private ICQJsonRouterService? _jsonRouterService;
 
         /// <summary>
         /// 事件中心
@@ -52,35 +57,44 @@ namespace OneBot.CommandRoute.Services.Implements
         public CommandService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory,
             ILogger<CommandService> logger)
         {
+            _bot = bot;
             _serviceProvider = serviceProvider;
             _jsonRouterService = _serviceProvider.GetService<ICQJsonRouterService>();
             _scopeFactory = scopeFactory;
             _logger = logger;
             Event = new EventManager();
-            _matchingRootNode.IsRoot = true;
 
-            bot.SoraService.Event.OnClientConnect += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupRequest += OnGeneralEvent;
-            bot.SoraService.Event.OnFriendRequest += OnGeneralEvent;
-            bot.SoraService.Event.OnFileUpload += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupAdminChange += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupMemberChange += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupMemberMute += OnGeneralEvent;
-            bot.SoraService.Event.OnFriendAdd += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupRecall += OnGeneralEvent;
-            bot.SoraService.Event.OnFriendRecall += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupCardUpdate += OnGeneralEvent;
-            bot.SoraService.Event.OnGroupPoke += OnGeneralEvent;
-            bot.SoraService.Event.OnLuckyKingEvent += OnGeneralEvent;
-            bot.SoraService.Event.OnHonorEvent += OnGeneralEvent;
-            bot.SoraService.Event.OnOfflineFileEvent += OnGeneralEvent;
-            bot.SoraService.Event.OnClientStatusChangeEvent += OnGeneralEvent;
-            bot.SoraService.Event.OnEssenceChange += OnGeneralEvent;
+            var routeConfiguration = serviceProvider.GetService<IOneBotCommandRouteConfiguration>() ?? new DefaultOneBotCommandRouteConfiguration();
+            _matchingRootNode = new MatchingNode(routeConfiguration) {IsRoot = true};
+        }
 
-            bot.SoraService.Event.OnGroupMessage += EventOnGroupMessage;
-            bot.SoraService.Event.OnPrivateMessage += EventOnPrivateMessage;
+        /// <summary>
+        /// 注册消息处理事件
+        /// </summary>
+        public void RegisterEventHandler()
+        {            
+            _bot.SoraService.Event.OnClientConnect += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupRequest += OnGeneralEvent;
+            _bot.SoraService.Event.OnFriendRequest += OnGeneralEvent;
+            _bot.SoraService.Event.OnFileUpload += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupAdminChange += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupMemberChange += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupMemberMute += OnGeneralEvent;
+            _bot.SoraService.Event.OnFriendAdd += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupRecall += OnGeneralEvent;
+            _bot.SoraService.Event.OnFriendRecall += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupCardUpdate += OnGeneralEvent;
+            _bot.SoraService.Event.OnGroupPoke += OnGeneralEvent;
+            _bot.SoraService.Event.OnLuckyKingEvent += OnGeneralEvent;
+            _bot.SoraService.Event.OnHonorEvent += OnGeneralEvent;
+            _bot.SoraService.Event.OnOfflineFileEvent += OnGeneralEvent;
+            _bot.SoraService.Event.OnClientStatusChangeEvent += OnGeneralEvent;
+            _bot.SoraService.Event.OnEssenceChange += OnGeneralEvent;
 
-            bot.SoraService.Event.OnSelfMessage += EventOnSelfMessage;
+            _bot.SoraService.Event.OnGroupMessage += EventOnGroupMessage;
+            _bot.SoraService.Event.OnPrivateMessage += EventOnPrivateMessage;
+
+            _bot.SoraService.Event.OnSelfMessage += EventOnSelfMessage;
         }
 
         #region 事件处理
@@ -89,13 +103,13 @@ namespace OneBot.CommandRoute.Services.Implements
         /// 登录账号发送消息事件
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="eventargs"></param>
+        /// <param name="e"></param>
         /// <returns></returns>
         private ValueTask EventOnSelfMessage(string type, GroupMessageEventArgs e)
         {
-            using (var scope = this._scopeFactory.CreateScope()) {
-                Event.FireSelfMessage(scope, e);
-            };
+            using var scope = this._scopeFactory.CreateScope();
+            Event.FireSelfMessage(scope, e);
+            ;
             return ValueTask.CompletedTask;
         }
 

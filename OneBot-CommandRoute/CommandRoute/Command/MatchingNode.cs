@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Entities;
+using OneBot.CommandRoute.Services;
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Command
@@ -34,17 +34,22 @@ namespace OneBot.CommandRoute.Command
         /// <summary>
         /// 指令前缀
         /// </summary>
-        private const string COMMAND_PREFIX = "！!/";
+        private readonly IOneBotCommandRouteConfiguration _configuration;
 
         /// <summary>
         /// 和这个结点相关的指令信息列表
         /// </summary>
-        List<CommandModel> Command = new List<CommandModel>();
+        private List<CommandModel> _command = new List<CommandModel>();
 
         /// <summary>
         /// 待匹配的子结点
         /// </summary>
-        SortedDictionary<string, MatchingNode> Children = new SortedDictionary<string, MatchingNode>();
+        private readonly SortedDictionary<string, MatchingNode> _children = new SortedDictionary<string, MatchingNode>();
+
+        public MatchingNode(IOneBotCommandRouteConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
 
         /// <summary>
         /// 处理指令匹配
@@ -71,13 +76,13 @@ namespace OneBot.CommandRoute.Command
 
             if (nextToken is string token)
             {
-                foreach (var s in Children)
+                foreach (var s in _children)
                 {
                     var nextStep = s.Key.ToUpper();
                     var tokenUpper = token.ToUpper();
                     if (IsRoot && nextStep[0] >= 'A' && nextStep[0] <= 'Z')
                     {
-                        if (!COMMAND_PREFIX.Contains(token[0])) continue;
+                        if (!_configuration.CommandPrefix.Contains("" + token[0])) continue;
                         if (nextStep != tokenUpper.Substring(1)) continue;
                     }
                     else
@@ -90,7 +95,7 @@ namespace OneBot.CommandRoute.Command
                 }
             }
 
-            foreach (var s in Command)
+            foreach (var s in _command)
             {
                 var ret = s.Invoke(scope, sender, e, oldParser);
                 if (ret != 0) return ret;
@@ -109,26 +114,26 @@ namespace OneBot.CommandRoute.Command
             if (i >= command.ParametersName.Count)
             {
                 // 完全匹配完力
-                Command.Add(command);
+                _command.Add(command);
                 // 保证先匹配更严格的指令再匹配宽松的指令
-                Command = Command.OrderByDescending(s => s.WeightA).ThenByDescending(s => s.WeightB).ToList();
+                _command = _command.OrderByDescending(s => s.WeightA).ThenByDescending(s => s.WeightB).ToList();
                 return;
             }
 
             if (command.ParametersMatchingType[i] != 0)
             {
                 // 参数部分就不进入匹配了
-                Command.Add(command);
-                Command = Command.OrderByDescending(s => s.WeightA).ThenByDescending(s => s.WeightB).ToList();
+                _command.Add(command);
+                _command = _command.OrderByDescending(s => s.WeightA).ThenByDescending(s => s.WeightB).ToList();
                 return;
             }
 
             // 挂载子结点
             MatchingNode tmp;
-            if (!Children.TryGetValue(command.ParametersName[i], out tmp))
+            if (!_children.TryGetValue(command.ParametersName[i], out tmp))
             {
-                tmp = new MatchingNode();
-                Children[command.ParametersName[i]] = tmp;
+                tmp = new MatchingNode(_configuration);
+                _children[command.ParametersName[i]] = tmp;
             }
 
             tmp.Register(command, i + 1);
