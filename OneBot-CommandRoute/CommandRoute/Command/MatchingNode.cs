@@ -65,7 +65,7 @@ namespace OneBot.CommandRoute.Command
 
             var oldParser = lexer.Clone();
 
-            object nextToken = null;
+            object? nextToken = null;
             try
             {
                 nextToken = lexer.GetNext();
@@ -78,16 +78,18 @@ namespace OneBot.CommandRoute.Command
             {
                 foreach (var s in _children)
                 {
-                    var nextStep = s.Key.ToUpper();
-                    var tokenUpper = token.ToUpper();
-                    if (IsRoot && nextStep[0] >= 'A' && nextStep[0] <= 'Z')
+                    var nextStepForComparing = (_configuration.IsCaseSensitive) ? s.Key : s.Key.ToUpper();
+                    var tokenForComparing = (_configuration.IsCaseSensitive) ? token : token.ToUpper();
+                    
+                    // 如果是根，并且有设置指令前缀，并且是英文指令，那么我们就处理指令前缀匹配
+                    if (IsRoot && _configuration.CommandPrefix.Length > 0 && nextStepForComparing[0] >= 'A' && nextStepForComparing[0] <= 'Z')
                     {
                         if (!_configuration.CommandPrefix.Contains("" + token[0])) continue;
-                        if (nextStep != tokenUpper.Substring(1)) continue;
+                        if (nextStepForComparing != tokenForComparing[1..]) continue;
                     }
                     else
                     {
-                        if (nextStep != tokenUpper) continue;
+                        if (nextStepForComparing != tokenForComparing) continue;
                     }
 
                     var ret = s.Value.ProcessingCommandMapping(scope, sender, e, lexer);
@@ -129,8 +131,7 @@ namespace OneBot.CommandRoute.Command
             }
 
             // 挂载子结点
-            MatchingNode tmp;
-            if (!_children.TryGetValue(command.ParametersName[i], out tmp))
+            if (!_children.TryGetValue(command.ParametersName[i], out var tmp))
             {
                 tmp = new MatchingNode(_configuration);
                 _children[command.ParametersName[i]] = tmp;

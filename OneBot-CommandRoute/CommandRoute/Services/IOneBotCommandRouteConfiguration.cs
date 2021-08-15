@@ -7,5 +7,10 @@
         /// 若返回空数组，则表示英文指令也不使用前缀。 
         /// </summary>
         string[] CommandPrefix { get; }
+
+        /// <summary>
+        /// 指令匹配是否大小写敏感
+        /// </summary>
+        bool IsCaseSensitive { get; }
     }
 }
