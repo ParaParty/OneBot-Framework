@@ -58,10 +58,15 @@ namespace OneBot.CommandRoute.Command
         /// <param name="sender">事件触发者</param>
         /// <param name="e">Sora 事件对象</param>
         /// <param name="lexer">指令解析器</param>
+        /// /// <param name="canStop">处理那种指令 可拦截/不可拦截</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer)
+        public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer,bool canStop=true)
         {
             if (!lexer.IsValid()) return 0;
+            if (_command.All(p => p.Attribute.CanStop != canStop))
+            {
+                return 0;
+            }
 
             var oldParser = lexer.Clone();
 
