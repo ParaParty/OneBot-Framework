@@ -49,6 +49,7 @@ namespace OneBot.CommandRoute.Services.Implements
             var commandService = ServiceProvider.GetService<ICommandService>();
             // ReSharper disable once PossibleNullReferenceException
             commandService.RegisterCommand();
+            commandService.RegisterEventHandler();
 
             // 启动 CQHTTP
             SoraService.StartService();

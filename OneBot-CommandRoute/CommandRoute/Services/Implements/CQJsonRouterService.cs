@@ -6,7 +6,7 @@ using OneBot.CommandRoute.Models.Entities;
 using OneBot.CommandRoute.Models.Enumeration;
 using Sora.EventArgs.SoraEvent;
 
-namespace OneBot.CommandRoute.Services
+namespace OneBot.CommandRoute.Services.Implements
 {
     class CQJsonRouterService : ICQJsonRouterService
     {

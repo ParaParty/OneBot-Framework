@@ -9,7 +9,7 @@ using Sora.Entities.MessageElement.CQModel;
 using Sora.Enumeration;
 using Sora.EventArgs.SoraEvent;
 
-namespace OneBot_CommandRoute.CommandRoute.OneBotControllers
+namespace OneBot.CommandRoute.OneBotControllers
 {
     public class CQJsonRouterController: IOneBotController
     {

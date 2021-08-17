@@ -10,5 +10,7 @@ namespace OneBot.CommandRoute.Services
         public EventManager Event { get; set; }
 
         public void RegisterCommand();
+
+        public void RegisterEventHandler();
     }
 }
