@@ -50,7 +50,7 @@ namespace OneBot.CommandRoute.Command
         {
             this._configuration = configuration;
         }
-
+        
         /// <summary>
         /// 处理指令匹配
         /// </summary>
@@ -63,11 +63,10 @@ namespace OneBot.CommandRoute.Command
         public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer,bool canStop=true)
         {
             if (!lexer.IsValid()) return 0;
-            if (_command.All(p => p.Attribute.CanStop != canStop))
+            if (!IsRoot&&_command.All(p => p.Attribute.CanStop != canStop))
             {
                 return 0;
             }
-
             var oldParser = lexer.Clone();
 
             object? nextToken = null;
@@ -97,7 +96,7 @@ namespace OneBot.CommandRoute.Command
                         if (nextStepForComparing != tokenForComparing) continue;
                     }
 
-                    var ret = s.Value.ProcessingCommandMapping(scope, sender, e, lexer);
+                    var ret = s.Value.ProcessingCommandMapping(scope, sender, e, lexer,canStop);
                     if (ret != 0) return ret;
                 }
             }
