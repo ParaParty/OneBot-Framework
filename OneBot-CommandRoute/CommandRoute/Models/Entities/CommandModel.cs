@@ -10,7 +10,6 @@ using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Enumeration;
-using OneBot_CommandRoute.CommandRoute.Attributes;
 using Sora.Entities.MessageElement;
 
 namespace OneBot.CommandRoute.Models.Entities

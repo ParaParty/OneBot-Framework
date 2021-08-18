@@ -2,7 +2,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Services;
-using OneBot_CommandRoute.CommandRoute.Attributes;
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Models.Entities
