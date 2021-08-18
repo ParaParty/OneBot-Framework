@@ -23,7 +23,9 @@ namespace OneBot.CommandRoute.OneBotControllers
         /// </summary>
         private readonly ICQJsonRouterService _routeService;
 
+#pragma warning disable 8618
         public CQJsonRouterController(ICommandService commandService, IServiceProvider serviceProvider)
+#pragma warning restore 8618
         {
             _serviceProvider = serviceProvider;
             var routeService = serviceProvider.GetService<ICQJsonRouterService>();
@@ -38,13 +40,13 @@ namespace OneBot.CommandRoute.OneBotControllers
         private int EventOnGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs eventArgs)
         {
             var p = eventArgs.Message.MessageBody.FirstOrDefault();
-            return p == null ? 0 : UniversalProcess(scope, eventArgs, p);
+            return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
         private int EventOnPrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs eventArgs)
         {
             var p = eventArgs.Message.MessageBody.FirstOrDefault();
-            return p == null ? 0 : UniversalProcess(scope, eventArgs, p);
+            return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
         private int UniversalProcess(IServiceScope scope, BaseSoraEventArgs eventArgs, CQCode firstElement)
@@ -61,7 +63,11 @@ namespace OneBot.CommandRoute.OneBotControllers
 
                     if (jObject.TryGetValue("app", out var jToken))
                     {
-                        appid = (string) jToken;
+                        // According to the signature of JObject.TryGetValue,
+                        // jToken is not null when TryGetValue returns true.
+#pragma warning disable 8600
+                        appid = (string) jToken ?? "";
+#pragma warning restore 8600
                         process = true;
                     }
                 }
@@ -71,7 +77,6 @@ namespace OneBot.CommandRoute.OneBotControllers
                 // JSON 格式出错
             }
 
-            // ReSharper disable once PossibleNullReferenceException
             return process ? _routeService.Handle(scope, eventArgs, appid) : 0;
         }
     }

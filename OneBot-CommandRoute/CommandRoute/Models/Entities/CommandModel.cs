@@ -119,7 +119,7 @@ namespace OneBot.CommandRoute.Models.Entities
             // 尝试解析剩下的所有参数
             int step = lexer.ParsedArguments.Count;
 
-            List<object> matchedArgs = new List<object>();
+            List<object?> matchedArgs = new List<object?>();
             matchedArgs.AddRange(lexer.ParsedArguments);
             for (int i = step; i < ParametersName.Count; i++)
             {
@@ -132,7 +132,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 var newParser = lexer.Clone();
                 // 解析一个新的
 
-                object newArg = null;
+                object? newArg = null;
                 bool succeed = false;
 
                 // 解析新的参数
@@ -155,7 +155,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     }
                     else
                     {
-                        succeed = TryParseType(baseSoraEventArgs, newArg, ParametersType[i], out object result);
+                        succeed = TryParseType(baseSoraEventArgs, newArg, ParametersType[i], out object? result);
                         if (succeed)
                         {
                             newArg = result;
@@ -182,7 +182,7 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             // 参数注入
             var functionParametersList = CommandMethod.GetParameters();
-            object[] functionArgs = new object[functionParametersList.Length];
+            object?[] functionArgs = new object[functionParametersList.Length];
             for (int i = 0; i < ParametersName.Count; i++)
             {
                 if (ParameterPositionMapping[i] < 0) continue;
@@ -257,8 +257,9 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
-                // ReSharper disable once PossibleNullReferenceException
+#pragma warning disable 8605
                 return (int) CommandMethod.Invoke(CommandObj, functionArgs);
+#pragma warning restore 8605
             }
 
             CommandMethod.Invoke(CommandObj, functionArgs);
@@ -273,7 +274,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseType(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object result)
+        private bool TryParseType(BaseSoraEventArgs baseSoraEventArgs, object? arg, Type type, out object? result)
         {
             result = null;
 
@@ -314,7 +315,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object result)
+        private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object? result)
         {
             bool ret = false;
             if (type == ((CQCode)arg).DataObject.GetType())
@@ -381,7 +382,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseString(BaseSoraEventArgs baseSoraEventArgs, string arg, Type type, out object result)
+        private bool TryParseString(BaseSoraEventArgs baseSoraEventArgs, string? arg, Type type, out object? result)
         {
             bool ret = false;
 
@@ -432,7 +433,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     var converter = type.GetMethod("op_Implicit", new[] {typeof(string)});
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] {arg});
+                        result = converter.Invoke(null, new object?[] {arg});
                         ret = true;
                     }
                     else

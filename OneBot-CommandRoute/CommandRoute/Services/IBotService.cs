@@ -7,8 +7,16 @@ namespace OneBot.CommandRoute.Services
     /// </summary>
     public interface IBotService
     {
-        ISoraService SoraService { get; set; }
+        /// <summary>
+        /// Sora WS 服务
+        /// </summary>
+        ISoraService SoraService { get; }
         
+        /// <summary>
+        /// Sora WS 服务设置
+        /// </summary>
+        public ISoraConfig ServiceConfig { get; }
+
         void Start();
     }
 }

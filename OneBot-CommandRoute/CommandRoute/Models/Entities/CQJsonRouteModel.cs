@@ -34,7 +34,7 @@ namespace OneBot.CommandRoute.Models.Entities
         public int Invoke(IServiceScope scope, BaseSoraEventArgs baseSoraEventArgs)
         {
             var functionParametersList = CommandMethod.GetParameters();
-            object[] functionArgs = new object[functionParametersList.Length];
+            object?[] functionArgs = new object[functionParametersList.Length];
             
             // 依赖注入
             for (int i = 0; i < functionParametersList.Length; i++)
@@ -87,8 +87,10 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
-                // ReSharper disable once PossibleNullReferenceException
+                // 上面都判断了返回值类型了，这里忽略这个警告很合理吧？
+#pragma warning disable 8605
                 return (int) CommandMethod.Invoke(CommandObj, functionArgs);
+#pragma warning restore 8605
             }
 
             CommandMethod.Invoke(CommandObj, functionArgs);

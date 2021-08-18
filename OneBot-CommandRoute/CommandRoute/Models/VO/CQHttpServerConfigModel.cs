@@ -9,11 +9,11 @@ namespace OneBot.CommandRoute.Models.VO
     {
         /// <summary>模式 ws / reverse_ws</summary>
         [JsonProperty("Mode")]
-        public string Mode { get; set; }
+        public string Mode { get; set; } = "reverse_ws";
 
         /// <summary>反向连接服务器监听地址 / 正向连接服务器目标地址</summary>
         [JsonProperty("Host")]
-        public string Host { get; set; } = null;
+        public string Host { get; set; } = "127.0.0.1";
 
         /// <summary>反向服务器端口</summary>
         [JsonProperty("Port")]

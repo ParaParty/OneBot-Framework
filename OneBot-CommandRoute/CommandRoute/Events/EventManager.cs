@@ -7,70 +7,70 @@ namespace OneBot.CommandRoute.Events
     public class EventManager
     {
         /// <summary>客户端链接完成事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<ConnectEventArgs> OnClientConnect;
+        public event EventManager.EventAsyncCallBackHandler<ConnectEventArgs>? OnClientConnect;
 
         /// <summary>群聊事件（触发指令之后）</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs> OnGroupMessage;
+        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessage;
 
         /// <summary>群聊事件（触发指令之前）</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs> OnGroupMessageReceived;
+        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessageReceived;
 
         /// <summary> 登录账号发送消息事件 </summary>
-        public event EventAsyncCallBackHandler<GroupMessageEventArgs> OnSelfMessage;
+        public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnSelfMessage;
 
         /// <summary>私聊事件（触发指令之后）</summary>
-        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs> OnPrivateMessage;
+        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessage;
 
         /// <summary>私聊事件（触发指令之前）</summary>
-        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs> OnPrivateMessageReceived;
+        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessageReceived;
 
         /// <summary>群申请事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<AddGroupRequestEventArgs> OnGroupRequest;
+        public event EventManager.EventAsyncCallBackHandler<AddGroupRequestEventArgs>? OnGroupRequest;
 
         /// <summary>好友申请事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FriendRequestEventArgs> OnFriendRequest;
+        public event EventManager.EventAsyncCallBackHandler<FriendRequestEventArgs>? OnFriendRequest;
 
         /// <summary>群文件上传事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FileUploadEventArgs> OnFileUpload;
+        public event EventManager.EventAsyncCallBackHandler<FileUploadEventArgs>? OnFileUpload;
 
         /// <summary>管理员变动事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupAdminChangeEventArgs> OnGroupAdminChange;
+        public event EventManager.EventAsyncCallBackHandler<GroupAdminChangeEventArgs>? OnGroupAdminChange;
 
         /// <summary>群成员变动事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMemberChangeEventArgs> OnGroupMemberChange;
+        public event EventManager.EventAsyncCallBackHandler<GroupMemberChangeEventArgs>? OnGroupMemberChange;
 
         /// <summary>群成员禁言事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMuteEventArgs> OnGroupMemberMute;
+        public event EventManager.EventAsyncCallBackHandler<GroupMuteEventArgs>? OnGroupMemberMute;
 
         /// <summary>好友添加事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FriendAddEventArgs> OnFriendAdd;
+        public event EventManager.EventAsyncCallBackHandler<FriendAddEventArgs>? OnFriendAdd;
 
         /// <summary>群聊撤回事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupRecallEventArgs> OnGroupRecall;
+        public event EventManager.EventAsyncCallBackHandler<GroupRecallEventArgs>? OnGroupRecall;
 
         /// <summary>好友撤回事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FriendRecallEventArgs> OnFriendRecall;
+        public event EventManager.EventAsyncCallBackHandler<FriendRecallEventArgs>? OnFriendRecall;
 
         /// <summary>群名片变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupCardUpdateEventArgs> OnGroupCardUpdate;
+        public event EventManager.EventAsyncCallBackHandler<GroupCardUpdateEventArgs>? OnGroupCardUpdate;
 
         /// <summary>群内戳一戳事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupPokeEventArgs> OnGroupPoke;
+        public event EventManager.EventAsyncCallBackHandler<GroupPokeEventArgs>? OnGroupPoke;
 
         /// <summary>运气王事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<LuckyKingEventArgs> OnLuckyKingEvent;
+        public event EventManager.EventAsyncCallBackHandler<LuckyKingEventArgs>? OnLuckyKingEvent;
 
         /// <summary>群成员荣誉变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<HonorEventArgs> OnHonorEvent;
+        public event EventManager.EventAsyncCallBackHandler<HonorEventArgs>? OnHonorEvent;
 
         /// <summary>离线文件事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<OfflineFileEventArgs> OnOfflineFileEvent;
+        public event EventManager.EventAsyncCallBackHandler<OfflineFileEventArgs>? OnOfflineFileEvent;
 
         /// <summary>其他客户端在线状态变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<ClientStatusChangeEventArgs> OnClientStatusChangeEvent;
+        public event EventManager.EventAsyncCallBackHandler<ClientStatusChangeEventArgs>? OnClientStatusChangeEvent;
 
         /// <summary>其他客户端在线状态变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<EssenceChangeEventArgs> OnEssenceChange;
+        public event EventManager.EventAsyncCallBackHandler<EssenceChangeEventArgs>? OnEssenceChange;
 
         public delegate int EventAsyncCallBackHandler<in TEventArgs>(
             IServiceScope scope,
@@ -174,7 +174,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="eventArgs"></param>
         /// <param name="listeners"></param>
         /// <returns></returns>
-        internal int Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[] listeners)
+        internal int Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[]? listeners)
             where T : BaseSoraEventArgs
         {
             if (listeners == null) return 0;
@@ -215,7 +215,7 @@ namespace OneBot.CommandRoute.Events
         /// <summary>
         /// 异常处理事件
         /// </summary>
-        public event ExceptionDelegate OnException;
+        public event ExceptionDelegate? OnException;
 
         public delegate void ExceptionDelegate(IServiceScope scope, BaseSoraEventArgs e, Exception exception);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneBot.CommandRoute.Models.VO;
@@ -15,26 +16,31 @@ namespace OneBot.CommandRoute.Services.Implements
     public class BotService : IBotService
     {
         /// <summary>
-        /// Sora WS 服务器
+        /// Sora WS 服务
         /// </summary>
-        public ISoraService SoraService { get; set; }
+        public ISoraService SoraService { get; private set; }
 
         /// <summary>
-        /// Sora WS 服务器设置
+        /// Sora WS 服务设置
         /// </summary>
-        private ISoraConfig ServiceConfig { get; set; }
+        public ISoraConfig ServiceConfig { get; private set; }
 
         /// <summary>
         /// 依赖注入服务
         /// </summary>
-        private IServiceProvider ServiceProvider { get; set; }
+        private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// OneBot 启动后的 Task
+        /// </summary>
+        private ValueTask _startTask;
+        
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
         {
-            ServiceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
 
             // 配置日志
-            var logger = ServiceProvider.GetService<ILogService>();
+            var logger = _serviceProvider.GetService<ILogService>();
             if (logger != null) Log.SetLoggerService(logger);
 
             // 配置 CQHTTP Sora
@@ -46,13 +52,13 @@ namespace OneBot.CommandRoute.Services.Implements
         public void Start()
         {
             // 初始化指令系统
-            var commandService = ServiceProvider.GetService<ICommandService>();
-            // ReSharper disable once PossibleNullReferenceException
+            var commandService = _serviceProvider.GetService<ICommandService>() ??
+                                 throw new ArgumentNullException("", "ICommandService did not register.");
             commandService.RegisterCommand();
             commandService.RegisterEventHandler();
 
             // 启动 CQHTTP
-            SoraService.StartService();
+            _startTask = SoraService.StartService();
         }
     }
 }
