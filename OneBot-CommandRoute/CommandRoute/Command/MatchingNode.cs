@@ -63,7 +63,7 @@ namespace OneBot.CommandRoute.Command
         public int ProcessingCommandMapping(IServiceScope scope, object sender, BaseSoraEventArgs e, CommandLexer lexer,bool canStop=true)
         {
             if (!lexer.IsValid()) return 0;
-            if (!IsRoot&&_command.All(p => p.Attribute.CanStop != canStop))
+            if (!IsRoot&&_command.Count>0&&_command.All(p => p.Attribute.CanStop != canStop))
             {
                 return 0;
             }
