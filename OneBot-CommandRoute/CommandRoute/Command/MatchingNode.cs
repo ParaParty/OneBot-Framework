@@ -68,7 +68,7 @@ namespace OneBot.CommandRoute.Command
             object? nextToken = null;
             try
             {
-                nextToken = lexer.GetNext();
+                nextToken = lexer.GetNextNotBlank();
             }
             catch (ParserToTheEndException)
             {

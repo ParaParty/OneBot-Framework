@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Sora.Entities.MessageElement.CQModel;
 using Sora.Entities.MessageElement;
@@ -138,10 +139,47 @@ namespace OneBot.CommandRoute.Lexer
         }
 
         /// <summary>
+        /// 尝试获得下一个字符串
+        /// </summary>
+        private bool TryGetNextObject(ref string str)
+        {
+            // 如果往后这个字符串已经扫完了
+            if (ScanStringPointer >= str.Length)
+            {
+                // 那就往后取一个对象
+                ScanObjectPointer++;
+                ScanStringPointer = 0;
+                        
+                if (ScanObjectPointer < SourceCommand.Count)
+                {
+                    // 往后取一个
+                    var nextSegment = SourceCommand[ScanObjectPointer];
+                    if (nextSegment.MessageType == CQType.Text)
+                    {
+                        // 接着往后识别
+                        str = ((Text)(nextSegment.DataObject)).Content;
+                    }
+                    else
+                    {
+                        // 如果后面那个不是字符串，那么就结束
+                        return true;
+                    }
+                }
+                else
+                {
+                    // 如果往后取一个对象已经没得再取了，那就直接返回
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// 获取下一个 Token
         /// </summary>
         /// <returns>下一个 Token</returns>
-        public object GetNext()
+        private object GetNext()
         {
             // 检查是否扫描到末尾
             if (ScanObjectPointer >= SourceCommand.Count)
@@ -157,65 +195,86 @@ namespace OneBot.CommandRoute.Lexer
             {
                 ScanObjectPointer++;
                 ScanStringPointer = 0;
-                ParsedArguments.Add(s);
                 return s;
             }
 
             // 获取当前消息段的文本
-            var str = ((Text) (s.DataObject)).Content;
+            var str = ((Text)(s.DataObject)).Content;
             var token = "";
-
-            while (ScanStringPointer < str.Length && BLANKCHARACTER.Contains(str[ScanStringPointer]))
-            {
-                // 舍弃开头的空白字符
-                while (ScanStringPointer < str.Length && BLANKCHARACTER.Contains(str[ScanStringPointer]))
-                {
-                    ScanStringPointer++;
-                }
-
-                // 如果开头的空白字符删完之后没了就要从下一个消息段继续扫描
-                if (ScanStringPointer >= str.Length)
-                {
-                    ScanObjectPointer++;
-                    ScanStringPointer = 0;
-                    if (ScanObjectPointer >= SourceCommand.Count)
-                    {
-                        throw new ParserToTheEndException();
-                    }
-
-                    // 获取下一个消息段
-                    var ret = SourceCommand[ScanObjectPointer];
-
-                    // 如果下一个消息段不是文本则返回
-                    if (ret.MessageType != CQType.Text)
-                    {
-                        ScanObjectPointer++;
-                        ParsedArguments.Add(ret);
-                        return ret;
-                    }
-
-                    // 如果下一个消息段是文本则继续扫描
-                    s = ret;
-                    str = ((Text) (s.DataObject)).Content;
-                }
-            }
-
-            // 解析中间的字符
-            // TODO 双引号
-            while (ScanStringPointer < str.Length && (!BLANKCHARACTER.Contains(str[ScanStringPointer])))
-            {
-                token += str[ScanStringPointer];
-                ScanStringPointer++;
-            }
-
+            
+            // 检查当前元素是否扫描完成
             if (ScanStringPointer >= str.Length)
             {
                 ScanObjectPointer++;
                 ScanStringPointer = 0;
+                if (ScanObjectPointer >= SourceCommand.Count)
+                {
+                    throw new ParserToTheEndException();
+                }
+
+                // 获取下一个消息段
+                var ret = SourceCommand[ScanObjectPointer];
+
+                // 如果下一个消息段不是文本则返回
+                if (ret.MessageType != CQType.Text)
+                {
+                    ScanObjectPointer++;
+                    return ret;
+                }
+
+                // 如果下一个消息段是文本则继续扫描
+                s = ret;
+                str = ((Text) (s.DataObject)).Content;
             }
 
-            ParsedArguments.Add(token);
+            // 文本参数
+            if (BLANKCHARACTER.Contains(str[ScanStringPointer]))
+            {
+                // 空白元素
+                while (BLANKCHARACTER.Contains(str[ScanStringPointer]))
+                {
+                    // 往后拼接
+                    token += str[ScanStringPointer];
+                    ScanStringPointer++;
+                    if (TryGetNextObject(ref str))
+                    {
+                        return token;
+                    }
+                }
+            }
+            else
+            {
+                // 非空白元素
+                while (!BLANKCHARACTER.Contains(str[ScanStringPointer]))
+                {
+                    // 往后拼接
+                    token += str[ScanStringPointer];
+                    ScanStringPointer++;
+                    if (TryGetNextObject(ref str))
+                    {
+                        return token;
+                    }
+                }
+            }
+
+
+
             return token;
+        }
+
+        /// <summary>
+        /// 获取下一个不是空白的 Token
+        /// </summary>
+        /// <returns>下一个 Token</returns>
+        public object GetNextNotBlank()
+        {
+            var ret = GetNext();
+            while (ret is string s && string.IsNullOrWhiteSpace(s))
+            {
+                ret = GetNext();
+            }
+            ParsedArguments.Add(ret);
+            return ret;
         }
 
         /// <summary>

@@ -138,7 +138,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 // 解析新的参数
                 try
                 {
-                    newArg = newParser.GetNext();
+                    newArg = newParser.GetNextNotBlank();
                     succeed = true;
                 }
                 catch (Exception)

@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot_CommandRoute.CommandRoute.Attributes;
+using OneBot.CommandRoute.Attributes;
 using Sora.Entities.Info;
 using Sora.Enumeration.ApiType;
 using Sora.Enumeration.EventParamsType;
@@ -21,7 +21,7 @@ namespace OneBot.FrameworkDemo.Attributes
             var taskValue = p.SoraApi.GetGroupMemberInfo(p.SourceGroup, p.Sender.Id, true);
             taskValue.AsTask().Wait();
 
-            if (taskValue.Result.apiStatus != APIStatusType.OK)
+            if (taskValue.Result.apiStatus.RetCode != ApiStatusType.OK)
             {
                 return;
 
