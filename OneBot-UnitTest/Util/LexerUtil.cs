@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OneBot.CommandRoute.Lexer;
 
 namespace OneBot_UnitTest.Util
@@ -16,7 +15,7 @@ namespace OneBot_UnitTest.Util
                     ret.Add(self.GetNextNotBlank());
                 }
             }
-            catch (Exception ignored)
+            catch (ParserToTheEndException ignored)
             {
                 // ignored
             }

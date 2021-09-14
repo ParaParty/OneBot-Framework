@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Sora.Entities;
 using Sora.Entities.MessageElement.CQModel;
 using Sora.Entities.MessageElement;
 using Sora.Enumeration;
@@ -15,6 +17,11 @@ namespace OneBot.CommandRoute.Lexer
         /// 空白字符
         /// </summary>
         private const string BLANKCHARACTER = "\r\n\t ";
+        
+        /// <summary>
+        /// 引号
+        /// </summary>
+        private const string QUOTECHARACTER = "\"\'";
 
         /// <summary>
         /// 源信息
@@ -42,7 +49,10 @@ namespace OneBot.CommandRoute.Lexer
         /// <param name="s">被解析的字符串</param>
         public CommandLexer(IList<CQCode> s)
         {
-            SourceCommand = s;
+            SourceCommand = s.Where(c => 
+                    c.MessageType != CQType.Text 
+                    || ((Text)c.DataObject).Content.Length > 0)
+                .ToList();
         }
 
         /// <summary>
@@ -141,7 +151,7 @@ namespace OneBot.CommandRoute.Lexer
         /// <summary>
         /// 尝试获得下一个字符串
         /// </summary>
-        private bool TryGetNextObject(ref string str)
+        private bool TryGetNextStringObject(ref string str)
         {
             // 如果往后这个字符串已经扫完了
             if (ScanStringPointer >= str.Length)
@@ -236,7 +246,7 @@ namespace OneBot.CommandRoute.Lexer
                     // 往后拼接
                     token += str[ScanStringPointer];
                     ScanStringPointer++;
-                    if (TryGetNextObject(ref str))
+                    if (TryGetNextStringObject(ref str))
                     {
                         return token;
                     }
@@ -245,20 +255,126 @@ namespace OneBot.CommandRoute.Lexer
             else
             {
                 // 非空白元素
-                while (!BLANKCHARACTER.Contains(str[ScanStringPointer]))
+                if (QUOTECHARACTER.Contains(str[ScanStringPointer]))
                 {
-                    // 往后拼接
-                    token += str[ScanStringPointer];
+                    MessageBody multiElementsToken = new MessageBody();
+                    var terminate = str[ScanStringPointer];
+                    
                     ScanStringPointer++;
-                    if (TryGetNextObject(ref str))
+                    TryGetNextStringObject(ref str);
+                    
+                    while (true) {
+                        // 往后拼接
+                        if (SourceCommand[ScanObjectPointer].MessageType == CQType.Text) {
+                            if (str[ScanStringPointer] == terminate)
+                            {
+                                // 如果遇到了字符串起始符号
+                                ScanStringPointer++;
+                                if (ScanStringPointer < str.Length)
+                                {
+                                    // 如果当前字符串还没处理完
+                                    if (str[ScanStringPointer] == terminate)
+                                    {
+                                        // 如果下一个符号还是起始符号
+                                        token += terminate;
+                                        ScanStringPointer++;
+                                        TryGetNextStringObject(ref str);
+                                    }
+                                    else
+                                    {
+                                        // 如果不是起始符号
+                                        multiElementsToken += token;
+                                        token = "";
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    // 如果当前字符串处理完了
+                                    ScanStringPointer = 0;
+                                    ScanObjectPointer++;
+                                    
+                                    if (ScanObjectPointer >= SourceCommand.Count)
+                                    {
+                                        // 如果整个消息已经处理完了
+                                        multiElementsToken += token;
+                                        token = "";
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        if (SourceCommand[ScanObjectPointer].MessageType != CQType.Text)
+                                        {
+                                            // 如果下一个消息段不是文本，意味着当前扫描到的地方就是一个完整的文本消息
+                                            multiElementsToken += token;
+                                            token = "";
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            // 如果下一个消息段是文本，意味着我们需要看一眼
+                                            str = ((Text)SourceCommand[ScanObjectPointer].DataObject).Content;
+                                            if (str[ScanStringPointer] == terminate)
+                                            {
+                                                // 如果下一个符号还是起始符号
+                                                token += terminate;
+                                                ScanStringPointer++;
+                                                TryGetNextStringObject(ref str);
+                                            }
+                                            else
+                                            {
+                                                // 如果不是起始符号
+                                                multiElementsToken += token;
+                                                token = "";
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                token += str[ScanStringPointer];
+                                ScanStringPointer++;
+                                if (TryGetNextStringObject(ref str))
+                                {
+                                    multiElementsToken += token;
+                                    token = "";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            multiElementsToken += SourceCommand[ScanObjectPointer];
+                            ScanObjectPointer++;
+                            if (ScanObjectPointer < SourceCommand.Count)
+                            {
+                                str = ((Text)SourceCommand[ScanObjectPointer].DataObject).Content;
+                            }
+                        }
+
+                        if (ScanObjectPointer >= SourceCommand.Count)
+                        {
+                            break;
+                        }
+                    }
+
+                    return multiElementsToken;
+                }
+                else
+                {
+                    while (!BLANKCHARACTER.Contains(str[ScanStringPointer]))
                     {
-                        return token;
+                        // 往后拼接
+                        token += str[ScanStringPointer];
+                        ScanStringPointer++;
+                        if (TryGetNextStringObject(ref str))
+                        {
+                            return token;
+                        }
                     }
                 }
             }
-
-
-
             return token;
         }
 

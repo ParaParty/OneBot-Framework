@@ -2,7 +2,7 @@
 
 namespace OneBot.CommandRoute.Lexer
 {
-    class ParserToTheEndException : Exception
+    public class ParserToTheEndException : Exception
     {
     }
 }
