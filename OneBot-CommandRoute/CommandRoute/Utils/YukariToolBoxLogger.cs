@@ -4,7 +4,7 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using YukariToolBox.FormatLog;
 
-namespace OneBot_CommandRoute.CommandRoute.Utils
+namespace OneBot.CommandRoute.Utils
 {
     public class YukariToolBoxLogger : ILogService
     {

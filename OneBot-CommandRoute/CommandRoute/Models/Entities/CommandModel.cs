@@ -304,9 +304,52 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
             }
 
+            if (arg is MessageBody)
+            {
+                var s = (MessageBody)arg;
+                try
+                {
+                    return TryParseMessageBody(baseSoraEventArgs, s, type, out result);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+
             return false;
         }
 
+        /// <summary>
+        /// 尝试解析 CQ 码
+        /// </summary>
+        /// <param name="baseSoraEventArgs">Sora 事件对象</param>
+        /// <param name="arg">被 cast 的值</param>
+        /// <param name="type">要 cast 的类型</param>
+        /// <param name="result">cast 结果</param>
+        /// <returns>真: 成功 / 假: 失败</returns>
+        private bool TryParseMessageBody(BaseSoraEventArgs baseSoraEventArgs, MessageBody arg, Type type, out object? result)
+        {
+            bool ret = false;
+            if (type == typeof(MessageBody))
+            {
+                ret = true;
+                result = arg;
+            }
+            else if (type == typeof(string))
+            {
+                ret = true;
+                result = arg.ToString();
+            }
+            else
+            {
+                ret = false;
+                result = null;
+            }
+
+            return ret;
+        }
+        
         /// <summary>
         /// 尝试解析 CQ 码
         /// </summary>

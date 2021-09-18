@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.OneBotControllers;
 using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Services.Implements;
-using OneBot_CommandRoute.CommandRoute.Utils;
+using OneBot.CommandRoute.Utils;
 using YukariToolBox.FormatLog;
 
 namespace OneBot_CommandRoute.CommandRoute.Mixin
