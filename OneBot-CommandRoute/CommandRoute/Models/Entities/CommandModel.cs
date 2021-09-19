@@ -10,6 +10,7 @@ using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Enumeration;
+using OneBot.CommandRoute.Utils;
 using Sora.Entities.MessageElement;
 
 namespace OneBot.CommandRoute.Models.Entities
@@ -133,6 +134,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 // 解析一个新的
 
                 object? newArg = null;
+                // ReSharper disable once RedundantAssignment
                 bool succeed = false;
 
                 // 解析新的参数
@@ -330,6 +332,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <returns>真: 成功 / 假: 失败</returns>
         private bool TryParseMessageBody(BaseSoraEventArgs baseSoraEventArgs, MessageBody arg, Type type, out object? result)
         {
+            // ReSharper disable once RedundantAssignment
             bool ret = false;
             if (type == typeof(MessageBody))
             {
@@ -339,12 +342,34 @@ namespace OneBot.CommandRoute.Models.Entities
             else if (type == typeof(string))
             {
                 ret = true;
-                result = arg.ToString();
+                result = arg.Serialize();
             }
             else
             {
-                ret = false;
+                try
+                {
+                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                    if (converter != null)
+                    {
+                        result = converter.Invoke(null, new[] {arg});
+                        // ReSharper disable once RedundantAssignment
+                        ret = true;
+                    }
+                    else
+                    {
+                        result = null;
+                        // ReSharper disable once RedundantAssignment
+                        ret = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    result = null;
+                    // ReSharper disable once RedundantAssignment
+                    ret = false;
+                }
                 result = null;
+                return false;
             }
 
             return ret;
@@ -360,6 +385,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <returns>真: 成功 / 假: 失败</returns>
         private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object? result)
         {
+            // ReSharper disable once RedundantAssignment
             bool ret = false;
             if (type == ((CQCode)arg).DataObject.GetType())
             {
@@ -397,17 +423,20 @@ namespace OneBot.CommandRoute.Models.Entities
                     if (converter != null)
                     {
                         result = converter.Invoke(null, new[] {arg});
+                        // ReSharper disable once RedundantAssignment
                         ret = true;
                     }
                     else
                     {
                         result = null;
+                        // ReSharper disable once RedundantAssignment
                         ret = false;
                     }
                 }
                 catch (Exception)
                 {
                     result = null;
+                    // ReSharper disable once RedundantAssignment
                     ret = false;
                 }
                 result = null;
@@ -427,6 +456,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <returns>真: 成功 / 假: 失败</returns>
         private bool TryParseString(BaseSoraEventArgs baseSoraEventArgs, string? arg, Type type, out object? result)
         {
+            // ReSharper disable once RedundantAssignment
             bool ret = false;
 
             if (type == typeof(int) || type == typeof(int?))

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 using Sora.Entities;
 using Sora.Entities.MessageElement;
 using Sora.Entities.MessageElement.CQModel;
@@ -57,12 +58,22 @@ namespace OneBot.CommandRoute.Utils
 
             var data = msg.DataObject;
             var dataType = data.GetType();
-            var dataFields = dataType.GetFields();
+            var dataFields = dataType.GetProperties();
 
             foreach (var field in dataFields)
             {
-                var key = field.CustomAttributes;
+                var jsonPropertyArr = field.GetCustomAttributes<JsonPropertyAttribute>(true).ToList();
+                if (jsonPropertyArr.Count != 1)
+                {
+                    continue;
+                }
+                var jsonProperty = jsonPropertyArr.First();
+                var key = jsonProperty.PropertyName;
                 var value = ((field.GetValue(data) ?? "").ToString() ?? "").CQCodeEncode(comma: true);
+                if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(value))
+                {
+                    continue;
+                }
                 ret.Append(',').Append(key).Append('=').Append(value);
             }
 
@@ -131,7 +142,7 @@ namespace OneBot.CommandRoute.Utils
                             "&#91;" => '[',
                             "&#93;" => ']',
                             "&#44;" => ',',
-                            _ => throw new ArgumentOutOfRangeException(),
+                            _ => throw new ArgumentOutOfRangeException(),   // unreachable
                         };
 
                         ret.Append(msg[new Range(last, i)]);

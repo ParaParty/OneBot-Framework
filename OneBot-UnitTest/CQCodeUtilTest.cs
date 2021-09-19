@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OneBot.CommandRoute.Utils;
 using Sora.Entities.MessageElement;
 
@@ -41,6 +42,13 @@ namespace OneBot_UnitTest
             Assert.AreEqual("810[CQ:at,qq=114514]1919", "810&#91;CQ:at,qq=114514&#93;1919".CQCodeDecode());
             Assert.AreEqual("[CQ:at,qq=114514]", "&#91;CQ:at&#44;qq=114514&#93;".CQCodeDecode());
             Assert.AreEqual("[CQ:at,qq=114514]1919810", "&#91;CQ:at&#44;qq=114514&#93;1919810".CQCodeDecode());
+
+            var test = Guid.NewGuid().ToString();
+            Assert.AreEqual(test, test.CQCodeDecode());
+            
+            Assert.AreEqual("&", "&".CQCodeDecode());
+            Assert.AreEqual("&123;", "&123;".CQCodeDecode());
+            Assert.AreEqual("&123;[CQ:at,qq=114514]", "&123;&#91;CQ:at&#44;qq=114514&#93;".CQCodeDecode());
         }
 
         [TestMethod]
@@ -55,6 +63,7 @@ namespace OneBot_UnitTest
         {
             Assert.AreEqual("[CQ:at,qq=114514]1919810", (CQCodes.CQAt(114514) + "1919810").Serialize());
             Assert.AreEqual("[CQ:at,qq=1919810]114514", (CQCodes.CQAt(1919810) + "114514").Serialize());
+            Assert.AreEqual("1919810[CQ:at,qq=1919810]114514", ("1919810" + CQCodes.CQAt(1919810) + "114514").Serialize());
         }
 
 
