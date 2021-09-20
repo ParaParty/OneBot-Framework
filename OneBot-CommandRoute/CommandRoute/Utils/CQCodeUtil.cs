@@ -45,6 +45,10 @@ namespace OneBot.CommandRoute.Utils
             ret.Append("[CQ:");
 
             var messageTypeFieldInfo = msg.MessageType.GetType().GetField(msg.MessageType.ToString());
+            if (messageTypeFieldInfo == null)
+            {
+                return "";
+            }
             DescriptionAttribute[] attributes =
                 (DescriptionAttribute[])messageTypeFieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attributes.Length < 1)
@@ -69,11 +73,12 @@ namespace OneBot.CommandRoute.Utils
                 }
                 var jsonProperty = jsonPropertyArr.First();
                 var key = jsonProperty.PropertyName;
-                var value = ((field.GetValue(data) ?? "").ToString() ?? "").CQCodeEncode(comma: true);
-                if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(value))
+                var propData = field.GetValue(data);
+                if (string.IsNullOrWhiteSpace(key) || propData == null)
                 {
                     continue;
                 }
+                var value = (propData.ToString() ?? "").CQCodeEncode(comma: true);
                 ret.Append(',').Append(key).Append('=').Append(value);
             }
 
@@ -111,7 +116,7 @@ namespace OneBot.CommandRoute.Utils
         /// <summary>
         /// 需要被反转义的内容
         /// </summary>
-        private static string[] _decodeTarget =
+        private static readonly string[] _decodeTarget =
         {
             "&amp;", "&#91;", "&#93;", "&#44;"
         };
