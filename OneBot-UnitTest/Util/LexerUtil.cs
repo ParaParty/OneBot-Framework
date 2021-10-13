@@ -15,7 +15,7 @@ namespace OneBot_UnitTest.Util
                     ret.Add(self.GetNextNotBlank());
                 }
             }
-            catch (ParserToTheEndException ignored)
+            catch (ParserToTheEndException)
             {
                 // ignored
             }
