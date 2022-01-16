@@ -1,2 +1,13 @@
+root = true
+
 [*]
-charset = utf-8 # 使 VS 默认以 UTF-8 编码保存
+charset = utf-8
+
+indent_style = space
+indent_size = 4
+
+insert_final_newline = true;
+
+spaces_around_operators = true;
+
+end_of_line = lf;
