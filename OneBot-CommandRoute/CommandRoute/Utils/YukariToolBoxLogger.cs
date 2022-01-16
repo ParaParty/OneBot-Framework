@@ -1,45 +1,123 @@
 using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
-using YukariToolBox.FormatLog;
+using Websocket.Client.Logging;
+using YukariToolBox.LightLog;
 
 namespace OneBot.CommandRoute.Utils
 {
     public class YukariToolBoxLogger : ILogService
     {
-        public ILogger<YukariToolBoxLogger> Logger { get; }
+        private readonly ILoggerFactory _loggerFactory;
 
-        public YukariToolBoxLogger(ILogger<YukariToolBoxLogger> logger)
+        private readonly ILogger<YukariToolBoxLogger> _logger;
+
+        private readonly ConcurrentDictionary<Type, ILogger> _loggerMap = new ConcurrentDictionary<Type, ILogger>();
+
+        public YukariToolBoxLogger(ILoggerFactory loggerFactory, ILogger<YukariToolBoxLogger> logger)
         {
-            Logger = logger;
+            _loggerFactory = loggerFactory;
+            _logger = logger;
         }
 
-        public void Info(object type, object message)
+        private ILogger GetLogger()
         {
-            Logger.LogInformation($"[{type}]{message}");
+            StackTrace trace = new StackTrace();
+            StackFrame? frame = trace.GetFrame(3);
+            if (frame == null)
+            {
+                return _logger;
+            }
+
+            MethodBase? logMethod = frame.GetMethod();
+            if (logMethod == null)
+            {
+                return _logger;
+            }
+            
+            Type? logType = logMethod.ReflectedType;
+            if (logType == null)
+            {
+                return _logger;
+            }
+            
+            return _loggerMap.GetOrAdd(logType, s => _loggerFactory.CreateLogger(s));
         }
 
-        public void Warning(object type, object message)
-        {
-            Logger.LogWarning($"[{type}]{message}");
 
+        public void Info(string source, string message)
+        {
+            GetLogger().LogInformation("[{source}] {message}", source, message);
         }
 
-        public void Error(object type, object message)
+        public void Info<T>(string source, string message, T context)
         {
-            Logger.LogError($"[{type}]{message}");
-
+            GetLogger().LogInformation("[{source}] {message} {context}", source, message, context);
         }
 
-        public void Fatal(object type, object message)
+        public void Warning(string source, string message)
         {
-            Logger.LogCritical($"[{type}]{message}");
+            GetLogger().LogWarning("[{source}] {message}", source, message);
         }
 
-        public void Debug(object type, object message)
+        public void Warning<T>(string source, string message, T context)
         {
-            Logger.LogDebug($"[{type}]{message}");
+            GetLogger().LogWarning("[{source}] {message} {context}", source, message, context);
+        }
+
+        public void Error(string source, string message)
+        {
+            GetLogger().LogError("[{source}] {message}", source, message);
+        }
+
+        public void Error(Exception exception, string source, string message)
+        {
+            GetLogger().LogError(exception, "[{source}] {message}", source, message);
+        }
+
+        public void Error<T>(string source, string message, T context)
+        {
+            GetLogger().LogError("[{source}] {message} {context}", source, message, context);
+        }
+
+        public void Error<T>(Exception exception, string source, string message, T context)
+        {
+            GetLogger().LogError(exception, "[{source}] {message} {context}", source, message, context);
+        }
+
+        public void Fatal(Exception exception, string source, string message)
+        {
+            GetLogger().LogCritical(exception, "[{source}] {message}", source, message);
+        }
+
+        public void Fatal<T>(Exception exception, string source, string message, T context)
+        {
+            GetLogger().LogCritical(exception, "[{source}] {message} {context}", source, message, context);
+        }
+
+        public void Debug(string source, string message)
+        {
+            GetLogger().LogDebug("[{source}] {message}", source, message);
+        }
+
+        public void Debug<T>(string source, string message, T context)
+        {
+            GetLogger().LogDebug("[{source}] {message} {context}", source, message, context);
+        }
+
+        public void Verbos(string source, string message)
+        {
+            GetLogger().LogDebug("[{source}] {message}", source, message);
+        }
+
+        public void Verbos<T>(string source, string message, T context)
+        {
+            GetLogger().LogDebug("[{source}] {message} {context}", source, message, context);
         }
 
         public void UnhandledExceptionLog(UnhandledExceptionEventArgs args)
@@ -47,11 +125,22 @@ namespace OneBot.CommandRoute.Utils
             StringBuilder errorLogBuilder = new StringBuilder();
             errorLogBuilder.Append("检测到未处理的异常");
             if (args.IsTerminating)
+            {
                 errorLogBuilder.Append("，服务器将停止运行");
-            Logger.LogError(0, args.ExceptionObject as Exception, errorLogBuilder.ToString());
-            Warning("Sora", "将在5s后自动退出");
-            Thread.Sleep(5000);
-            Environment.Exit(-1);
+            }
+
+            _logger.LogCritical(args.ExceptionObject as Exception, errorLogBuilder.ToString());
+            if (args.IsTerminating)
+            {
+                _logger.LogWarning("[Sora] 将在5s后自动退出");
+                Thread.Sleep(5000);
+                Environment.Exit(-1);
+            }
+        }
+
+        public void SetCultureInfo(CultureInfo cultureInfo)
+        {
+            //
         }
     }
 }

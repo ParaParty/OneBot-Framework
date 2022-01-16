@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneBot.CommandRoute.Models.VO;
+using Sora;
 using Sora.Interfaces;
-using Sora.Net;
-using Sora.OnebotModel;
-using YukariToolBox.FormatLog;
+using Sora.Net.Config;
+using YukariToolBox.LightLog;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
@@ -34,17 +34,18 @@ namespace OneBot.CommandRoute.Services.Implements
         /// OneBot 启动后的 Task
         /// </summary>
         private ValueTask _startTask;
-        
+
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
 
             // 配置日志
             var logger = _serviceProvider.GetService<ILogService>();
-            if (logger != null) Log.SetLoggerService(logger);
+            Log.LogConfiguration.DisableConsoleOutput();
+            if (logger != null) Log.LogConfiguration.AddLogService(logger);
 
             // 配置 CQHTTP Sora
-            var cqHttpConfig = cqHttpServerConfigModel?.Value;
+            var cqHttpConfig = cqHttpServerConfigModel.Value;
             ServiceConfig = cqHttpConfig == null ? new ServerConfig() : cqHttpConfig.ToServiceConfig();
             SoraService = SoraServiceFactory.CreateService(ServiceConfig);
         }

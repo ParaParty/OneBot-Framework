@@ -10,8 +10,8 @@ using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Enumeration;
-using OneBot.CommandRoute.Utils;
-using Sora.Entities.MessageElement;
+using Sora.Entities.Segment;
+using Sora.Util;
 
 namespace OneBot.CommandRoute.Models.Entities
 {
@@ -293,9 +293,9 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
             }
 
-            if (arg is CQCode)
+            if (arg is SoraSegment)
             {
-                var s = (CQCode)arg;
+                var s = (SoraSegment)arg;
                 try
                 {
                     return TryParseCQCode(baseSoraEventArgs, s, type, out result);
@@ -387,15 +387,15 @@ namespace OneBot.CommandRoute.Models.Entities
         {
             // ReSharper disable once RedundantAssignment
             bool ret = false;
-            if (type == ((CQCode)arg).DataObject.GetType())
+            if (type == ((SoraSegment)arg).Data.GetType())
             {
                 ret = true;
                 result = arg;
             }
-            else if (((CQCode)arg).MessageType == CQType.At)
+            else if (((SoraSegment)arg).MessageType == SegmentType.At)
             {
-                var cast = (Sora.Entities.MessageElement.CQModel.At) ((CQCode)arg).DataObject;
-                var succeed = long.TryParse(cast.Traget, out long uid);
+                var cast = ( Sora.Entities.Segment.DataModel.AtSegment) ((SoraSegment)arg).Data;
+                var succeed = long.TryParse(cast.Target, out long uid);
                 if (!succeed)
                 {
                     result = null;

@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OneBot.CommandRoute.Services;
-using Sora.Entities.MessageElement;
-using Sora.Entities.MessageElement.CQModel;
+using Sora.Entities.Segment;
+using Sora.Entities.Segment.DataModel;
 using Sora.Enumeration;
 using Sora.EventArgs.SoraEvent;
 
@@ -49,16 +49,16 @@ namespace OneBot.CommandRoute.OneBotControllers
             return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
-        private int UniversalProcess(IServiceScope scope, BaseSoraEventArgs eventArgs, CQCode firstElement)
+        private int UniversalProcess(IServiceScope scope, BaseSoraEventArgs eventArgs, SoraSegment firstElement)
         {
             var process = false;
             var appid = "";
 
             try
             {
-                if (firstElement.MessageType == CQType.Json)
+                if (firstElement.MessageType == SegmentType.Json)
                 {
-                    var jsonData = ((Code)firstElement.DataObject).Content;
+                    var jsonData = ((CodeSegment)firstElement.Data).Content;
                     var jObject = JObject.Parse(jsonData);
 
                     if (jObject.TryGetValue("app", out var jToken))

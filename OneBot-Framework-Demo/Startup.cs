@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using OneBot.CommandRoute.Mixin;
 using OneBot.CommandRoute.Models.VO;
 using OneBot.CommandRoute.Services;
 using OneBot.FrameworkDemo.Modules;
-using OneBot_CommandRoute.CommandRoute.Mixin;
 
 
 namespace OneBot.FrameworkDemo

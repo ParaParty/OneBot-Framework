@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using Sora.Interfaces;
+using Sora.Net.Config;
 using Sora.OnebotModel;
 
 namespace OneBot.CommandRoute.Models.VO
@@ -17,7 +18,7 @@ namespace OneBot.CommandRoute.Models.VO
 
         /// <summary>反向服务器端口</summary>
         [JsonProperty("Port")]
-        public uint Port { get; set; } = 8080;
+        public ushort Port { get; set; } = 8080;
 
         /// <summary>鉴权Token</summary>
         [JsonProperty("AccessToken")]
