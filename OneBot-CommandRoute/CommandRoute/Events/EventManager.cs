@@ -7,75 +7,76 @@ namespace OneBot.CommandRoute.Events
     public class EventManager
     {
         /// <summary>客户端链接完成事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<ConnectEventArgs>? OnClientConnect;
+        public event EventAsyncCallBackHandler<ConnectEventArgs>? OnClientConnect;
 
         /// <summary>群聊事件（触发指令之后）</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessage;
+        public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessage;
 
         /// <summary>群聊事件（触发指令之前）</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessageReceived;
+        public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessageReceived;
 
         /// <summary> 登录账号发送消息事件 </summary>
         public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnSelfMessage;
 
         /// <summary>私聊事件（触发指令之后）</summary>
-        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessage;
+        public event EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessage;
 
         /// <summary>私聊事件（触发指令之前）</summary>
-        public event EventManager.EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessageReceived;
+        public event EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessageReceived;
 
         /// <summary>群申请事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<AddGroupRequestEventArgs>? OnGroupRequest;
+        public event EventAsyncCallBackHandler<AddGroupRequestEventArgs>? OnGroupRequest;
 
         /// <summary>好友申请事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FriendRequestEventArgs>? OnFriendRequest;
+        public event EventAsyncCallBackHandler<FriendRequestEventArgs>? OnFriendRequest;
 
         /// <summary>群文件上传事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FileUploadEventArgs>? OnFileUpload;
+        public event EventAsyncCallBackHandler<FileUploadEventArgs>? OnFileUpload;
 
         /// <summary>管理员变动事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupAdminChangeEventArgs>? OnGroupAdminChange;
+        public event EventAsyncCallBackHandler<GroupAdminChangeEventArgs>? OnGroupAdminChange;
 
         /// <summary>群成员变动事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMemberChangeEventArgs>? OnGroupMemberChange;
+        public event EventAsyncCallBackHandler<GroupMemberChangeEventArgs>? OnGroupMemberChange;
 
         /// <summary>群成员禁言事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupMuteEventArgs>? OnGroupMemberMute;
+        public event EventAsyncCallBackHandler<GroupMuteEventArgs>? OnGroupMemberMute;
 
         /// <summary>好友添加事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FriendAddEventArgs>? OnFriendAdd;
+        public event EventAsyncCallBackHandler<FriendAddEventArgs>? OnFriendAdd;
 
         /// <summary>群聊撤回事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupRecallEventArgs>? OnGroupRecall;
+        public event EventAsyncCallBackHandler<GroupRecallEventArgs>? OnGroupRecall;
 
         /// <summary>好友撤回事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<FriendRecallEventArgs>? OnFriendRecall;
+        public event EventAsyncCallBackHandler<FriendRecallEventArgs>? OnFriendRecall;
 
         /// <summary>群名片变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupCardUpdateEventArgs>? OnGroupCardUpdate;
+        public event EventAsyncCallBackHandler<GroupCardUpdateEventArgs>? OnGroupCardUpdate;
 
         /// <summary>群内戳一戳事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<GroupPokeEventArgs>? OnGroupPoke;
+        public event EventAsyncCallBackHandler<GroupPokeEventArgs>? OnGroupPoke;
 
         /// <summary>运气王事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<LuckyKingEventArgs>? OnLuckyKingEvent;
+        public event EventAsyncCallBackHandler<LuckyKingEventArgs>? OnLuckyKingEvent;
 
         /// <summary>群成员荣誉变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<HonorEventArgs>? OnHonorEvent;
+        public event EventAsyncCallBackHandler<HonorEventArgs>? OnHonorEvent;
+
+        /// <summary>群成员头衔更新</summary>
+        public event EventAsyncCallBackHandler<TitleUpdateEventArgs>? OnTitleUpdate;
 
         /// <summary>离线文件事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<OfflineFileEventArgs>? OnOfflineFileEvent;
+        public event EventAsyncCallBackHandler<OfflineFileEventArgs>? OnOfflineFileEvent;
 
         /// <summary>其他客户端在线状态变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<ClientStatusChangeEventArgs>? OnClientStatusChangeEvent;
+        public event EventAsyncCallBackHandler<ClientStatusChangeEventArgs>? OnClientStatusChangeEvent;
 
         /// <summary>其他客户端在线状态变更事件</summary>
-        public event EventManager.EventAsyncCallBackHandler<EssenceChangeEventArgs>? OnEssenceChange;
+        public event EventAsyncCallBackHandler<EssenceChangeEventArgs>? OnEssenceChange;
 
-        public delegate int EventAsyncCallBackHandler<in TEventArgs>(
-            IServiceScope scope,
-            TEventArgs eventArgs)
-            where TEventArgs : System.EventArgs;
+        public delegate int EventAsyncCallBackHandler<in TEventArgs>(IServiceScope scope, TEventArgs eventArgs)
+            where TEventArgs : EventArgs;
 
         /// <summary>
         /// 分发事件
@@ -84,81 +85,85 @@ namespace OneBot.CommandRoute.Events
         /// <param name="eventArgs"></param>
         internal void Fire(IServiceScope scope, BaseSoraEventArgs eventArgs)
         {
-            if (eventArgs is ConnectEventArgs)
+            if (eventArgs is ConnectEventArgs connectEventArgs)
             {
-                Fire<ConnectEventArgs>(scope, eventArgs, OnClientConnect?.GetInvocationList());
+                Fire(scope, connectEventArgs, OnClientConnect);
             }
-            else if (eventArgs is GroupMessageEventArgs)
+            else if (eventArgs is GroupMessageEventArgs groupMessageEventArgs)
             {
-                Fire<GroupMessageEventArgs>(scope, eventArgs, OnGroupMessage?.GetInvocationList());
+                Fire(scope, groupMessageEventArgs, OnGroupMessage);
             }
-            else if (eventArgs is PrivateMessageEventArgs)
+            else if (eventArgs is PrivateMessageEventArgs privateMessageEventArgs)
             {
-                Fire<PrivateMessageEventArgs>(scope, eventArgs, OnPrivateMessage?.GetInvocationList());
+                Fire(scope, privateMessageEventArgs, OnPrivateMessage);
             }
-            else if (eventArgs is AddGroupRequestEventArgs)
+            else if (eventArgs is AddGroupRequestEventArgs addGroupRequestEventArgs)
             {
-                Fire<AddGroupRequestEventArgs>(scope, eventArgs, OnGroupRequest?.GetInvocationList());
+                Fire(scope, addGroupRequestEventArgs, OnGroupRequest);
             }
-            else if (eventArgs is FriendRequestEventArgs)
+            else if (eventArgs is FriendRequestEventArgs friendRequestEventArgs)
             {
-                Fire<FriendRequestEventArgs>(scope, eventArgs, OnFriendRequest?.GetInvocationList());
+                Fire(scope, friendRequestEventArgs, OnFriendRequest);
             }
-            else if (eventArgs is FileUploadEventArgs)
+            else if (eventArgs is FileUploadEventArgs fileUploadEventArgs)
             {
-                Fire<FileUploadEventArgs>(scope, eventArgs, OnFileUpload?.GetInvocationList());
+                Fire(scope, fileUploadEventArgs, OnFileUpload);
             }
-            else if (eventArgs is GroupAdminChangeEventArgs)
+            else if (eventArgs is GroupAdminChangeEventArgs groupAdminChangeEventArgs)
             {
-                Fire<GroupAdminChangeEventArgs>(scope, eventArgs, OnGroupAdminChange?.GetInvocationList());
+                Fire(scope, groupAdminChangeEventArgs, OnGroupAdminChange);
             }
-            else if (eventArgs is GroupMemberChangeEventArgs)
+            else if (eventArgs is GroupMemberChangeEventArgs groupMemberChangeEventArgs)
             {
-                Fire<GroupMemberChangeEventArgs>(scope, eventArgs, OnGroupMemberChange?.GetInvocationList());
+                Fire(scope, groupMemberChangeEventArgs, OnGroupMemberChange);
             }
-            else if (eventArgs is GroupMuteEventArgs)
+            else if (eventArgs is GroupMuteEventArgs groupMuteEventArgs)
             {
-                Fire<GroupMuteEventArgs>(scope, eventArgs, OnGroupMemberMute?.GetInvocationList());
+                Fire(scope, groupMuteEventArgs, OnGroupMemberMute);
             }
-            else if (eventArgs is FriendAddEventArgs)
+            else if (eventArgs is FriendAddEventArgs friendAddEventArgs)
             {
-                Fire<FriendAddEventArgs>(scope, eventArgs, OnFriendAdd?.GetInvocationList());
+                Fire(scope, friendAddEventArgs, OnFriendAdd);
             }
-            else if (eventArgs is GroupRecallEventArgs)
+            else if (eventArgs is GroupRecallEventArgs groupRecallEventArgs)
             {
-                Fire<GroupRecallEventArgs>(scope, eventArgs, OnGroupRecall?.GetInvocationList());
+                Fire(scope, groupRecallEventArgs, OnGroupRecall);
             }
-            else if (eventArgs is FriendRecallEventArgs)
+            else if (eventArgs is FriendRecallEventArgs friendRecallEventArgs)
             {
-                Fire<FriendRecallEventArgs>(scope, eventArgs, OnFriendRecall?.GetInvocationList());
+                Fire(scope, friendRecallEventArgs, OnFriendRecall);
             }
-            else if (eventArgs is GroupCardUpdateEventArgs)
+            else if (eventArgs is GroupCardUpdateEventArgs groupCardUpdateEventArgs)
             {
-                Fire<GroupCardUpdateEventArgs>(scope, eventArgs, OnGroupCardUpdate?.GetInvocationList());
+                Fire(scope, groupCardUpdateEventArgs, OnGroupCardUpdate);
             }
-            else if (eventArgs is GroupPokeEventArgs)
+            else if (eventArgs is GroupPokeEventArgs groupPokeEventArgs)
             {
-                Fire<GroupPokeEventArgs>(scope, eventArgs, OnGroupPoke?.GetInvocationList());
+                Fire(scope, groupPokeEventArgs, OnGroupPoke);
             }
-            else if (eventArgs is LuckyKingEventArgs)
+            else if (eventArgs is LuckyKingEventArgs luckyKingEventArgs)
             {
-                Fire<LuckyKingEventArgs>(scope, eventArgs, OnLuckyKingEvent?.GetInvocationList());
+                Fire(scope, luckyKingEventArgs, OnLuckyKingEvent);
             }
-            else if (eventArgs is HonorEventArgs)
+            else if (eventArgs is HonorEventArgs honorEventArgs)
             {
-                Fire<HonorEventArgs>(scope, eventArgs, OnHonorEvent?.GetInvocationList());
+                Fire(scope, honorEventArgs, OnHonorEvent);
             }
-            else if (eventArgs is OfflineFileEventArgs)
+            else if (eventArgs is TitleUpdateEventArgs titleUpdateEventArgs)
             {
-                Fire<OfflineFileEventArgs>(scope, eventArgs, OnOfflineFileEvent?.GetInvocationList());
+                Fire(scope, titleUpdateEventArgs, OnTitleUpdate);
             }
-            else if (eventArgs is ClientStatusChangeEventArgs)
+            else if (eventArgs is OfflineFileEventArgs offlineFileEventArgs)
             {
-                Fire<ClientStatusChangeEventArgs>(scope, eventArgs, OnClientStatusChangeEvent?.GetInvocationList());
+                Fire(scope, offlineFileEventArgs, OnOfflineFileEvent);
             }
-            else if (eventArgs is EssenceChangeEventArgs)
+            else if (eventArgs is ClientStatusChangeEventArgs clientStatusChangeEventArgs)
             {
-                Fire<EssenceChangeEventArgs>(scope, eventArgs, OnEssenceChange?.GetInvocationList());
+                Fire(scope, clientStatusChangeEventArgs, OnClientStatusChangeEvent);
+            }
+            else if (eventArgs is EssenceChangeEventArgs essenceChangeEventArgs)
+            {
+                Fire(scope, essenceChangeEventArgs, OnEssenceChange);
             }
             else
             {
@@ -174,14 +179,15 @@ namespace OneBot.CommandRoute.Events
         /// <param name="eventArgs"></param>
         /// <param name="listeners"></param>
         /// <returns></returns>
-        internal int Fire<T>(IServiceScope scope, BaseSoraEventArgs eventArgs, Delegate[]? listeners)
+        internal int Fire<T>(IServiceScope scope, T eventArgs, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
             where T : BaseSoraEventArgs
         {
+            Delegate[]? listeners = OnEssenceChange?.GetInvocationList();
             if (listeners == null) return 0;
 
             for (int counter = listeners.Length - 1; counter >= 0; counter--)
             {
-                int ret = ((EventAsyncCallBackHandler<T>) (listeners[counter]))(scope, (T) eventArgs);
+                int ret = ((EventAsyncCallBackHandler<T>)(listeners[counter]))(scope, (T)eventArgs);
                 if (ret != 0) return ret;
             }
 
@@ -196,8 +202,7 @@ namespace OneBot.CommandRoute.Events
         /// <returns></returns>
         internal int FirePrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs privateMessageEventArgs)
         {
-            return Fire<PrivateMessageEventArgs>(scope, privateMessageEventArgs,
-                OnPrivateMessageReceived?.GetInvocationList());
+            return Fire(scope, privateMessageEventArgs, OnPrivateMessageReceived);
         }
 
         /// <summary>
@@ -208,8 +213,7 @@ namespace OneBot.CommandRoute.Events
         /// <returns></returns>
         internal int FireGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs groupMessageEventArgs)
         {
-            return Fire<GroupMessageEventArgs>(scope, groupMessageEventArgs,
-                OnGroupMessageReceived?.GetInvocationList());
+            return Fire(scope, groupMessageEventArgs, OnGroupMessageReceived);
         }
 
         /// <summary>
@@ -229,7 +233,6 @@ namespace OneBot.CommandRoute.Events
         internal bool FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
         {
             if (OnException == null) return false;
-
             OnException?.Invoke(scope, e, exception);
             return true;
         }
@@ -241,7 +244,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="eventArgs"></param>
         internal void FireSelfMessage(IServiceScope scope, GroupMessageEventArgs eventArgs)
         {
-            Fire<EssenceChangeEventArgs>(scope, eventArgs, OnSelfMessage?.GetInvocationList());
+            Fire(scope, eventArgs, OnSelfMessage);
         }
     }
 }
