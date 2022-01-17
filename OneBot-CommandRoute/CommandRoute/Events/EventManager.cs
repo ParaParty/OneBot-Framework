@@ -177,12 +177,12 @@ namespace OneBot.CommandRoute.Events
         /// <typeparam name="T"></typeparam>
         /// <param name="scope"></param>
         /// <param name="eventArgs"></param>
-        /// <param name="listeners"></param>
+        /// <param name="eventAsyncCallBackHandler"></param>
         /// <returns></returns>
         internal int Fire<T>(IServiceScope scope, T eventArgs, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
             where T : BaseSoraEventArgs
         {
-            Delegate[]? listeners = OnEssenceChange?.GetInvocationList();
+            Delegate[]? listeners = eventAsyncCallBackHandler?.GetInvocationList();
             if (listeners == null) return 0;
 
             for (int counter = listeners.Length - 1; counter >= 0; counter--)
