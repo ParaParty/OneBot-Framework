@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
-using Websocket.Client.Logging;
 using YukariToolBox.LightLog;
 
 namespace OneBot.CommandRoute.Utils

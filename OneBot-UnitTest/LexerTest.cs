@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OneBot.CommandRoute.Lexer;
 using OneBot_UnitTest.Util;
 using Sora.Entities;
-using Sora.Entities.MessageElement;
+using Sora.Entities.Segment;
 
 namespace OneBot_UnitTest
 {
@@ -16,7 +16,7 @@ namespace OneBot_UnitTest
         [TestMethod]
         public void LexerTestForString()
         {
-          List<(List<CQCode>, List<object>)> testCasts = new()
+          List<(List<SoraSegment>, List<object>)> testCasts = new()
             {
                 (new (){"a b c d"}, new (){"a", "b", "c", "d"}),
                 (new (){@"a
@@ -51,10 +51,10 @@ e
         [TestMethod]
         public void LexerForNormalMixedMessage()
         {
-          List<(List<CQCode>, List<object>)> testCasts = new()
+          List<(List<SoraSegment>, List<object>)> testCasts = new()
             {
-                (new (){"mute ", CQCodes.CQAt(114514), " 1d"}, new (){"mute", CQCodes.CQAt(114514), "1d"}),
-                (new (){"mute", CQCodes.CQAt(114514), "1d"}, new (){"mute", CQCodes.CQAt(114514), "1d"}),
+                (new (){"mute ", SoraSegment.At(114514), " 1d"}, new (){"mute", SoraSegment.At(114514), "1d"}),
+                (new (){"mute", SoraSegment.At(114514), "1d"}, new (){"mute", SoraSegment.At(114514), "1d"}),
             };
             
             testCasts.ForEach((data) =>
@@ -70,7 +70,7 @@ e
         [TestMethod]
         public void LexerTestForQuotedString()
         {
-            List<(List<CQCode>, List<object>)> testCasts = new()
+            List<(List<SoraSegment>, List<object>)> testCasts = new()
             {
                 (new() { "a \"b c\" d" }, new() { "a", new MessageBody { "b c" }, "d" }),
                 (new() { "a \"b\n c\" d" }, new() { "a", new MessageBody { "b\n c" }, "d" }),
@@ -96,34 +96,34 @@ e
         [TestMethod]
         public void LexerForNormalQuotedMixedMessage()
         {
-            List<(List<CQCode>, List<object>)> testCasts = new()
+            List<(List<SoraSegment>, List<object>)> testCasts = new()
             {
                 (
-                    new() { "draw 喜报 \"恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。\"" }, 
-                    new() { "draw", "喜报", new MessageBody { "恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。" }}
+                    new() { "draw 喜报 \"恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。\"" }, 
+                    new() { "draw", "喜报", new MessageBody { "恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。" }}
                 ),
                 (
-                    new() { "draw 喜报 '恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。'" }, 
-                    new() { "draw", "喜报", new MessageBody { "恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。" }}
+                    new() { "draw 喜报 '恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。'" }, 
+                    new() { "draw", "喜报", new MessageBody { "恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。" }}
                 ),
                 (
                     new()
                     {
-                        "draw 喜报 \"恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。\"'  ", CQCodes.CQAt(1919810), "  '"
+                        "draw 喜报 \"恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。\"'  ", SoraSegment.At(1919810), "  '"
                     },
                     new()
                     {
-                        "draw", "喜报", new MessageBody { "恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。" },
-                        new MessageBody { "  ", CQCodes.CQAt(1919810), "  " }
+                        "draw", "喜报", new MessageBody { "恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。" },
+                        new MessageBody { "  ", SoraSegment.At(1919810), "  " }
                     }
                 ),
                 (
-                    new() { "draw 喜报 \"恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。\"", CQCodes.CQAt(1919810) }, 
-                    new() { "draw", "喜报", new MessageBody { "恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。" }, CQCodes.CQAt(1919810)}
+                    new() { "draw 喜报 \"恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。\"", SoraSegment.At(1919810) }, 
+                    new() { "draw", "喜报", new MessageBody { "恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。" }, SoraSegment.At(1919810)}
                 ),
                 (
-                    new() { "draw 喜报 \"恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。\"", "test" }, 
-                    new() { "draw", "喜报", new MessageBody { "恭喜 ", CQCodes.CQAt(114514), "获得群 Bug 最多奖。" }, "test"}
+                    new() { "draw 喜报 \"恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。\"", "test" }, 
+                    new() { "draw", "喜报", new MessageBody { "恭喜 ", SoraSegment.At(114514), "获得群 Bug 最多奖。" }, "test"}
                 ),
             };
 
