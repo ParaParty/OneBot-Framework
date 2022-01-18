@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Command;
 using OneBot.CommandRoute.Events;
-using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Entities;
 using Sora.EventArgs.SoraEvent;
 using System;
@@ -57,7 +56,7 @@ namespace OneBot.CommandRoute.Services.Implements
             _matchingRootNode = new MatchingNode(routeConfiguration) { IsRoot = true };
         }
 
-        public ValueTask HandleEvent(object sender, OneBotContext oneBotContext)
+        public ValueTask HandleEvent(OneBotContext oneBotContext)
         {
             var eventArgs = oneBotContext.SoraEventArgs;
 
@@ -65,20 +64,20 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 if (groupMessageEventArgs.IsSelfMessage)
                 {
-                    return EventOnSelfMessage(sender, oneBotContext, groupMessageEventArgs);
+                    return EventOnSelfMessage(oneBotContext);
                 }
                 else
                 {
-                    return EventOnGroupMessage(sender, oneBotContext, groupMessageEventArgs);
+                    return EventOnGroupMessage(oneBotContext);
                 }
             }
-            else if (eventArgs is PrivateMessageEventArgs privateMessageEventArgs)
+            else if (eventArgs is PrivateMessageEventArgs)
             {
-                return EventOnPrivateMessage(sender, oneBotContext, privateMessageEventArgs);
+                return EventOnPrivateMessage(oneBotContext);
             }
             else
             {
-                return OnGeneralEvent(sender, oneBotContext, eventArgs);
+                return OnGeneralEvent(oneBotContext);
             }
         }
 
@@ -87,16 +86,14 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 登录账号发送消息事件
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
-        /// <param name="e"></param>
         /// <returns></returns>
-        private ValueTask EventOnSelfMessage(object sender, OneBotContext oneBotContext, GroupMessageEventArgs e)
+        private ValueTask EventOnSelfMessage(OneBotContext oneBotContext)
         {     
             Exception? exception = null;
             try
             {
-                Event.FireSelfMessage(oneBotContext, e);
+                Event.FireSelfMessage(oneBotContext);
             }
             catch (Exception e1)
             {
@@ -105,7 +102,7 @@ namespace OneBot.CommandRoute.Services.Implements
 
             if (exception != null)
             {
-                return EventOnException(sender, oneBotContext, exception);
+                return EventOnException(oneBotContext, exception);
             }
             return ValueTask.CompletedTask;
         }
@@ -113,15 +110,13 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 异常处理
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
         /// <param name="exception"></param>
-        public ValueTask EventOnException(object sender, OneBotContext oneBotContext, Exception exception)
+        public ValueTask EventOnException(OneBotContext oneBotContext, Exception exception)
         {
-            var e = oneBotContext.SoraEventArgs;
             try
             {
-                if (!Event.FireException(oneBotContext, e, exception))
+                if (!Event.FireException(oneBotContext, exception))
                 {
                     _logger.LogError(
                         $"{exception.Message} : \n" +
@@ -141,16 +136,14 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 通用事件
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
-        /// <param name="e"></param>
         /// <returns></returns>
-        private ValueTask OnGeneralEvent(object sender, OneBotContext oneBotContext, BaseSoraEventArgs e)
+        private ValueTask OnGeneralEvent(OneBotContext oneBotContext)
         {
             Exception? exception = null;
             try
             {
-                Event.Fire(oneBotContext, e);
+                Event.Fire(oneBotContext);
             }
             catch (Exception e1)
             {
@@ -159,7 +152,7 @@ namespace OneBot.CommandRoute.Services.Implements
 
             if (exception != null)
             {
-                return EventOnException(sender, oneBotContext, exception);
+                return EventOnException(oneBotContext, exception);
             }
 
             return ValueTask.CompletedTask;
@@ -172,19 +165,16 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 私聊消息分发
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
-        /// <param name="e"></param>
         /// <returns></returns>
-        private ValueTask EventOnPrivateMessage(object sender, OneBotContext oneBotContext, PrivateMessageEventArgs e)
+        private ValueTask EventOnPrivateMessage(OneBotContext oneBotContext)
         {
             Exception? exception = null;
             try
             {
-                if (Event.FirePrivateMessageReceived(oneBotContext, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext, sender, e,
-                        new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
-                Event.Fire(oneBotContext, e);
+                if (Event.FirePrivateMessageReceived(oneBotContext) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) return ValueTask.CompletedTask;
+                Event.Fire(oneBotContext);
             }
             catch (Exception e1)
             {
@@ -193,7 +183,7 @@ namespace OneBot.CommandRoute.Services.Implements
 
             if (exception != null)
             {
-                return EventOnException(sender, oneBotContext, exception);
+                return EventOnException(oneBotContext, exception);
             }
 
             return ValueTask.CompletedTask;
@@ -202,19 +192,16 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 群聊消息分发
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
-        /// <param name="e"></param>
         /// <returns></returns>
-        private ValueTask EventOnGroupMessage(object sender, OneBotContext oneBotContext, GroupMessageEventArgs e)
+        private ValueTask EventOnGroupMessage(OneBotContext oneBotContext)
         {
             Exception? exception = null;
             try
             {
-                if (Event.FireGroupMessageReceived(oneBotContext, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext, sender, e,
-                        new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
-                Event.Fire(oneBotContext, e);
+                if (Event.FireGroupMessageReceived(oneBotContext) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) return ValueTask.CompletedTask;
+                Event.Fire(oneBotContext);
             }
             catch (Exception e1)
             {
@@ -223,7 +210,7 @@ namespace OneBot.CommandRoute.Services.Implements
 
             if (exception != null)
             {
-                return EventOnException(sender, oneBotContext, exception);
+                return EventOnException(oneBotContext, exception);
             }
 
             return ValueTask.CompletedTask;
@@ -245,7 +232,6 @@ namespace OneBot.CommandRoute.Services.Implements
                 var methods = clazz.GetMethods();
                 foreach (var method in methods)
                 {
-                    var methodAttributes = method.CustomAttributes;
                     if (Attribute.IsDefined(method, typeof(CommandAttribute)))
                     {
                         var attr = Attribute.GetCustomAttribute(method, typeof(CommandAttribute)) as CommandAttribute;
@@ -397,19 +383,18 @@ namespace OneBot.CommandRoute.Services.Implements
 
                 parametersMatchingType.Add(0);
                 parametersName.Add(s);
+                // ReSharper disable once RedundantJumpStatement
                 continue;
             }
-
-            ;
 
             // 先检查属性
             var functionParametersList = commandMethod.GetParameters();
             for (var i = 0; i < functionParametersList.Length; i++)
             {
                 var type = functionParametersList[i];
-                if (System.Attribute.IsDefined(type, typeof(CommandParameterAttribute)))
+                if (Attribute.IsDefined(type, typeof(CommandParameterAttribute)))
                 {
-                    var attr = System.Attribute.GetCustomAttribute(type, typeof(CommandParameterAttribute)) as CommandParameterAttribute;
+                    var attr = Attribute.GetCustomAttribute(type, typeof(CommandParameterAttribute)) as CommandParameterAttribute;
 #pragma warning disable 8602
                     var paraName = attr.Name;
 #pragma warning restore 8602

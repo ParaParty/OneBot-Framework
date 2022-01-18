@@ -87,13 +87,14 @@ public class EventService : IEventService
         using (var scope = this._scopeFactory.CreateScope())
         {
             var ctx = new OneBotContextDefault();
+            ctx.SetSoraEventSender(sender);
             ctx.SetSoraEventArgs(e);
             ctx.SoraServiceScope(scope);
 
             var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
             var count = middleware.Count();
 
-            OneBotRequestDelegate entry = context => _commandService.HandleEvent(sender, context);
+            OneBotRequestDelegate entry = context => _commandService.HandleEvent(context);
 
             for (int i = count - 1; i >= 0; i--)
             {
@@ -112,7 +113,7 @@ public class EventService : IEventService
                 exception = ex;
             }
 
-            if (exception != null) _commandService.EventOnException(sender, ctx, exception);
+            if (exception != null) _commandService.EventOnException(ctx, exception);
         }
 
         return ValueTask.CompletedTask;

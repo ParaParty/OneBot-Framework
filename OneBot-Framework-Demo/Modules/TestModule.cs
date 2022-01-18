@@ -23,8 +23,10 @@ namespace OneBot.FrameworkDemo.Modules
             
             // 基本事件处理例子
             // 如果你不想要指令路由，可以使用这个方法来注册最原始的事件监听方法
-            commandService.Event.OnGroupMessage += (scope, args) =>
+            commandService.Event.OnGroupMessage += (scope) =>
             {
+                var args = scope.WrapSoraEventArgs<GroupMessageEventArgs>();
+                
                 // 在控制台中复读群里的信息
                 logger.LogInformation($"{args.SourceGroup.Id} : {args.Sender.Id} : {args.Message.RawText}");
 
@@ -33,7 +35,7 @@ namespace OneBot.FrameworkDemo.Modules
             };
 
             // 全局异常处理事件
-            commandService.Event.OnException += (scope, args, exception) =>
+            commandService.Event.OnException += (scope, exception) =>
             {
                 logger.LogError($"{exception.Message}");
             };

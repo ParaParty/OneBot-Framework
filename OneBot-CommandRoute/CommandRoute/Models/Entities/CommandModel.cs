@@ -103,12 +103,11 @@ namespace OneBot.CommandRoute.Models.Entities
         /// 尝试调用这个函数
         /// </summary>
         /// <param name="context">事件上下文</param>
-        /// <param name="sender">事件触发者</param>
-        /// <param name="baseSoraEventArgs">Sora 事件对象</param>
         /// <param name="lexer">指令解析器</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int Invoke(OneBotContext context, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLexer lexer)
+        public int Invoke(OneBotContext context, CommandLexer lexer)
         {
+            var baseSoraEventArgs = context.SoraEventArgs;
             switch (baseSoraEventArgs)
             {
                 // 检查事件类型是否正确

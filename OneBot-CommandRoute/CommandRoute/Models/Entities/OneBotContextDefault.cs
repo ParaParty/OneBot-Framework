@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Sora.EventArgs.SoraEvent;
@@ -13,6 +14,21 @@ public class OneBotContextDefault : OneBotContext
     public override BaseSoraEventArgs SoraEventArgs { get; protected set; } = null!;
 
     /// <summary>
+    /// Sora 基本事件参数
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public override T WrapSoraEventArgs<T>()
+    {
+        var ret = SoraEventArgs as T;
+        if (ret == null)
+        {
+            throw new ArgumentException($"SoraEventArgs is not an instance of {typeof(T).Name}", $"SoraEventArgs");
+        }
+        return ret;
+    }
+
+    /// <summary>
     /// IOC Service Scope
     /// </summary>
     public override IServiceScope ServiceScope { get; protected set; } = null!;
@@ -24,13 +40,23 @@ public class OneBotContextDefault : OneBotContext
         new ConcurrentDictionary<object, object?>();
 
 
-    public void SetSoraEventArgs(BaseSoraEventArgs e)
+    internal void SetSoraEventArgs(BaseSoraEventArgs e)
     {
         SoraEventArgs = e;
     }
 
-    public void SoraServiceScope(IServiceScope scope)
+    internal void SoraServiceScope(IServiceScope scope)
     {
         ServiceScope = scope;
+    }
+
+    /// <summary>
+    /// Sora Sender
+    /// </summary>
+    public object Sender { get; private set; } = "";
+
+    internal void SetSoraEventSender(object sender)
+    {
+        Sender = sender;
     }
 }

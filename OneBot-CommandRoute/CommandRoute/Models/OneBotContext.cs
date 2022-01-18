@@ -12,6 +12,13 @@ public abstract class OneBotContext
     public abstract BaseSoraEventArgs SoraEventArgs { get; protected set; }
 
     /// <summary>
+    /// Sora 基本事件参数
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public abstract T WrapSoraEventArgs<T>() where T : BaseSoraEventArgs;
+
+    /// <summary>
     /// IOC Service Scope
     /// </summary>
     public abstract IServiceScope ServiceScope { get; protected set; }

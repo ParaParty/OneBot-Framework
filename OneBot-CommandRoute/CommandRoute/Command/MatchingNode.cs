@@ -57,10 +57,29 @@ namespace OneBot.CommandRoute.Command
         /// </summary>
         /// <param name="context">事件上下文</param>
         /// <param name="sender">事件触发者</param>
-        /// <param name="e">Sora 事件对象</param>
+        /// <returns>0 继续 / 1 阻断</returns>
+        public int ProcessingCommandMapping(OneBotContext context)
+        {
+            var eventArgs = context.SoraEventArgs;
+
+            CommandLexer? lexer = eventArgs switch
+            {
+                GroupMessageEventArgs groupMessageEventArgs => new CommandLexer(groupMessageEventArgs.Message.MessageBody),
+                PrivateMessageEventArgs privateMessageEventArgs => new CommandLexer(privateMessageEventArgs.Message.MessageBody),
+                _ => null
+            };
+
+            return lexer == null ? 0 : ProcessingCommandMapping(context, lexer);
+        }
+
+
+        /// <summary>
+        /// 处理指令匹配
+        /// </summary>
+        /// <param name="context">事件上下文</param>
         /// <param name="lexer">指令解析器</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int ProcessingCommandMapping(OneBotContext context, object sender, BaseSoraEventArgs e, CommandLexer lexer)
+        public int ProcessingCommandMapping(OneBotContext context, CommandLexer lexer)
         {
             if (!lexer.IsValid()) return 0;
 
@@ -93,14 +112,14 @@ namespace OneBot.CommandRoute.Command
                         if (nextStepForComparing != tokenForComparing) continue;
                     }
 
-                    var ret = s.Value.ProcessingCommandMapping(context, sender, e, lexer);
+                    var ret = s.Value.ProcessingCommandMapping(context, lexer);
                     if (ret != 0) return ret;
                 }
             }
 
             foreach (var s in _command)
             {
-                var ret = s.Invoke(context, sender, e, oldParser);
+                var ret = s.Invoke(context, oldParser);
                 if (ret != 0) return ret;
             }
 

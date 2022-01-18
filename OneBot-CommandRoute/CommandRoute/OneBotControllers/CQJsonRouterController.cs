@@ -15,11 +15,6 @@ namespace OneBot.CommandRoute.OneBotControllers
     public class CQJsonRouterController: IOneBotController
     {
         /// <summary>
-        /// 服务容器
-        /// </summary>
-        private readonly IServiceProvider _serviceProvider;
-
-        /// <summary>
         /// 路由服务
         /// </summary>
         private readonly ICQJsonRouterService _routeService;
@@ -28,7 +23,6 @@ namespace OneBot.CommandRoute.OneBotControllers
         public CQJsonRouterController(ICommandService commandService, IServiceProvider serviceProvider)
 #pragma warning restore 8618
         {
-            _serviceProvider = serviceProvider;
             var routeService = serviceProvider.GetService<ICQJsonRouterService>();
             if (routeService != null)
             {
@@ -38,14 +32,16 @@ namespace OneBot.CommandRoute.OneBotControllers
             }
         }
 
-        private int EventOnGroupMessageReceived(OneBotContext scope, GroupMessageEventArgs eventArgs)
+        private int EventOnGroupMessageReceived(OneBotContext scope)
         {
+            var eventArgs = scope.WrapSoraEventArgs<GroupMessageEventArgs>();
             var p = eventArgs.Message.MessageBody.FirstOrDefault();
             return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
-        private int EventOnPrivateMessageReceived(OneBotContext scope, PrivateMessageEventArgs eventArgs)
+        private int EventOnPrivateMessageReceived(OneBotContext scope)
         {
+            var eventArgs = scope.WrapSoraEventArgs<PrivateMessageEventArgs>();
             var p = eventArgs.Message.MessageBody.FirstOrDefault();
             return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
