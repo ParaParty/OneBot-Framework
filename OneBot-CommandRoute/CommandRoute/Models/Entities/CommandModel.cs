@@ -102,12 +102,12 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <summary>
         /// 尝试调用这个函数
         /// </summary>
-        /// <param name="scope">事件上下文</param>
+        /// <param name="context">事件上下文</param>
         /// <param name="sender">事件触发者</param>
         /// <param name="baseSoraEventArgs">Sora 事件对象</param>
         /// <param name="lexer">指令解析器</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int Invoke(IServiceScope scope, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLexer lexer)
+        public int Invoke(OneBotContext context, object sender, BaseSoraEventArgs baseSoraEventArgs, CommandLexer lexer)
         {
             switch (baseSoraEventArgs)
             {
@@ -232,16 +232,22 @@ namespace OneBot.CommandRoute.Models.Entities
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
-
+                
                 // 判断是否需要传递 Scope 信息
                 if (parameterType == typeof(IServiceScope))
                 {
-                    functionArgs[i] = scope;
+                    functionArgs[i] = context.ServiceScope;
+                    continue;
+                }
+                
+                if (parameterType == typeof(OneBotContext))
+                {
+                    functionArgs[i] = context;
                     continue;
                 }
 
                 // 从 Scope 中获得参数
-                functionArgs[i] = scope.ServiceProvider.GetService(parameterType);
+                functionArgs[i] = context.ServiceScope.ServiceProvider.GetService(parameterType);
             }
 
             // TODO 判断是否有基本类型但是是 NOTNULL 的。
@@ -252,7 +258,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
                 for (int i = 0; i < attrs.Length; i++)
                 {
-                    (attrs[i] as BeforeCommandAttribute)?.Invoke(scope, baseSoraEventArgs);
+                    (attrs[i] as BeforeCommandAttribute)?.Invoke(context);
                 }
             }
 

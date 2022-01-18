@@ -31,11 +31,6 @@ namespace OneBot.CommandRoute.Services.Implements
         private readonly MatchingNode _matchingRootNode;
 
         /// <summary>
-        /// Scope 工厂
-        /// </summary>
-        private readonly IServiceScopeFactory _scopeFactory;
-
-        /// <summary>
         /// 日志
         /// </summary>
         private ILogger<CommandService> _logger;
@@ -50,12 +45,10 @@ namespace OneBot.CommandRoute.Services.Implements
         /// </summary>
         public EventManager Event { get; set; }
 
-        public CommandService(IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory,
-            ILogger<CommandService> logger)
+        public CommandService(IServiceProvider serviceProvider, ILogger<CommandService> logger)
         {
             _serviceProvider = serviceProvider;
             _jsonRouterService = _serviceProvider.GetService<ICQJsonRouterService>();
-            _scopeFactory = scopeFactory;
             _logger = logger;
             Event = new EventManager();
 
@@ -100,11 +93,10 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnSelfMessage(object sender, OneBotContext oneBotContext, GroupMessageEventArgs e)
         {     
-            var scope = oneBotContext.ServiceScope;
             Exception? exception = null;
             try
             {
-                Event.FireSelfMessage(scope, e);
+                Event.FireSelfMessage(oneBotContext, e);
             }
             catch (Exception e1)
             {
@@ -126,12 +118,10 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <param name="exception"></param>
         public ValueTask EventOnException(object sender, OneBotContext oneBotContext, Exception exception)
         {
-            var scope = oneBotContext.ServiceScope;
             var e = oneBotContext.SoraEventArgs;
-
             try
             {
-                if (!Event.FireException(scope, e, exception))
+                if (!Event.FireException(oneBotContext, e, exception))
                 {
                     _logger.LogError(
                         $"{exception.Message} : \n" +
@@ -157,11 +147,10 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask OnGeneralEvent(object sender, OneBotContext oneBotContext, BaseSoraEventArgs e)
         {
-            var scope = oneBotContext.ServiceScope; 
             Exception? exception = null;
             try
             {
-                Event.Fire(scope, e);
+                Event.Fire(oneBotContext, e);
             }
             catch (Exception e1)
             {
@@ -189,14 +178,13 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnPrivateMessage(object sender, OneBotContext oneBotContext, PrivateMessageEventArgs e)
         {
-            var scope = oneBotContext.ServiceScope;
             Exception? exception = null;
             try
             {
-                if (Event.FirePrivateMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                if (Event.FirePrivateMessageReceived(oneBotContext, e) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext, sender, e,
                         new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
-                Event.Fire(scope, e);
+                Event.Fire(oneBotContext, e);
             }
             catch (Exception e1)
             {
@@ -220,14 +208,13 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnGroupMessage(object sender, OneBotContext oneBotContext, GroupMessageEventArgs e)
         {
-            var scope = oneBotContext.ServiceScope;
             Exception? exception = null;
             try
             {
-                if (Event.FireGroupMessageReceived(scope, e) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(scope, sender, e,
+                if (Event.FireGroupMessageReceived(oneBotContext, e) != 0) return ValueTask.CompletedTask;
+                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext, sender, e,
                         new CommandLexer(e.Message.MessageBody)) != 0) return ValueTask.CompletedTask;
-                Event.Fire(scope, e);
+                Event.Fire(oneBotContext, e);
             }
             catch (Exception e1)
             {

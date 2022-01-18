@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Services;
 using Sora.Entities.Segment;
 using Sora.Entities.Segment.DataModel;
@@ -37,19 +38,19 @@ namespace OneBot.CommandRoute.OneBotControllers
             }
         }
 
-        private int EventOnGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs eventArgs)
+        private int EventOnGroupMessageReceived(OneBotContext scope, GroupMessageEventArgs eventArgs)
         {
             var p = eventArgs.Message.MessageBody.FirstOrDefault();
             return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
-        private int EventOnPrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs eventArgs)
+        private int EventOnPrivateMessageReceived(OneBotContext scope, PrivateMessageEventArgs eventArgs)
         {
             var p = eventArgs.Message.MessageBody.FirstOrDefault();
             return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
         }
 
-        private int UniversalProcess(IServiceScope scope, BaseSoraEventArgs eventArgs, SoraSegment firstElement)
+        private int UniversalProcess(OneBotContext scope, BaseSoraEventArgs eventArgs, SoraSegment firstElement)
         {
             var process = false;
             var appid = "";

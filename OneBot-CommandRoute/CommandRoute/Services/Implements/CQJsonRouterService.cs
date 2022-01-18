@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
+using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Entities;
 using OneBot.CommandRoute.Models.Enumeration;
 using Sora.EventArgs.SoraEvent;
@@ -41,7 +42,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <param name="eventArgs"></param>
         /// <param name="appid"></param>
         /// <returns></returns>
-        public int Handle(IServiceScope scope, BaseSoraEventArgs eventArgs, string appid)
+        public int Handle(OneBotContext scope, BaseSoraEventArgs eventArgs, string appid)
         {
             if (!_mapping.TryGetValue(appid, out var list)) return 0;
             foreach (var mappingObj in list)

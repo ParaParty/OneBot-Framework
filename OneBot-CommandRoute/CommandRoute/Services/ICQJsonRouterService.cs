@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
+using OneBot.CommandRoute.Models;
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Services
@@ -9,6 +10,6 @@ namespace OneBot.CommandRoute.Services
     {
         void Register(IOneBotController oneBotController, MethodInfo method, CQJsonAttribute attr);
         
-        int Handle(IServiceScope scope, BaseSoraEventArgs eventArgs, string appid);
+        int Handle(OneBotContext scope, BaseSoraEventArgs eventArgs, string appid);
     }
 }

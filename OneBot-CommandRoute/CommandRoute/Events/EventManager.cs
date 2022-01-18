@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using OneBot.CommandRoute.Models;
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Events
@@ -75,7 +76,7 @@ namespace OneBot.CommandRoute.Events
         /// <summary>其他客户端在线状态变更事件</summary>
         public event EventAsyncCallBackHandler<EssenceChangeEventArgs>? OnEssenceChange;
 
-        public delegate int EventAsyncCallBackHandler<in TEventArgs>(IServiceScope scope, TEventArgs eventArgs)
+        public delegate int EventAsyncCallBackHandler<in TEventArgs>(OneBotContext scope, TEventArgs eventArgs)
             where TEventArgs : EventArgs;
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace OneBot.CommandRoute.Events
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="eventArgs"></param>
-        internal void Fire(IServiceScope scope, BaseSoraEventArgs eventArgs)
+        internal void Fire(OneBotContext scope, BaseSoraEventArgs eventArgs)
         {
             if (eventArgs is ConnectEventArgs connectEventArgs)
             {
@@ -179,7 +180,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="eventArgs"></param>
         /// <param name="eventAsyncCallBackHandler"></param>
         /// <returns></returns>
-        internal int Fire<T>(IServiceScope scope, T eventArgs, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
+        internal int Fire<T>(OneBotContext scope, T eventArgs, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
             where T : BaseSoraEventArgs
         {
             Delegate[]? listeners = eventAsyncCallBackHandler?.GetInvocationList();
@@ -200,7 +201,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="scope"></param>
         /// <param name="privateMessageEventArgs"></param>
         /// <returns></returns>
-        internal int FirePrivateMessageReceived(IServiceScope scope, PrivateMessageEventArgs privateMessageEventArgs)
+        internal int FirePrivateMessageReceived(OneBotContext scope, PrivateMessageEventArgs privateMessageEventArgs)
         {
             return Fire(scope, privateMessageEventArgs, OnPrivateMessageReceived);
         }
@@ -211,7 +212,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="scope"></param>
         /// <param name="groupMessageEventArgs"></param>
         /// <returns></returns>
-        internal int FireGroupMessageReceived(IServiceScope scope, GroupMessageEventArgs groupMessageEventArgs)
+        internal int FireGroupMessageReceived(OneBotContext scope, GroupMessageEventArgs groupMessageEventArgs)
         {
             return Fire(scope, groupMessageEventArgs, OnGroupMessageReceived);
         }
@@ -221,7 +222,7 @@ namespace OneBot.CommandRoute.Events
         /// </summary>
         public event ExceptionDelegate? OnException;
 
-        public delegate void ExceptionDelegate(IServiceScope scope, BaseSoraEventArgs e, Exception exception);
+        public delegate void ExceptionDelegate(OneBotContext scope, BaseSoraEventArgs e, Exception exception);
 
         /// <summary>
         /// 分发异常
@@ -230,7 +231,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="e"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        internal bool FireException(IServiceScope scope, BaseSoraEventArgs e, Exception exception)
+        internal bool FireException(OneBotContext scope, BaseSoraEventArgs e, Exception exception)
         {
             if (OnException == null) return false;
             OnException?.Invoke(scope, e, exception);
@@ -242,7 +243,7 @@ namespace OneBot.CommandRoute.Events
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="eventArgs"></param>
-        internal void FireSelfMessage(IServiceScope scope, GroupMessageEventArgs eventArgs)
+        internal void FireSelfMessage(OneBotContext scope, GroupMessageEventArgs eventArgs)
         {
             Fire(scope, eventArgs, OnSelfMessage);
         }
