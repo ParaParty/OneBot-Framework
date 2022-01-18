@@ -10,12 +10,12 @@ public class OneBotContextDefault : OneBotContext
     /// <summary>
     /// Sora 基本事件参数
     /// </summary>
-    public override BaseSoraEventArgs SoraEventArgs { get; protected set; }
+    public override BaseSoraEventArgs SoraEventArgs { get; protected set; } = null!;
 
     /// <summary>
     /// IOC Service Scope
     /// </summary>
-    public override IServiceScope ServiceScope { get; protected set; }
+    public override IServiceScope ServiceScope { get; protected set; } = null!;
 
     /// <summary>
     /// 上下文传递的内容
