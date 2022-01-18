@@ -3,9 +3,16 @@ using OneBot.CommandRoute.Models;
 
 namespace OneBot.CommandRoute.Services;
 
-public delegate ValueTask OneBotRequestDelegate(OneBotContext context);
-
+/// <summary>
+/// OneBot 中间件
+/// </summary>
 public interface IOneBotMiddleware
 {
+    /// <summary>
+    /// OneBot 中间件处理
+    /// </summary>
+    /// <param name="oneBotContext">OneBot 事件上下文</param>
+    /// <param name="step">下一步</param>
+    /// <returns></returns>
     public ValueTask Invoke(OneBotContext oneBotContext, OneBotRequestDelegate step);
 }
