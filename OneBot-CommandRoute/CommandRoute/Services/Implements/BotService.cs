@@ -56,7 +56,11 @@ namespace OneBot.CommandRoute.Services.Implements
             var commandService = _serviceProvider.GetService<ICommandService>() ??
                                  throw new ArgumentNullException("", "ICommandService did not register.");
             commandService.RegisterCommand();
-            commandService.RegisterEventHandler();
+            
+            // 初始化事件系统
+            var eventService = _serviceProvider.GetService<IEventService>() ??
+                                 throw new ArgumentNullException("", "IEventService did not register.");
+            eventService.RegisterEventHandler();
 
             // 启动 CQHTTP
             _startTask = SoraService.StartService();

@@ -1,4 +1,7 @@
+using System;
+using System.Threading.Tasks;
 using OneBot.CommandRoute.Events;
+using OneBot.CommandRoute.Models;
 
 namespace OneBot.CommandRoute.Services
 {
@@ -7,10 +10,31 @@ namespace OneBot.CommandRoute.Services
     /// </summary>
     public interface ICommandService
     {
+        /// <summary>
+        /// 事件管理器
+        /// </summary>
         public EventManager Event { get; set; }
 
+        /// <summary>
+        /// 注册指令
+        /// </summary>
         public void RegisterCommand();
 
-        public void RegisterEventHandler();
+        /// <summary>
+        /// 事件处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="oneBotContext"></param>
+        /// <returns></returns>
+        public ValueTask HandleEvent(object sender, OneBotContext oneBotContext);
+
+
+        /// <summary>
+        /// 异常处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="oneBotContext"></param>
+        /// <param name="exception"></param>
+        public ValueTask EventOnException(object sender, OneBotContext oneBotContext, Exception exception);
     }
 }

@@ -17,7 +17,10 @@ namespace OneBot.CommandRoute.Mixin
         {   
             // OneBot
             services.AddSingleton<IBotService, BotService>();
-            
+
+            // 事件服务
+            services.AddSingleton<IEventService, EventService>();
+
             // 指令路由服务
             services.AddSingleton<ICommandService, CommandService>();
             
