@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using OneBot.CommandRoute.OneBotControllers;
 using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Services.Implements;
@@ -17,6 +18,7 @@ namespace OneBot.CommandRoute.Mixin
         {
             // OneBot
             services.AddSingleton<IBotService, BotService>();
+            services.AddSingleton<IHostedService, OneBotHostedService>();
 
             // 事件服务
             services.AddSingleton<IEventService, EventService>();

@@ -59,13 +59,6 @@ namespace OneBot.FrameworkDemo
                 });
             });
             */
-
-            // 初始化
-            var serviceProvider = app.ApplicationServices;
-
-            // 初始化机器人核心
-            var soraService = serviceProvider.GetService<IBotService>();
-            soraService.Start();
         }
     }
 }

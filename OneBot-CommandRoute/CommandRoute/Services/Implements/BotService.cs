@@ -25,25 +25,10 @@ namespace OneBot.CommandRoute.Services.Implements
         /// </summary>
         public ISoraConfig ServiceConfig { get; }
 
-        /// <summary>
-        /// 依赖注入服务
-        /// </summary>
-        private readonly IServiceProvider _serviceProvider;
-
-        /// <summary>
-        /// OneBot 启动后的 Task
-        /// </summary>
-        // ValueTask instances returned from member invocations are intended to be directly awaited. Attempts to consume a ValueTask multiple times or to directly access one's result before it's known to be completed may result in an exception or corruption. Ignoring such a ValueTask is likely an indication of a functional bug and may degrade performance.
-        // TODO: This should be removed, or change it to Task.
-        // ReSharper disable once NotAccessedField.Local
-        private ValueTask _startTask;
-
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
-
             // 配置日志
-            var logger = _serviceProvider.GetService<ILogService>();
+            var logger = serviceProvider.GetService<ILogService>();
             Log.LogConfiguration.DisableConsoleOutput();
             if (logger != null) Log.LogConfiguration.AddLogService(logger);
 
@@ -51,22 +36,6 @@ namespace OneBot.CommandRoute.Services.Implements
             var cqHttpConfig = cqHttpServerConfigModel.Value;
             ServiceConfig = cqHttpConfig == null ? new ServerConfig() : cqHttpConfig.ToServiceConfig();
             SoraService = SoraServiceFactory.CreateService(ServiceConfig);
-        }
-
-        public void Start()
-        {
-            // 初始化指令系统
-            var commandService = _serviceProvider.GetRequiredService<ICommandService>();
-            commandService.RegisterCommand();
-
-            // 初始化事件系统
-            var eventService = _serviceProvider.GetRequiredService<IEventService>();
-            eventService.RegisterEventHandler();
-
-            // 启动 CQHTTP
-            // ValueTask instances returned from member invocations are intended to be directly awaited. Attempts to consume a ValueTask multiple times or to directly access one's result before it's known to be completed may result in an exception or corruption. Ignoring such a ValueTask is likely an indication of a functional bug and may degrade performance.
-            // TODO: This should be removed, or convert it to Task.
-            _startTask = SoraService.StartService();
         }
     }
 }
