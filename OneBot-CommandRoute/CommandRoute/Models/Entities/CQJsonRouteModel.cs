@@ -96,7 +96,6 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
-                // 上面都判断了返回值类型了，这里忽略这个警告很合理吧？
                 return CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
             }
 
