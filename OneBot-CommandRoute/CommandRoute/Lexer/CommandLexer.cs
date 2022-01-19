@@ -16,7 +16,7 @@ namespace OneBot.CommandRoute.Lexer
         /// 空白字符
         /// </summary>
         private const string BlankCharacter = "\r\n\t ";
-        
+
         /// <summary>
         /// 引号
         /// </summary>
@@ -51,8 +51,8 @@ namespace OneBot.CommandRoute.Lexer
         /// <param name="s">被解析的字符串</param>
         public CommandLexer(IList<SoraSegment> s)
         {
-            SourceCommand = s.Where(c => 
-                    c.MessageType != SegmentType.Text 
+            SourceCommand = s.Where(c =>
+                    c.MessageType != SegmentType.Text
                     || ((TextSegment)c.Data).Content.Length > 0)
                 .ToList();
         }
@@ -79,7 +79,7 @@ namespace OneBot.CommandRoute.Lexer
                 if (SourceCommand.Count < 2) return false;
                 scanObjectPointer = 1;
             }
-            
+
             string s;
             var flag = false;
 
@@ -98,7 +98,7 @@ namespace OneBot.CommandRoute.Lexer
 
             // 如果扫描起始消息段不为文本则不合法
             if (SourceCommand[scanObjectPointer].MessageType != SegmentType.Text) return false;
-            s = ((TextSegment) SourceCommand[scanObjectPointer].Data).Content;
+            s = ((TextSegment)SourceCommand[scanObjectPointer].Data).Content;
 
             // 兼容 回复+空格+At+正文 的奇怪设计
             if (scanObjectPointer == 1 && string.IsNullOrWhiteSpace(s))
@@ -108,7 +108,7 @@ namespace OneBot.CommandRoute.Lexer
                 if (SourceCommand[3].MessageType != SegmentType.Text) return false;
 
                 scanObjectPointer = 3;
-                s = ((TextSegment) SourceCommand[scanObjectPointer].Data).Content;
+                s = ((TextSegment)SourceCommand[scanObjectPointer].Data).Content;
 
                 flag = true;
             }
@@ -118,14 +118,14 @@ namespace OneBot.CommandRoute.Lexer
                 // 舍弃空白段
                 while (SourceCommand[scanObjectPointer].MessageType == SegmentType.Text)
                 {
-                    if (!string.IsNullOrWhiteSpace(((TextSegment) SourceCommand[scanObjectPointer].Data).Content)) break;
+                    if (!string.IsNullOrWhiteSpace(((TextSegment)SourceCommand[scanObjectPointer].Data).Content)) break;
                     scanObjectPointer++;
                     if (scanObjectPointer == SourceCommand.Count) return false;
                 }
 
                 // 如果舍弃空白段后不是文本段则不合法
                 if (SourceCommand[scanObjectPointer].MessageType != SegmentType.Text) return false;
-                s = ((TextSegment) (SourceCommand[scanObjectPointer].Data)).Content;
+                s = ((TextSegment)(SourceCommand[scanObjectPointer].Data)).Content;
 
                 // 舍弃开头空白字符
                 while (scanStringPointer < s.Length && BlankCharacter.Contains(s[scanStringPointer]))
@@ -160,7 +160,7 @@ namespace OneBot.CommandRoute.Lexer
                 // 那就往后取一个对象
                 ScanObjectPointer++;
                 ScanStringPointer = 0;
-                        
+
                 if (ScanObjectPointer < SourceCommand.Count)
                 {
                     // 往后取一个
@@ -212,7 +212,7 @@ namespace OneBot.CommandRoute.Lexer
             // 获取当前消息段的文本
             var str = ((TextSegment)(s.Data)).Content;
             var token = "";
-            
+
             // 检查当前元素是否扫描完成
             if (ScanStringPointer >= str.Length)
             {
@@ -235,7 +235,7 @@ namespace OneBot.CommandRoute.Lexer
 
                 // 如果下一个消息段是文本则继续扫描
                 s = ret;
-                str = ((TextSegment) (s.Data)).Content;
+                str = ((TextSegment)(s.Data)).Content;
             }
 
             // 文本参数
@@ -260,13 +260,15 @@ namespace OneBot.CommandRoute.Lexer
                 {
                     MessageBody multiElementsToken = new MessageBody();
                     var terminate = str[ScanStringPointer];
-                    
+
                     ScanStringPointer++;
                     TryGetNextStringObject(ref str);
-                    
-                    while (true) {
+
+                    while (true)
+                    {
                         // 往后拼接
-                        if (SourceCommand[ScanObjectPointer].MessageType == SegmentType.Text) {
+                        if (SourceCommand[ScanObjectPointer].MessageType == SegmentType.Text)
+                        {
                             if (str[ScanStringPointer] == terminate)
                             {
                                 // 如果遇到了字符串起始符号
@@ -295,7 +297,7 @@ namespace OneBot.CommandRoute.Lexer
                                     // 如果当前字符串处理完了
                                     ScanStringPointer = 0;
                                     ScanObjectPointer++;
-                                    
+
                                     if (ScanObjectPointer >= SourceCommand.Count)
                                     {
                                         // 如果整个消息已经处理完了
@@ -408,7 +410,7 @@ namespace OneBot.CommandRoute.Lexer
 
             if (ScanStringPointer != 0)
             {
-                ret.Add(((TextSegment) (SourceCommand[ScanObjectPointer].Data)).Content.Substring(ScanStringPointer));
+                ret.Add(((TextSegment)(SourceCommand[ScanObjectPointer].Data)).Content.Substring(ScanStringPointer));
             }
             else
             {

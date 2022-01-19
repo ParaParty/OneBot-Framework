@@ -60,8 +60,12 @@ namespace OneBot.CommandRoute.Services.Implements
         {
             var eventArgs = oneBotContext.SoraEventArgs;
 
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            // ReSharper disable once ConvertIfStatementToSwitchExpression
             if (eventArgs is GroupMessageEventArgs groupMessageEventArgs)
             {
+                // ReSharper disable once ConvertIfStatementToSwitchStatement
+                // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (groupMessageEventArgs.IsSelfMessage)
                 {
                     return EventOnSelfMessage(oneBotContext);
@@ -89,7 +93,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <param name="oneBotContext"></param>
         /// <returns></returns>
         private ValueTask EventOnSelfMessage(OneBotContext oneBotContext)
-        {     
+        {
             Exception? exception = null;
             try
             {
@@ -118,10 +122,7 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 if (!Event.FireException(oneBotContext, exception))
                 {
-                    _logger.LogError(
-                        $"{exception.Message} : \n" +
-                        $"{exception.StackTrace}"
-                    );
+                    _logger.LogError(exception.Message, exception);
                 }
             }
             catch (Exception e1)

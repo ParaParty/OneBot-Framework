@@ -98,7 +98,7 @@ namespace OneBot.CommandRoute.Command
                 {
                     var nextStepForComparing = (_configuration.IsCaseSensitive) ? s.Key : s.Key.ToUpper();
                     var tokenForComparing = (_configuration.IsCaseSensitive) ? token : token.ToUpper();
-                    
+
                     // 如果是根，并且有设置指令前缀，并且是英文指令，那么我们就处理指令前缀匹配
                     if (IsRoot && _configuration.CommandPrefix.Length > 0 && nextStepForComparing[0] >= 'A' && nextStepForComparing[0] <= 'Z')
                     {

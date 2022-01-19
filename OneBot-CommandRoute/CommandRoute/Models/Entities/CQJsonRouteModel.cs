@@ -20,13 +20,13 @@ namespace OneBot.CommandRoute.Models.Entities
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public MethodInfo CommandMethod { get; private set; }
-        
+
         /// <summary>
         /// 这个路由方法的属性
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public CQJsonAttribute Attribute { get; private set; }
-        
+
         public CQJsonRouteModel(IOneBotController commandObj, MethodInfo commandMethod, CQJsonAttribute attribute)
         {
             CommandObj = commandObj;
@@ -38,7 +38,7 @@ namespace OneBot.CommandRoute.Models.Entities
         {
             var functionParametersList = CommandMethod.GetParameters();
             object?[] functionArgs = new object[functionParametersList.Length];
-            
+
             // 依赖注入
             for (int i = 0; i < functionParametersList.Length; i++)
             {
@@ -72,7 +72,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     functionArgs[i] = context.ServiceScope;
                     continue;
                 }
-                
+
                 if (parameterType == typeof(OneBotContext))
                 {
                     functionArgs[i] = context;
@@ -82,12 +82,12 @@ namespace OneBot.CommandRoute.Models.Entities
                 // 从 Scope 中获得参数
                 functionArgs[i] = context.ServiceScope.ServiceProvider.GetService(parameterType);
             }
-            
+
             // 在调用前执行
             if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
             {
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
-                foreach(var t in attrs)
+                foreach (var t in attrs)
                 {
                     (t as BeforeCommandAttribute)?.Invoke(context);
                 }
@@ -98,7 +98,7 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 // 上面都判断了返回值类型了，这里忽略这个警告很合理吧？
 #pragma warning disable 8605
-                return (int) CommandMethod.Invoke(CommandObj, functionArgs);
+                return (int)CommandMethod.Invoke(CommandObj, functionArgs);
 #pragma warning restore 8605
             }
 

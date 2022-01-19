@@ -11,7 +11,7 @@ namespace OneBot.CommandRoute.Services.Implements
     class CQJsonRouterService : ICQJsonRouterService
     {
         private readonly SortedDictionary<string, List<CQJsonRouteModel>> _mapping;
-        
+
         public CQJsonRouterService()
         {
             _mapping = new();
@@ -33,7 +33,7 @@ namespace OneBot.CommandRoute.Services.Implements
             }
             list.Add(mappingObj);
         }
-        
+
         /// <summary>
         /// 处理
         /// </summary>

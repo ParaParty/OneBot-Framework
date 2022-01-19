@@ -236,14 +236,14 @@ namespace OneBot.CommandRoute.Models.Entities
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
-                
+
                 // 判断是否需要传递 Scope 信息
                 if (parameterType == typeof(IServiceScope))
                 {
                     functionArgs[i] = context.ServiceScope;
                     continue;
                 }
-                
+
                 if (parameterType == typeof(OneBotContext))
                 {
                     functionArgs[i] = context;
@@ -260,7 +260,7 @@ namespace OneBot.CommandRoute.Models.Entities
             if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
             {
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
-                foreach(var t in attrs)
+                foreach (var t in attrs)
                 {
                     (t as BeforeCommandAttribute)?.Invoke(context);
                 }
@@ -270,7 +270,7 @@ namespace OneBot.CommandRoute.Models.Entities
             if (CommandMethod.ReturnType == typeof(int))
             {
 #pragma warning disable 8605
-                return (int) CommandMethod.Invoke(CommandObj, functionArgs);
+                return (int)CommandMethod.Invoke(CommandObj, functionArgs);
 #pragma warning restore 8605
             }
 
@@ -357,10 +357,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                    var converter = type.GetMethod("op_Implicit", new[] { arg.GetType() });
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new object?[] {arg});
+                        result = converter.Invoke(null, new object?[] { arg });
                         // ReSharper disable once RedundantAssignment
                         ret = true;
                     }
@@ -383,7 +383,7 @@ namespace OneBot.CommandRoute.Models.Entities
 
             return ret;
         }
-        
+
         /// <summary>
         /// 尝试解析 CQ 码
         /// </summary>
@@ -404,7 +404,7 @@ namespace OneBot.CommandRoute.Models.Entities
             }
             else if (((SoraSegment)arg).MessageType == SegmentType.At)
             {
-                var cast = ( Sora.Entities.Segment.DataModel.AtSegment) ((SoraSegment)arg).Data;
+                var cast = (Sora.Entities.Segment.DataModel.AtSegment)((SoraSegment)arg).Data;
                 var succeed = long.TryParse(cast.Target, out long uid);
                 if (!succeed)
                 {
@@ -429,10 +429,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                    var converter = type.GetMethod("op_Implicit", new[] { arg.GetType() });
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] {arg});
+                        result = converter.Invoke(null, new[] { arg });
                         // ReSharper disable once RedundantAssignment
                         ret = true;
                     }
@@ -513,10 +513,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] {typeof(string)});
+                    var converter = type.GetMethod("op_Implicit", new[] { typeof(string) });
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new object?[] {arg});
+                        result = converter.Invoke(null, new object?[] { arg });
                         ret = true;
                     }
                     else

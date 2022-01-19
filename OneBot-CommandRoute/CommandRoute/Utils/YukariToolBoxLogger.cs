@@ -38,13 +38,13 @@ namespace OneBot.CommandRoute.Utils
             {
                 return _logger;
             }
-            
+
             Type? logType = logMethod.ReflectedType;
             if (logType == null)
             {
                 return _logger;
             }
-            
+
             return _loggerMap.GetOrAdd(logType, s => _loggerFactory.CreateLogger(s));
         }
 

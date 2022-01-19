@@ -85,6 +85,7 @@ namespace OneBot.CommandRoute.Events
         {
             var eventArgs = scope.SoraEventArgs;
 
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (eventArgs is ConnectEventArgs)
             {
                 Fire(scope, OnClientConnect);

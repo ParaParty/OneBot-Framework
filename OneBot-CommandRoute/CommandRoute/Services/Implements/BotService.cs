@@ -56,7 +56,7 @@ namespace OneBot.CommandRoute.Services.Implements
             // 初始化指令系统
             var commandService = _serviceProvider.GetRequiredService<ICommandService>();
             commandService.RegisterCommand();
-            
+
             // 初始化事件系统
             var eventService = _serviceProvider.GetRequiredService<IEventService>();
             eventService.RegisterEventHandler();

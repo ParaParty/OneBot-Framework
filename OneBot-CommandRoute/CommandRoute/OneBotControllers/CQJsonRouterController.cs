@@ -12,7 +12,7 @@ using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.OneBotControllers
 {
-    public class CQJsonRouterController: IOneBotController
+    public class CQJsonRouterController : IOneBotController
     {
         /// <summary>
         /// 路由服务
@@ -63,7 +63,7 @@ namespace OneBot.CommandRoute.OneBotControllers
                         // According to the signature of JObject.TryGetValue,
                         // jToken is not null when TryGetValue returns true.
 #pragma warning disable 8600
-                        appid = (string) jToken ?? "";
+                        appid = (string)jToken ?? "";
 #pragma warning restore 8600
                         process = true;
                     }

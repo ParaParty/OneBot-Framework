@@ -14,7 +14,7 @@ namespace OneBot.CommandRoute.Mixin
         /// </summary>
         /// <param name="services"></param>
         public static void ConfigureOneBot(this IServiceCollection services)
-        {   
+        {
             // OneBot
             services.AddSingleton<IBotService, BotService>();
 
@@ -23,11 +23,11 @@ namespace OneBot.CommandRoute.Mixin
 
             // 指令路由服务
             services.AddSingleton<ICommandService, CommandService>();
-            
+
             // CQ:Json 路由服务
             services.AddSingleton<ICQJsonRouterService, CQJsonRouterService>();
             services.AddSingleton<IOneBotController, CQJsonRouterController>();
-            
+
             // 日志服务
             services.AddSingleton<ILogService, YukariToolBoxLogger>();
         }
