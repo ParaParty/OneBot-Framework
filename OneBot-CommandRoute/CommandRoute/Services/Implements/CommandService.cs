@@ -56,7 +56,7 @@ namespace OneBot.CommandRoute.Services.Implements
             _matchingRootNode = new MatchingNode(routeConfiguration) { IsRoot = true };
         }
 
-        public ValueTask HandleEvent(OneBotContext oneBotContext)
+        public async ValueTask HandleEvent(OneBotContext oneBotContext)
         {
             var eventArgs = oneBotContext.SoraEventArgs;
 
@@ -68,20 +68,20 @@ namespace OneBot.CommandRoute.Services.Implements
                 // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (groupMessageEventArgs.IsSelfMessage)
                 {
-                    return EventOnSelfMessage(oneBotContext);
+                    await EventOnSelfMessage(oneBotContext);
                 }
                 else
                 {
-                    return EventOnGroupMessage(oneBotContext);
+                    await EventOnGroupMessage(oneBotContext);
                 }
             }
             else if (eventArgs is PrivateMessageEventArgs)
             {
-                return EventOnPrivateMessage(oneBotContext);
+                await EventOnPrivateMessage(oneBotContext);
             }
             else
             {
-                return OnGeneralEvent(oneBotContext);
+                await OnGeneralEvent(oneBotContext);
             }
         }
 

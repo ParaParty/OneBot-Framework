@@ -82,40 +82,34 @@ public class EventService : IEventService
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// <returns></returns>
-    private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
+    private async ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
     {
-        using (var scope = this._scopeFactory.CreateScope())
+        using var scope = _scopeFactory.CreateScope();
+        
+        var ctx = new OneBotContextDefault();
+        ctx.SetSoraEventSender(sender);
+        ctx.SetSoraEventArgs(e);
+        ctx.SoraServiceScope(scope);
+
+        var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
+        var count = middleware.Length;
+
+        OneBotRequestDelegate entry = context => _commandService.HandleEvent(context);
+
+        for (int i = count - 1; i >= 0; i--)
         {
-            var ctx = new OneBotContextDefault();
-            ctx.SetSoraEventSender(sender);
-            ctx.SetSoraEventArgs(e);
-            ctx.SoraServiceScope(scope);
-
-            var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
-            var count = middleware.Count();
-
-            OneBotRequestDelegate entry = context => _commandService.HandleEvent(context);
-
-            for (int i = count - 1; i >= 0; i--)
-            {
-                var idx = i;
-                var realEntry = entry;
-                entry = context => middleware[idx].Invoke(context, realEntry);
-            }
-
-            Exception? exception = null;
-            try
-            {
-                entry(ctx);
-            }
-            catch (Exception ex)
-            {
-                exception = ex;
-            }
-
-            if (exception != null) _commandService.EventOnException(ctx, exception);
+            var idx = i;
+            var realEntry = entry;
+            entry = context => middleware[idx].Invoke(context, realEntry);
         }
 
-        return ValueTask.CompletedTask;
+        try
+        {
+            await entry(ctx);
+        }
+        catch (Exception ex)
+        {
+            await _commandService.EventOnException(ctx, ex);
+        }
     }
 }
