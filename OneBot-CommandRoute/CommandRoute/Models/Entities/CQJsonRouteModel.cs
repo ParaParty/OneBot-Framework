@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
@@ -11,16 +12,19 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <summary>
         /// 指令对象（单例）
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public IOneBotController CommandObj { get; private set; }
 
         /// <summary>
         /// 指令方法
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public MethodInfo CommandMethod { get; private set; }
         
         /// <summary>
         /// 这个路由方法的属性
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public CQJsonAttribute Attribute { get; private set; }
         
         public CQJsonRouteModel(IOneBotController commandObj, MethodInfo commandMethod, CQJsonAttribute attribute)
@@ -83,9 +87,9 @@ namespace OneBot.CommandRoute.Models.Entities
             if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
             {
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
-                for (int i = 0; i < attrs.Length; i++)
+                foreach(var t in attrs)
                 {
-                    (attrs[i] as BeforeCommandAttribute)?.Invoke(context);
+                    (t as BeforeCommandAttribute)?.Invoke(context);
                 }
             }
 

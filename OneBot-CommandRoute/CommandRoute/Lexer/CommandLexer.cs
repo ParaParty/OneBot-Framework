@@ -25,7 +25,8 @@ namespace OneBot.CommandRoute.Lexer
         /// <summary>
         /// 源信息
         /// </summary>
-        public IList<SoraSegment> SourceCommand { get; private set; }
+        // ReSharper disable once MemberCanBePrivate.Global
+        public IList<SoraSegment> SourceCommand { get; }
 
         /// <summary>
         /// 已经解析了的参数信息
@@ -35,12 +36,14 @@ namespace OneBot.CommandRoute.Lexer
         /// <summary>
         /// 当前扫描到 <code>SourceCommand</code> 的哪一个位置。
         /// </summary>
-        public int ScanObjectPointer { get; private set; } = 0;
+        // ReSharper disable once MemberCanBePrivate.Global
+        public int ScanObjectPointer { get; private set; }
 
         /// <summary>
         /// 如果当前扫描到的 <code>SourceCommand</code> 是 <code>CQFunction.Text</code> 的话当前字符串扫描到哪一个位置。
         /// </summary>
-        public int ScanStringPointer { get; private set; } = 0;
+        // ReSharper disable once MemberCanBePrivate.Global
+        public int ScanStringPointer { get; private set; }
 
         /// <summary>
         /// 构造函数
@@ -282,6 +285,7 @@ namespace OneBot.CommandRoute.Lexer
                                     {
                                         // 如果不是起始符号
                                         multiElementsToken += token;
+                                        // ReSharper disable once RedundantAssignment
                                         token = "";
                                         break;
                                     }
@@ -296,6 +300,7 @@ namespace OneBot.CommandRoute.Lexer
                                     {
                                         // 如果整个消息已经处理完了
                                         multiElementsToken += token;
+                                        // ReSharper disable once RedundantAssignment
                                         token = "";
                                         break;
                                     }
@@ -305,6 +310,7 @@ namespace OneBot.CommandRoute.Lexer
                                         {
                                             // 如果下一个消息段不是文本，意味着当前扫描到的地方就是一个完整的文本消息
                                             multiElementsToken += token;
+                                            // ReSharper disable once RedundantAssignment
                                             token = "";
                                             break;
                                         }
@@ -323,6 +329,7 @@ namespace OneBot.CommandRoute.Lexer
                                             {
                                                 // 如果不是起始符号
                                                 multiElementsToken += token;
+                                                // ReSharper disable once RedundantAssignment
                                                 token = "";
                                                 break;
                                             }
@@ -420,10 +427,12 @@ namespace OneBot.CommandRoute.Lexer
         /// <returns>新的 Lexer</returns>
         public CommandLexer Clone()
         {
-            CommandLexer ret = new CommandLexer(SourceCommand);
-            ret.ParsedArguments = new List<object>(ParsedArguments);
-            ret.ScanObjectPointer = ScanObjectPointer;
-            ret.ScanStringPointer = ScanStringPointer;
+            CommandLexer ret = new CommandLexer(SourceCommand)
+            {
+                ParsedArguments = new List<object>(ParsedArguments),
+                ScanObjectPointer = ScanObjectPointer,
+                ScanStringPointer = ScanStringPointer
+            };
             return ret;
         }
     }

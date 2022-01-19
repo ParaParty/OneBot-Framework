@@ -178,6 +178,7 @@ namespace OneBot.CommandRoute.Events
         /// <param name="scope"></param>
         /// <param name="eventAsyncCallBackHandler"></param>
         /// <returns></returns>
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private int Fire<T>(OneBotContext scope, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
             where T : BaseSoraEventArgs
         {

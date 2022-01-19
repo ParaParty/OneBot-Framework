@@ -16,6 +16,7 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 私聊
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         PM = 0x1,
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 群聊
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         GM = 0x2,
 
         /// <summary>
@@ -36,6 +38,7 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 讨论组
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         [Obsolete] DM = 0x4
     }
 }

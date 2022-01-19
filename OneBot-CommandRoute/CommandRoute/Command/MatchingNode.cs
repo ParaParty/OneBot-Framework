@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Entities;
@@ -56,7 +55,6 @@ namespace OneBot.CommandRoute.Command
         /// 处理指令匹配
         /// </summary>
         /// <param name="context">事件上下文</param>
-        /// <param name="sender">事件触发者</param>
         /// <returns>0 继续 / 1 阻断</returns>
         public int ProcessingCommandMapping(OneBotContext context)
         {
@@ -79,7 +77,7 @@ namespace OneBot.CommandRoute.Command
         /// <param name="context">事件上下文</param>
         /// <param name="lexer">指令解析器</param>
         /// <returns>0 继续 / 1 阻断</returns>
-        public int ProcessingCommandMapping(OneBotContext context, CommandLexer lexer)
+        private int ProcessingCommandMapping(OneBotContext context, CommandLexer lexer)
         {
             if (!lexer.IsValid()) return 0;
 

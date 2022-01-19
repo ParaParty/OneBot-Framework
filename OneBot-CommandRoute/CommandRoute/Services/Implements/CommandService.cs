@@ -32,12 +32,12 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 日志
         /// </summary>
-        private ILogger<CommandService> _logger;
+        private readonly ILogger<CommandService> _logger;
 
         /// <summary>
         /// CQ:Json 路由
         /// </summary>
-        private ICQJsonRouterService? _jsonRouterService;
+        private readonly ICQJsonRouterService? _jsonRouterService;
 
         /// <summary>
         /// 事件中心

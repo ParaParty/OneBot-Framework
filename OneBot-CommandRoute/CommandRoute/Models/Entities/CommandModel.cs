@@ -23,16 +23,19 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <summary>
         /// 指令对象（单例）
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public IOneBotController CommandObj { get; private set; }
 
         /// <summary>
         /// 指令方法
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public MethodInfo CommandMethod { get; private set; }
 
         /// <summary>
         /// 匹配的指令参数类型
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public List<Type> ParametersType { get; private set; }
 
         /// <summary>
@@ -54,11 +57,13 @@ namespace OneBot.CommandRoute.Models.Entities
         /// x 是指令参数位置
         /// y 是函数参数位置
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public List<int> ParameterPositionMapping { get; private set; }
 
         /// <summary>
         /// 这个指令方法的属性
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public CommandAttribute Attribute { get; private set; }
 
         /// <summary>
@@ -152,7 +157,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 {
                     if (ParametersMatchingType[i] == 0)
                     {
-                        succeed = (newArg is string) && ((string) newArg) == ParametersName[i];
+                        succeed = (newArg is string s) && s == ParametersName[i];
                     }
                     else
                     {
@@ -255,9 +260,9 @@ namespace OneBot.CommandRoute.Models.Entities
             if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
             {
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
-                for (int i = 0; i < attrs.Length; i++)
+                foreach(var t in attrs)
                 {
-                    (attrs[i] as BeforeCommandAttribute)?.Invoke(context);
+                    (t as BeforeCommandAttribute)?.Invoke(context);
                 }
             }
 
@@ -285,12 +290,11 @@ namespace OneBot.CommandRoute.Models.Entities
         {
             result = null;
 
-            if (arg is string)
+            if (arg is string argStr)
             {
-                var s = arg as string;
                 try
                 {
-                    return TryParseString(baseSoraEventArgs, s, type, out result);
+                    return TryParseString(baseSoraEventArgs, argStr, type, out result);
                 }
                 catch (Exception)
                 {
@@ -298,12 +302,11 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
             }
 
-            if (arg is SoraSegment)
+            if (arg is SoraSegment soraSegment)
             {
-                var s = (SoraSegment)arg;
                 try
                 {
-                    return TryParseCQCode(baseSoraEventArgs, s, type, out result);
+                    return TryParseCQCode(baseSoraEventArgs, soraSegment, type, out result);
                 }
                 catch (Exception)
                 {
@@ -311,12 +314,11 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
             }
 
-            if (arg is MessageBody)
+            if (arg is MessageBody messageBody)
             {
-                var s = (MessageBody)arg;
                 try
                 {
-                    return TryParseMessageBody(baseSoraEventArgs, s, type, out result);
+                    return TryParseMessageBody(baseSoraEventArgs, messageBody, type, out result);
                 }
                 catch (Exception)
                 {
@@ -335,6 +337,8 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        // ReSharper disable once UnusedParameter.Local
         private bool TryParseMessageBody(BaseSoraEventArgs baseSoraEventArgs, MessageBody arg, Type type, out object? result)
         {
             // ReSharper disable once RedundantAssignment
@@ -356,7 +360,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] {arg});
+                        result = converter.Invoke(null, new object?[] {arg});
                         // ReSharper disable once RedundantAssignment
                         ret = true;
                     }
@@ -388,6 +392,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object? result)
         {
             // ReSharper disable once RedundantAssignment

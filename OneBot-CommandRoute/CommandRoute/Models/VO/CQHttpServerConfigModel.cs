@@ -2,7 +2,6 @@ using System;
 using Newtonsoft.Json;
 using Sora.Interfaces;
 using Sora.Net.Config;
-using Sora.OnebotModel;
 
 namespace OneBot.CommandRoute.Models.VO
 {
@@ -44,7 +43,7 @@ namespace OneBot.CommandRoute.Models.VO
 
         public ISoraConfig ToServiceConfig()
         {
-            var mode = Mode?.ToLower();
+            var mode = Mode.ToLower();
 
             return mode switch
             {

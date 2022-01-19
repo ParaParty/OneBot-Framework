@@ -1,7 +1,5 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Models;
-using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Attributes
 {

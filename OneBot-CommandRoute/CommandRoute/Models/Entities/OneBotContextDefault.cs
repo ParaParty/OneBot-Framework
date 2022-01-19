@@ -39,7 +39,6 @@ public class OneBotContextDefault : OneBotContext
     public override IDictionary<object, object?> Items { get; protected set; } =
         new ConcurrentDictionary<object, object?>();
 
-
     internal void SetSoraEventArgs(BaseSoraEventArgs e)
     {
         SoraEventArgs = e;

@@ -18,12 +18,12 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// Sora WS 服务
         /// </summary>
-        public ISoraService SoraService { get; private set; }
+        public ISoraService SoraService { get; }
 
         /// <summary>
         /// Sora WS 服务设置
         /// </summary>
-        public ISoraConfig ServiceConfig { get; private set; }
+        public ISoraConfig ServiceConfig { get; }
 
         /// <summary>
         /// 依赖注入服务
@@ -33,6 +33,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// OneBot 启动后的 Task
         /// </summary>
+        // ReSharper disable once NotAccessedField.Local
         private ValueTask _startTask;
 
         public BotService(IOptions<CQHttpServerConfigModel> cqHttpServerConfigModel, IServiceProvider serviceProvider)
@@ -53,13 +54,11 @@ namespace OneBot.CommandRoute.Services.Implements
         public void Start()
         {
             // 初始化指令系统
-            var commandService = _serviceProvider.GetService<ICommandService>() ??
-                                 throw new ArgumentNullException("", "ICommandService did not register.");
+            var commandService = _serviceProvider.GetRequiredService<ICommandService>();
             commandService.RegisterCommand();
             
             // 初始化事件系统
-            var eventService = _serviceProvider.GetService<IEventService>() ??
-                                 throw new ArgumentNullException("", "IEventService did not register.");
+            var eventService = _serviceProvider.GetRequiredService<IEventService>();
             eventService.RegisterEventHandler();
 
             // 启动 CQHTTP

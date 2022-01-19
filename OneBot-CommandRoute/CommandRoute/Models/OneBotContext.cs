@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Sora.EventArgs.SoraEvent;
-
 namespace OneBot.CommandRoute.Models;
 
 public abstract class OneBotContext
