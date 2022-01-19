@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using OneBot.CommandRoute.Models;
+﻿using OneBot.CommandRoute.Models;
 
 namespace OneBot.CommandRoute.Services;
 

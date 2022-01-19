@@ -1,5 +1,5 @@
-using System;
 using OneBot.CommandRoute.Models;
+
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Events
@@ -85,89 +85,70 @@ namespace OneBot.CommandRoute.Events
         {
             var eventArgs = scope.SoraEventArgs;
 
-            if (eventArgs is ConnectEventArgs)
+            switch (eventArgs)
             {
-                Fire(scope, OnClientConnect);
-            }
-            else if (eventArgs is GroupMessageEventArgs)
-            {
-                Fire(scope, OnGroupMessage);
-            }
-            else if (eventArgs is PrivateMessageEventArgs)
-            {
-                Fire(scope, OnPrivateMessage);
-            }
-            else if (eventArgs is AddGroupRequestEventArgs)
-            {
-                Fire(scope, OnGroupRequest);
-            }
-            else if (eventArgs is FriendRequestEventArgs)
-            {
-                Fire(scope, OnFriendRequest);
-            }
-            else if (eventArgs is FileUploadEventArgs)
-            {
-                Fire(scope, OnFileUpload);
-            }
-            else if (eventArgs is GroupAdminChangeEventArgs)
-            {
-                Fire(scope, OnGroupAdminChange);
-            }
-            else if (eventArgs is GroupMemberChangeEventArgs)
-            {
-                Fire(scope, OnGroupMemberChange);
-            }
-            else if (eventArgs is GroupMuteEventArgs)
-            {
-                Fire(scope, OnGroupMemberMute);
-            }
-            else if (eventArgs is FriendAddEventArgs)
-            {
-                Fire(scope, OnFriendAdd);
-            }
-            else if (eventArgs is GroupRecallEventArgs)
-            {
-                Fire(scope, OnGroupRecall);
-            }
-            else if (eventArgs is FriendRecallEventArgs)
-            {
-                Fire(scope, OnFriendRecall);
-            }
-            else if (eventArgs is GroupCardUpdateEventArgs)
-            {
-                Fire(scope, OnGroupCardUpdate);
-            }
-            else if (eventArgs is GroupPokeEventArgs)
-            {
-                Fire(scope, OnGroupPoke);
-            }
-            else if (eventArgs is LuckyKingEventArgs)
-            {
-                Fire(scope, OnLuckyKingEvent);
-            }
-            else if (eventArgs is HonorEventArgs)
-            {
-                Fire(scope, OnHonorEvent);
-            }
-            else if (eventArgs is TitleUpdateEventArgs)
-            {
-                Fire(scope, OnTitleUpdate);
-            }
-            else if (eventArgs is OfflineFileEventArgs)
-            {
-                Fire(scope, OnOfflineFileEvent);
-            }
-            else if (eventArgs is ClientStatusChangeEventArgs)
-            {
-                Fire(scope, OnClientStatusChangeEvent);
-            }
-            else if (eventArgs is EssenceChangeEventArgs)
-            {
-                Fire(scope, OnEssenceChange);
-            }
-            else
-            {
-                throw new EventHandleException("不存在这样的事件。");
+                case ConnectEventArgs:
+                    Fire(scope, OnClientConnect);
+                    break;
+                case GroupMessageEventArgs:
+                    Fire(scope, OnGroupMessage);
+                    break;
+                case PrivateMessageEventArgs:
+                    Fire(scope, OnPrivateMessage);
+                    break;
+                case AddGroupRequestEventArgs:
+                    Fire(scope, OnGroupRequest);
+                    break;
+                case FriendRequestEventArgs:
+                    Fire(scope, OnFriendRequest);
+                    break;
+                case FileUploadEventArgs:
+                    Fire(scope, OnFileUpload);
+                    break;
+                case GroupAdminChangeEventArgs:
+                    Fire(scope, OnGroupAdminChange);
+                    break;
+                case GroupMemberChangeEventArgs:
+                    Fire(scope, OnGroupMemberChange);
+                    break;
+                case GroupMuteEventArgs:
+                    Fire(scope, OnGroupMemberMute);
+                    break;
+                case FriendAddEventArgs:
+                    Fire(scope, OnFriendAdd);
+                    break;
+                case GroupRecallEventArgs:
+                    Fire(scope, OnGroupRecall);
+                    break;
+                case FriendRecallEventArgs:
+                    Fire(scope, OnFriendRecall);
+                    break;
+                case GroupCardUpdateEventArgs:
+                    Fire(scope, OnGroupCardUpdate);
+                    break;
+                case GroupPokeEventArgs:
+                    Fire(scope, OnGroupPoke);
+                    break;
+                case LuckyKingEventArgs:
+                    Fire(scope, OnLuckyKingEvent);
+                    break;
+                case HonorEventArgs:
+                    Fire(scope, OnHonorEvent);
+                    break;
+                case TitleUpdateEventArgs:
+                    Fire(scope, OnTitleUpdate);
+                    break;
+                case OfflineFileEventArgs:
+                    Fire(scope, OnOfflineFileEvent);
+                    break;
+                case ClientStatusChangeEventArgs:
+                    Fire(scope, OnClientStatusChangeEvent);
+                    break;
+                case EssenceChangeEventArgs:
+                    Fire(scope, OnEssenceChange);
+                    break;
+                default:
+                    throw new EventHandleException("不存在这样的事件。");
             }
         }
 
@@ -178,15 +159,15 @@ namespace OneBot.CommandRoute.Events
         /// <param name="scope"></param>
         /// <param name="eventAsyncCallBackHandler"></param>
         /// <returns></returns>
-        private int Fire<T>(OneBotContext scope, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
+        private static int Fire<T>(OneBotContext scope, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
             where T : BaseSoraEventArgs
         {
-            Delegate[]? listeners = eventAsyncCallBackHandler?.GetInvocationList();
-            if (listeners == null) return 0;
+            if (eventAsyncCallBackHandler == null) return 0;
+            var listeners = eventAsyncCallBackHandler.GetInvocationList().Select(listener => (EventAsyncCallBackHandler<T>)listener);
 
-            for (int counter = listeners.Length - 1; counter >= 0; counter--)
+            foreach (var listener in listeners.Reverse())
             {
-                int ret = ((EventAsyncCallBackHandler<T>)listeners[counter])(scope);
+                int ret = listener(scope);
                 if (ret != 0) return ret;
             }
 
@@ -229,7 +210,7 @@ namespace OneBot.CommandRoute.Events
         internal bool FireException(OneBotContext scope, Exception exception)
         {
             if (OnException == null) return false;
-            OnException?.Invoke(scope, exception);
+            OnException(scope, exception);
             return true;
         }
 

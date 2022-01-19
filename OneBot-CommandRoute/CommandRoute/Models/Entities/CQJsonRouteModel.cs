@@ -1,8 +1,11 @@
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Services;
+
 using Sora.EventArgs.SoraEvent;
+
+using System.Reflection;
 
 namespace OneBot.CommandRoute.Models.Entities
 {
@@ -11,18 +14,18 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <summary>
         /// 指令对象（单例）
         /// </summary>
-        public IOneBotController CommandObj { get; private set; }
+        public IOneBotController CommandObj { get; }
 
         /// <summary>
         /// 指令方法
         /// </summary>
-        public MethodInfo CommandMethod { get; private set; }
-        
+        public MethodInfo CommandMethod { get; }
+
         /// <summary>
         /// 这个路由方法的属性
         /// </summary>
-        public CQJsonAttribute Attribute { get; private set; }
-        
+        public CQJsonAttribute Attribute { get; }
+
         public CQJsonRouteModel(IOneBotController commandObj, MethodInfo commandMethod, CQJsonAttribute attribute)
         {
             CommandObj = commandObj;
@@ -34,7 +37,7 @@ namespace OneBot.CommandRoute.Models.Entities
         {
             var functionParametersList = CommandMethod.GetParameters();
             object?[] functionArgs = new object[functionParametersList.Length];
-            
+
             // 依赖注入
             for (int i = 0; i < functionParametersList.Length; i++)
             {
@@ -44,19 +47,9 @@ namespace OneBot.CommandRoute.Models.Entities
                 var parameterType = parameter.ParameterType;
 
                 // 判断是否需要传递事件信息
-                if (parameterType == typeof(BaseSoraEventArgs))
-                {
-                    functionArgs[i] = baseSoraEventArgs;
-                    continue;
-                }
-
-                if (parameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs)
-                {
-                    functionArgs[i] = baseSoraEventArgs;
-                    continue;
-                }
-
-                if (parameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
+                if (parameterType == typeof(BaseSoraEventArgs) ||
+                    parameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs ||
+                    parameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
@@ -68,7 +61,7 @@ namespace OneBot.CommandRoute.Models.Entities
                     functionArgs[i] = context.ServiceScope;
                     continue;
                 }
-                
+
                 if (parameterType == typeof(OneBotContext))
                 {
                     functionArgs[i] = context;
@@ -78,14 +71,14 @@ namespace OneBot.CommandRoute.Models.Entities
                 // 从 Scope 中获得参数
                 functionArgs[i] = context.ServiceScope.ServiceProvider.GetService(parameterType);
             }
-            
+
             // 在调用前执行
             if (System.Attribute.IsDefined(CommandMethod, typeof(BeforeCommandAttribute)))
             {
-                var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
-                for (int i = 0; i < attrs.Length; i++)
+                var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute)).Select(attrs => attrs as BeforeCommandAttribute);
+                foreach (var attr in attrs)
                 {
-                    (attrs[i] as BeforeCommandAttribute)?.Invoke(context);
+                    attr?.Invoke(context);
                 }
             }
 
@@ -93,9 +86,7 @@ namespace OneBot.CommandRoute.Models.Entities
             if (CommandMethod.ReturnType == typeof(int))
             {
                 // 上面都判断了返回值类型了，这里忽略这个警告很合理吧？
-#pragma warning disable 8605
-                return (int) CommandMethod.Invoke(CommandObj, functionArgs);
-#pragma warning restore 8605
+                return CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
             }
 
             CommandMethod.Invoke(CommandObj, functionArgs);

@@ -1,16 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Command;
 using OneBot.CommandRoute.Events;
-using OneBot.CommandRoute.Models.Entities;
-using Sora.EventArgs.SoraEvent;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using OneBot.CommandRoute.Models;
+using OneBot.CommandRoute.Models.Entities;
+
+using Sora.EventArgs.SoraEvent;
+
+using System.Reflection;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
@@ -32,12 +31,12 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// 日志
         /// </summary>
-        private ILogger<CommandService> _logger;
+        private readonly ILogger<CommandService> _logger;
 
         /// <summary>
         /// CQ:Json 路由
         /// </summary>
-        private ICQJsonRouterService? _jsonRouterService;
+        private readonly ICQJsonRouterService? _jsonRouterService;
 
         /// <summary>
         /// 事件中心
@@ -49,35 +48,36 @@ namespace OneBot.CommandRoute.Services.Implements
             _serviceProvider = serviceProvider;
             _jsonRouterService = _serviceProvider.GetService<ICQJsonRouterService>();
             _logger = logger;
-            Event = new EventManager();
+            Event = new();
 
             var routeConfiguration = serviceProvider.GetService<IOneBotCommandRouteConfiguration>() ??
                                      new DefaultOneBotCommandRouteConfiguration();
-            _matchingRootNode = new MatchingNode(routeConfiguration) { IsRoot = true };
+            _matchingRootNode = new(routeConfiguration) 
+            { 
+                IsRoot = true
+            };
         }
 
         public ValueTask HandleEvent(OneBotContext oneBotContext)
         {
             var eventArgs = oneBotContext.SoraEventArgs;
 
-            if (eventArgs is GroupMessageEventArgs groupMessageEventArgs)
+            switch (eventArgs)
             {
-                if (groupMessageEventArgs.IsSelfMessage)
-                {
-                    return EventOnSelfMessage(oneBotContext);
-                }
-                else
-                {
-                    return EventOnGroupMessage(oneBotContext);
-                }
-            }
-            else if (eventArgs is PrivateMessageEventArgs)
-            {
-                return EventOnPrivateMessage(oneBotContext);
-            }
-            else
-            {
-                return OnGeneralEvent(oneBotContext);
+                case GroupMessageEventArgs groupMessageEventArgs:
+                    if (groupMessageEventArgs.IsSelfMessage)
+                    {
+                        return EventOnSelfMessage(oneBotContext);
+                    }
+                    else
+                    {
+                        return EventOnGroupMessage(oneBotContext);
+                    }
+
+                case PrivateMessageEventArgs:
+                    return EventOnPrivateMessage(oneBotContext);
+                default:
+                    return OnGeneralEvent(oneBotContext);
             }
         }
 
@@ -89,7 +89,7 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <param name="oneBotContext"></param>
         /// <returns></returns>
         private ValueTask EventOnSelfMessage(OneBotContext oneBotContext)
-        {     
+        {
             Exception? exception = null;
             try
             {
@@ -118,16 +118,13 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 if (!Event.FireException(oneBotContext, exception))
                 {
-                    _logger.LogError(
-                        $"{exception.Message} : \n" +
-                        $"{exception.StackTrace}"
-                    );
+                    _logger.LogError("{Exception}", $"{exception.Message} : \n{exception.StackTrace}");
                 }
             }
             catch (Exception e1)
             {
-                _logger.LogError(exception.Message, exception);
-                _logger.LogError(e1.Message, e1);
+                _logger.LogError("{Exception}", exception.Message);
+                _logger.LogError("{Exception}", e1);
             }
 
             return ValueTask.CompletedTask;
@@ -140,22 +137,15 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask OnGeneralEvent(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
                 Event.Fire(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
-                exception = e1;
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-
-            return ValueTask.CompletedTask;
         }
 
         #endregion 事件处理
@@ -169,24 +159,18 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnPrivateMessage(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
-                if (Event.FirePrivateMessageReceived(oneBotContext) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) return ValueTask.CompletedTask;
+                if (Event.FirePrivateMessageReceived(oneBotContext) != 0 ||
+                    _matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0)
+                    return ValueTask.CompletedTask;
                 Event.Fire(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
-                exception = e1;
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-
-            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -196,24 +180,18 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnGroupMessage(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
-                if (Event.FireGroupMessageReceived(oneBotContext) != 0) return ValueTask.CompletedTask;
-                if (_matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) return ValueTask.CompletedTask;
+                if (Event.FireGroupMessageReceived(oneBotContext) != 0 ||
+                    _matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) 
+                    return ValueTask.CompletedTask;
                 Event.Fire(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
-                exception = e1;
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-
-            return ValueTask.CompletedTask;
         }
 
         #endregion 指令路由
@@ -232,27 +210,21 @@ namespace OneBot.CommandRoute.Services.Implements
                 var methods = clazz.GetMethods();
                 foreach (var method in methods)
                 {
-                    if (Attribute.IsDefined(method, typeof(CommandAttribute)))
+                    if (Attribute.GetCustomAttribute(method, typeof(CommandAttribute)) is CommandAttribute cmAttr)
                     {
-                        var attr = Attribute.GetCustomAttribute(method, typeof(CommandAttribute)) as CommandAttribute;
-#pragma warning disable 8604
-                        RegisterCommand(s, method, attr);
-#pragma warning restore 8604
+                        RegisterCommand(s, method, cmAttr);
                     }
 
-                    if (Attribute.IsDefined(method, typeof(CQJsonAttribute)))
+                    if (Attribute.GetCustomAttribute(method, typeof(CQJsonAttribute)) is CQJsonAttribute cqAttr)
                     {
                         if (_jsonRouterService == null)
                         {
-                            _logger.LogWarning($"检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。{clazz.FullName}::{method.Name}");
+                            _logger.LogWarning("检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。{clazz}::{method}",clazz.FullName,method.Name);
                         }
                         else
                         {
-                            var attr = Attribute.GetCustomAttribute(method, typeof(CQJsonAttribute)) as CQJsonAttribute;
-#pragma warning disable 8604
-                            _jsonRouterService.Register(s, method, attr);
-                            _logger.LogDebug($"成功添加 CQ:Json ：{attr.AppId}\r\n{clazz.FullName}::{method.Name}");
-#pragma warning restore 8604
+                            _jsonRouterService.Register(s, method, cqAttr);
+                            _logger.LogDebug("成功添加 CQ:Json ：{cqAttr.AppId}\r\n{clazz.FullName}::{method.Name}",cqAttr.AppId,clazz.FullName,method.Name);
                         }
                     }
                 }
@@ -267,9 +239,8 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <param name="attribute"></param>
         private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, CommandAttribute attribute)
         {
-            List<string> command = attribute.Pattern.Trim().Split(' ').ToList();
-            List<string> aliasList = attribute.Alias.Select(s => s.Trim()).Where(s => s.Length > 0)
-                .ToList();
+            IEnumerable<string> command = attribute.Pattern.Trim().Split(' '),
+                aliasList = attribute.Alias.Select(s => s.Trim()).Where(s => s.Length > 0);
 
             try
             {
@@ -277,13 +248,10 @@ namespace OneBot.CommandRoute.Services.Implements
             }
             catch (ArgumentException e)
             {
-                _logger.LogError(
-                    $"{e.Message} : \n" +
-                    $"{e.StackTrace}"
-                );
+                _logger.LogError("{e.Message} : \n{e.StackTrace}",e.Message,e.StackTrace);
             }
 
-            foreach (var c in aliasList.Select(s => s.Split(' ').ToList()))
+            foreach (var c in aliasList.Select(s => s.Split(' ')))
             {
                 try
                 {
@@ -291,10 +259,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 }
                 catch (ArgumentException e)
                 {
-                    _logger.LogError(
-                        $"{e.Message} : \n" +
-                        $"{e.StackTrace}"
-                    );
+                    _logger.LogError("{e.Message} : \n{e.StackTrace}",e.Message,e.StackTrace);
                 }
             }
         }
@@ -307,23 +272,23 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <param name="matchPattern"></param>
         /// <param name="attribute"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, List<string> matchPattern,
+        private void RegisterCommand(IOneBotController commandObj, MethodInfo commandMethod, IEnumerable<string> matchPattern,
             CommandAttribute attribute)
         {
             // 参数类型
-            List<Type> parametersType = new List<Type>();
+            List<Type> parametersType = new();
 
             // 参数匹配类型：0全字匹配 1参数 2可选参数
-            List<int> parametersMatchingType = new List<int>();
+            List<int> parametersMatchingType = new();
 
             // 被全字匹配的字符串或参数名
-            List<string> parametersName = new List<string>();
+            List<string> parametersName = new();
 
             // 这个参数是否被用过了
-            List<bool> parametersUsed = new List<bool>();
+            List<bool> parametersUsed = new();
 
             // 这个参数对应函数的形参列表哪一位。负数表示不映射。
-            List<int> parameterPositionMapping = new List<int>();
+            List<int> parameterPositionMapping = new();
 
             // 从指令定义中解析出 参数匹配类型 和 参数匹配字符串或参数名
             var withOptional = false;
@@ -342,7 +307,7 @@ namespace OneBot.CommandRoute.Services.Implements
                     }
 
                     parametersMatchingType.Add(1);
-                    var paraName = s.Substring(1, s.Length - 2);
+                    string paraName = s[1..^1];
                     for (var j = 0; j < parametersName.Count; j++)
                     {
                         if (parametersMatchingType[j] == 0) continue;
@@ -361,7 +326,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 {
                     withOptional = true;
                     parametersMatchingType.Add(2);
-                    var paraName = s.Substring(1, s.Length - 2);
+                    var paraName = s[1..^1];
                     for (var j = 0; j < parametersName.Count; j++)
                     {
                         if (parametersMatchingType[j] == 0) continue;
@@ -392,12 +357,9 @@ namespace OneBot.CommandRoute.Services.Implements
             for (var i = 0; i < functionParametersList.Length; i++)
             {
                 var type = functionParametersList[i];
-                if (Attribute.IsDefined(type, typeof(CommandParameterAttribute)))
+                if (Attribute.GetCustomAttribute(type, typeof(CommandParameterAttribute)) is CommandParameterAttribute attr)
                 {
-                    var attr = Attribute.GetCustomAttribute(type, typeof(CommandParameterAttribute)) as CommandParameterAttribute;
-#pragma warning disable 8602
-                    var paraName = attr.Name;
-#pragma warning restore 8602
+                    string paraName = attr.Name;
 
                     var idx = -1;
                     for (var j = 0; j < parametersName.Count; j++)
@@ -427,7 +389,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 if (parametersUsed[i]) continue;
                 if (parametersMatchingType[i] == 0) continue;
 
-                var paraName = parametersName[i];
+                string paraName = parametersName[i];
 
                 for (var j = 0; j < functionParametersList.Length; j++)
                 {
@@ -446,7 +408,8 @@ namespace OneBot.CommandRoute.Services.Implements
                     parametersType, parametersMatchingType, parametersName, parameterPositionMapping,
                     attribute)
                 , 0);
-            _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}");
+            _logger.LogDebug("成功添加指令：{matchPattern}\r\n{commandType}::{commandMethod}",
+                string.Join(", ", matchPattern.ToArray()),commandObj.GetType().FullName,commandMethod.Name);
         }
 
         #endregion 注册指令

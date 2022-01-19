@@ -1,11 +1,11 @@
-using System;
+using Microsoft.Extensions.Logging;
+
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using System.Threading;
-using Microsoft.Extensions.Logging;
+
 using YukariToolBox.LightLog;
 
 namespace OneBot.CommandRoute.Utils
@@ -16,7 +16,7 @@ namespace OneBot.CommandRoute.Utils
 
         private readonly ILogger<YukariToolBoxLogger> _logger;
 
-        private readonly ConcurrentDictionary<Type, ILogger> _loggerMap = new ConcurrentDictionary<Type, ILogger>();
+        private readonly ConcurrentDictionary<Type, ILogger> _loggerMap = new();
 
         public YukariToolBoxLogger(ILoggerFactory loggerFactory, ILogger<YukariToolBoxLogger> logger)
         {
@@ -26,7 +26,7 @@ namespace OneBot.CommandRoute.Utils
 
         private ILogger GetLogger()
         {
-            StackTrace trace = new StackTrace();
+            StackTrace trace = new();
             StackFrame? frame = trace.GetFrame(3);
             if (frame == null)
             {
@@ -38,13 +38,13 @@ namespace OneBot.CommandRoute.Utils
             {
                 return _logger;
             }
-            
+
             Type? logType = logMethod.ReflectedType;
             if (logType == null)
             {
                 return _logger;
             }
-            
+
             return _loggerMap.GetOrAdd(logType, s => _loggerFactory.CreateLogger(s));
         }
 
@@ -121,14 +121,14 @@ namespace OneBot.CommandRoute.Utils
 
         public void UnhandledExceptionLog(UnhandledExceptionEventArgs args)
         {
-            StringBuilder errorLogBuilder = new StringBuilder();
+            StringBuilder errorLogBuilder = new();
             errorLogBuilder.Append("检测到未处理的异常");
             if (args.IsTerminating)
             {
                 errorLogBuilder.Append("，服务器将停止运行");
             }
 
-            _logger.LogCritical(args.ExceptionObject as Exception, errorLogBuilder.ToString());
+            _logger.LogCritical(args.ExceptionObject as Exception, "{errLog}", errorLogBuilder.ToString());
             if (args.IsTerminating)
             {
                 _logger.LogWarning("[Sora] 将在5s后自动退出");

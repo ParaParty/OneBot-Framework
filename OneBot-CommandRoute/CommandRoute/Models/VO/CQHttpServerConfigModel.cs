@@ -1,8 +1,7 @@
-using System;
 using Newtonsoft.Json;
+
 using Sora.Interfaces;
 using Sora.Net.Config;
-using Sora.OnebotModel;
 
 namespace OneBot.CommandRoute.Models.VO
 {
@@ -44,7 +43,7 @@ namespace OneBot.CommandRoute.Models.VO
 
         public ISoraConfig ToServiceConfig()
         {
-            var mode = Mode?.ToLower();
+            var mode = Mode.ToLower();
 
             return mode switch
             {
@@ -68,7 +67,7 @@ namespace OneBot.CommandRoute.Models.VO
                     ApiTimeOut = TimeSpan.FromMilliseconds(ApiTimeOut),
                     EnableSoraCommandManager = false
                 },
-                _ => throw new ArgumentException(@"There is something wrong in OneBot settings.")
+                _ => throw new ArgumentException("There is something wrong in OneBot settings.")
             };
         }
     }

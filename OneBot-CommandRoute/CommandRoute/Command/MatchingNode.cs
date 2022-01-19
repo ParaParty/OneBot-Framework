@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Entities;
 using OneBot.CommandRoute.Services;
+
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Command
@@ -40,16 +38,16 @@ namespace OneBot.CommandRoute.Command
         /// <summary>
         /// 和这个结点相关的指令信息列表
         /// </summary>
-        private List<CommandModel> _command = new List<CommandModel>();
+        private List<CommandModel> _command = new();
 
         /// <summary>
         /// 待匹配的子结点
         /// </summary>
-        private readonly SortedDictionary<string, MatchingNode> _children = new SortedDictionary<string, MatchingNode>();
+        private readonly SortedDictionary<string, MatchingNode> _children = new();
 
         public MatchingNode(IOneBotCommandRouteConfiguration configuration)
         {
-            this._configuration = configuration;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -64,8 +62,8 @@ namespace OneBot.CommandRoute.Command
 
             CommandLexer? lexer = eventArgs switch
             {
-                GroupMessageEventArgs groupMessageEventArgs => new CommandLexer(groupMessageEventArgs.Message.MessageBody),
-                PrivateMessageEventArgs privateMessageEventArgs => new CommandLexer(privateMessageEventArgs.Message.MessageBody),
+                GroupMessageEventArgs groupMessageEventArgs => new(groupMessageEventArgs.Message.MessageBody),
+                PrivateMessageEventArgs privateMessageEventArgs => new(privateMessageEventArgs.Message.MessageBody),
                 _ => null
             };
 
@@ -98,9 +96,9 @@ namespace OneBot.CommandRoute.Command
             {
                 foreach (var s in _children)
                 {
-                    var nextStepForComparing = (_configuration.IsCaseSensitive) ? s.Key : s.Key.ToUpper();
-                    var tokenForComparing = (_configuration.IsCaseSensitive) ? token : token.ToUpper();
-                    
+                    var nextStepForComparing = _configuration.IsCaseSensitive ? s.Key : s.Key.ToUpper();
+                    var tokenForComparing = _configuration.IsCaseSensitive ? token : token.ToUpper();
+
                     // 如果是根，并且有设置指令前缀，并且是英文指令，那么我们就处理指令前缀匹配
                     if (IsRoot && _configuration.CommandPrefix.Length > 0 && nextStepForComparing[0] >= 'A' && nextStepForComparing[0] <= 'Z')
                     {
@@ -153,7 +151,7 @@ namespace OneBot.CommandRoute.Command
             // 挂载子结点
             if (!_children.TryGetValue(command.ParametersName[i], out var tmp))
             {
-                tmp = new MatchingNode(_configuration);
+                tmp = new(_configuration);
                 _children[command.ParametersName[i]] = tmp;
             }
 

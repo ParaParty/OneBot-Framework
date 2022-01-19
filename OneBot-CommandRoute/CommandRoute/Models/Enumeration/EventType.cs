@@ -1,5 +1,3 @@
-using System;
-
 namespace OneBot.CommandRoute.Models.Enumeration
 {
     /// <summary>
@@ -16,7 +14,7 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 私聊
         /// </summary>
-        PM = 0x1,
+        PM = PrivateMessage,
 
         /// <summary>
         /// 群聊
@@ -26,16 +24,18 @@ namespace OneBot.CommandRoute.Models.Enumeration
         /// <summary>
         /// 群聊
         /// </summary>
-        GM = 0x2,
+        GM = GroupMessage,
 
         /// <summary>
         /// 讨论组
         /// </summary>
-        [Obsolete] DiscussMessage = 0x4,
+        [Obsolete("This value is deprecated.")]
+        DiscussMessage = 0x4,
 
         /// <summary>
         /// 讨论组
         /// </summary>
-        [Obsolete] DM = 0x4
+        [Obsolete("This value is deprecated.")]
+        DM = DiscussMessage
     }
 }

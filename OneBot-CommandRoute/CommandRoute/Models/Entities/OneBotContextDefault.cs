@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+
 using Sora.EventArgs.SoraEvent;
+
+using System.Collections.Concurrent;
 
 namespace OneBot.CommandRoute.Models.Entities;
 
@@ -36,8 +36,7 @@ public class OneBotContextDefault : OneBotContext
     /// <summary>
     /// 上下文传递的内容
     /// </summary>
-    public override IDictionary<object, object?> Items { get; protected set; } =
-        new ConcurrentDictionary<object, object?>();
+    public override ConcurrentDictionary<object, object?> Items { get; } = new();
 
 
     internal void SetSoraEventArgs(BaseSoraEventArgs e)

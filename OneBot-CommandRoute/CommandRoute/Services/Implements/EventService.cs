@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using OneBot.CommandRoute.Models.Entities;
+
 using Sora.EventArgs.SoraEvent;
+
+using System.Collections.Immutable;
 
 namespace OneBot.CommandRoute.Services.Implements;
 
@@ -19,33 +19,34 @@ public class EventService : IEventService
     /// </summary>
     private readonly IBotService _bot;
 
-    /// <summary>`
-    /// 服务容器
-    /// </summary>
-    private readonly IServiceProvider _serviceProvider;
+    ///// <summary>`
+    ///// 服务容器
+    ///// </summary>
+    //private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
     /// Scope 工厂
     /// </summary>
     private readonly IServiceScopeFactory _scopeFactory;
 
-    /// <summary>
-    /// 日志
-    /// </summary>
-    private ILogger<EventService> _logger;
+    ///// <summary>
+    ///// 日志
+    ///// </summary>
+    //private readonly ILogger<EventService> _logger;
 
     /// <summary>
     /// 指令路由服务
     /// </summary>
     private readonly ICommandService _commandService;
 
+    // Unused paras. Public API change.
     public EventService(IBotService bot, IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory,
         ILogger<EventService> logger, ICommandService commandService)
     {
         _bot = bot;
-        _serviceProvider = serviceProvider;
+        //_serviceProvider = serviceProvider;
         _scopeFactory = scopeFactory;
-        _logger = logger;
+        //_logger = logger;
         _commandService = commandService;
     }
 
@@ -82,7 +83,7 @@ public class EventService : IEventService
     /// <param name="sender"></param>
     /// <param name="e"></param>
     /// <returns></returns>
-    private ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
+    private async ValueTask OnGeneralEvent(object sender, BaseSoraEventArgs e)
     {
         using (var scope = this._scopeFactory.CreateScope())
         {
@@ -92,30 +93,26 @@ public class EventService : IEventService
             ctx.SoraServiceScope(scope);
 
             var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
-            var count = middleware.Count();
+            int count = middleware.Length;
 
             OneBotRequestDelegate entry = context => _commandService.HandleEvent(context);
 
             for (int i = count - 1; i >= 0; i--)
             {
-                var idx = i;
+                int idx = i;
                 var realEntry = entry;
                 entry = context => middleware[idx].Invoke(context, realEntry);
             }
 
-            Exception? exception = null;
             try
             {
-                entry(ctx);
+                await entry(ctx);
             }
             catch (Exception ex)
             {
-                exception = ex;
+                await _commandService.EventOnException(ctx, ex);
             }
 
-            if (exception != null) _commandService.EventOnException(ctx, exception);
         }
-
-        return ValueTask.CompletedTask;
     }
 }

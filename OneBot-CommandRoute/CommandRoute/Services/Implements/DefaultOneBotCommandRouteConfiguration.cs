@@ -2,7 +2,7 @@
 {
     public class DefaultOneBotCommandRouteConfiguration : IOneBotCommandRouteConfiguration
     {
-        private static readonly string[] CommandPrefixConst = {"！", "!", "/"};
+        private static readonly string[] CommandPrefixConst = { "！", "!", "/" };
 
         /// <summary>
         /// 默认英文指令前缀

@@ -1,10 +1,11 @@
-using System;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Services;
+
 using Sora.Entities.Segment;
 using Sora.Entities.Segment.DataModel;
 using Sora.Enumeration;
@@ -12,17 +13,16 @@ using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.OneBotControllers
 {
-    public class CQJsonRouterController: IOneBotController
+    public class CQJsonRouterController : IOneBotController
     {
         /// <summary>
         /// 路由服务
         /// </summary>
         private readonly ICQJsonRouterService _routeService;
 
-#pragma warning disable 8618
         public CQJsonRouterController(ICommandService commandService, IServiceProvider serviceProvider)
-#pragma warning restore 8618
         {
+            _routeService = null!;
             var routeService = serviceProvider.GetService<ICQJsonRouterService>();
             if (routeService != null)
             {
@@ -48,8 +48,8 @@ namespace OneBot.CommandRoute.OneBotControllers
 
         private int UniversalProcess(OneBotContext scope, BaseSoraEventArgs eventArgs, SoraSegment firstElement)
         {
-            var process = false;
-            var appid = "";
+            bool process = false;
+            string appid = "";
 
             try
             {
@@ -62,9 +62,7 @@ namespace OneBot.CommandRoute.OneBotControllers
                     {
                         // According to the signature of JObject.TryGetValue,
                         // jToken is not null when TryGetValue returns true.
-#pragma warning disable 8600
-                        appid = (string) jToken ?? "";
-#pragma warning restore 8600
+                        appid = jToken.Value<string>() ?? "";
                         process = true;
                     }
                 }

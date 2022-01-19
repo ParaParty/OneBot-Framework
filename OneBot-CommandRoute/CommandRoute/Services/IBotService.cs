@@ -11,7 +11,7 @@ namespace OneBot.CommandRoute.Services
         /// Sora WS 服务
         /// </summary>
         ISoraService SoraService { get; }
-        
+
         /// <summary>
         /// Sora WS 服务设置
         /// </summary>

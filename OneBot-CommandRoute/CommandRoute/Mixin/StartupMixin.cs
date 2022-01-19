@@ -1,8 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
+
 using OneBot.CommandRoute.OneBotControllers;
 using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Services.Implements;
 using OneBot.CommandRoute.Utils;
+
 using YukariToolBox.LightLog;
 
 namespace OneBot.CommandRoute.Mixin
@@ -14,22 +16,23 @@ namespace OneBot.CommandRoute.Mixin
         /// </summary>
         /// <param name="services"></param>
         public static void ConfigureOneBot(this IServiceCollection services)
-        {   
+        {
+            services
             // OneBot
-            services.AddSingleton<IBotService, BotService>();
+                .AddSingleton<IBotService, BotService>()
 
             // 事件服务
-            services.AddSingleton<IEventService, EventService>();
+                .AddSingleton<IEventService, EventService>()
 
             // 指令路由服务
-            services.AddSingleton<ICommandService, CommandService>();
-            
+                .AddSingleton<ICommandService, CommandService>()
+
             // CQ:Json 路由服务
-            services.AddSingleton<ICQJsonRouterService, CQJsonRouterService>();
-            services.AddSingleton<IOneBotController, CQJsonRouterController>();
-            
+                .AddSingleton<ICQJsonRouterService, CQJsonRouterService>()
+                .AddSingleton<IOneBotController, CQJsonRouterController>()
+
             // 日志服务
-            services.AddSingleton<ILogService, YukariToolBoxLogger>();
+                .AddSingleton<ILogService, YukariToolBoxLogger>();
         }
     }
 }

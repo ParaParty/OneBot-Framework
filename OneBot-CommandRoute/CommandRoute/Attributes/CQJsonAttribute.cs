@@ -1,4 +1,3 @@
-using System;
 using OneBot.CommandRoute.Models.Enumeration;
 
 namespace OneBot.CommandRoute.Attributes
@@ -12,7 +11,7 @@ namespace OneBot.CommandRoute.Attributes
         /// <summary>
         /// 指令格式
         /// </summary>
-        public string AppId { get; private set; } = "";
+        public string AppId { get; } = "";
 
         /// <summary>
         /// 事件类型

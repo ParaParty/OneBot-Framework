@@ -1,18 +1,18 @@
-using System.Collections.Generic;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Entities;
 using OneBot.CommandRoute.Models.Enumeration;
+
 using Sora.EventArgs.SoraEvent;
+
+using System.Reflection;
 
 namespace OneBot.CommandRoute.Services.Implements
 {
-    class CQJsonRouterService : ICQJsonRouterService
+    internal class CQJsonRouterService : ICQJsonRouterService
     {
         private readonly SortedDictionary<string, List<CQJsonRouteModel>> _mapping;
-        
+
         public CQJsonRouterService()
         {
             _mapping = new();
@@ -34,7 +34,7 @@ namespace OneBot.CommandRoute.Services.Implements
             }
             list.Add(mappingObj);
         }
-        
+
         /// <summary>
         /// 处理
         /// </summary>

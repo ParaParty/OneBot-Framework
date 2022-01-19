@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Models;
@@ -26,5 +26,5 @@ public abstract class OneBotContext
     /// <summary>
     /// 上下文传递的内容
     /// </summary>
-    public abstract IDictionary<object, object?> Items { get; protected set; }
+    public abstract IDictionary<object, object?> Items { get; }
 }

@@ -1,4 +1,3 @@
-using System;
 using OneBot.CommandRoute.Models.Enumeration;
 
 namespace OneBot.CommandRoute.Attributes
@@ -12,7 +11,7 @@ namespace OneBot.CommandRoute.Attributes
         /// <summary>
         /// 指令格式
         /// </summary>
-        public string Pattern { get; private set; } = "";
+        public string Pattern { get; } = "";
 
         /// <summary>
         /// 指令别名

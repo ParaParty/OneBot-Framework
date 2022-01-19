@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Sora.Enumeration;
-using Sora.EventArgs.SoraEvent;
-using Sora.Entities;
-using OneBot.CommandRoute.Services;
+
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Enumeration;
+using OneBot.CommandRoute.Services;
+
+using Sora.Entities;
 using Sora.Entities.Segment;
+using Sora.Enumeration;
+using Sora.EventArgs.SoraEvent;
 using Sora.Util;
+
+using System.Reflection;
 
 namespace OneBot.CommandRoute.Models.Entities
 {
@@ -23,17 +23,17 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <summary>
         /// 指令对象（单例）
         /// </summary>
-        public IOneBotController CommandObj { get; private set; }
+        public IOneBotController CommandObj { get; }
 
         /// <summary>
         /// 指令方法
         /// </summary>
-        public MethodInfo CommandMethod { get; private set; }
+        public MethodInfo CommandMethod { get; }
 
         /// <summary>
         /// 匹配的指令参数类型
         /// </summary>
-        public List<Type> ParametersType { get; private set; }
+        public List<Type> ParametersType { get; }
 
         /// <summary>
         /// 指令匹配类型
@@ -41,12 +41,12 @@ namespace OneBot.CommandRoute.Models.Entities
         ///     1 参数 /
         ///     2 可选参数 /
         /// </summary>
-        public List<int> ParametersMatchingType { get; private set; }
+        public List<int> ParametersMatchingType { get; }
 
         /// <summary>
         /// 指令参数名
         /// </summary>
-        public List<string> ParametersName { get; private set; }
+        public List<string> ParametersName { get; }
 
         /// <summary>
         /// 匹配到的参数与方法参数的映射关系
@@ -54,22 +54,22 @@ namespace OneBot.CommandRoute.Models.Entities
         /// x 是指令参数位置
         /// y 是函数参数位置
         /// </summary>
-        public List<int> ParameterPositionMapping { get; private set; }
+        public List<int> ParameterPositionMapping { get; }
 
         /// <summary>
         /// 这个指令方法的属性
         /// </summary>
-        public CommandAttribute Attribute { get; private set; }
+        public CommandAttribute Attribute { get; }
 
         /// <summary>
         /// 全字匹配和必选参数的个数和
         /// </summary>
-        public int WeightA { get; private set; }
+        public int WeightA { get; }
 
         /// <summary>
         /// 可选参数的个数
         /// </summary>
-        public int WeightB { get; private set; }
+        public int WeightB { get; }
 
         /// <summary>
         /// 构造函数
@@ -119,7 +119,7 @@ namespace OneBot.CommandRoute.Models.Entities
             // 尝试解析剩下的所有参数
             int step = lexer.ParsedArguments.Count;
 
-            List<object?> matchedArgs = new List<object?>();
+            List<object?> matchedArgs = new();
             matchedArgs.AddRange(lexer.ParsedArguments);
             for (int i = step; i < ParametersName.Count; i++)
             {
@@ -134,7 +134,7 @@ namespace OneBot.CommandRoute.Models.Entities
 
                 object? newArg = null;
                 // ReSharper disable once RedundantAssignment
-                bool succeed = false;
+                bool succeed;
 
                 // 解析新的参数
                 try
@@ -152,7 +152,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 {
                     if (ParametersMatchingType[i] == 0)
                     {
-                        succeed = (newArg is string) && ((string) newArg) == ParametersName[i];
+                        succeed = newArg is string name && name == ParametersName[i];
                     }
                     else
                     {
@@ -214,31 +214,21 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
 
                 // 判断是否需要传递事件信息
-                if (parameterType == typeof(BaseSoraEventArgs))
+                if (parameterType == typeof(BaseSoraEventArgs) ||
+                    parameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs ||
+                    parameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
                 {
                     functionArgs[i] = baseSoraEventArgs;
                     continue;
                 }
 
-                if (parameterType == typeof(PrivateMessageEventArgs) && baseSoraEventArgs is PrivateMessageEventArgs)
-                {
-                    functionArgs[i] = baseSoraEventArgs;
-                    continue;
-                }
-
-                if (parameterType == typeof(GroupMessageEventArgs) && baseSoraEventArgs is GroupMessageEventArgs)
-                {
-                    functionArgs[i] = baseSoraEventArgs;
-                    continue;
-                }
-                
                 // 判断是否需要传递 Scope 信息
                 if (parameterType == typeof(IServiceScope))
                 {
                     functionArgs[i] = context.ServiceScope;
                     continue;
                 }
-                
+
                 if (parameterType == typeof(OneBotContext))
                 {
                     functionArgs[i] = context;
@@ -264,9 +254,7 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
-#pragma warning disable 8605
-                return (int) CommandMethod.Invoke(CommandObj, functionArgs);
-#pragma warning restore 8605
+                return CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
             }
 
             CommandMethod.Invoke(CommandObj, functionArgs);
@@ -281,50 +269,45 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseType(BaseSoraEventArgs baseSoraEventArgs, object? arg, Type type, out object? result)
+        private static bool TryParseType(BaseSoraEventArgs baseSoraEventArgs, object? arg, Type type, out object? result)
         {
             result = null;
 
-            if (arg is string)
+            switch (arg)
             {
-                var s = arg as string;
-                try
-                {
-                    return TryParseString(baseSoraEventArgs, s, type, out result);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
+                case string s:
+                    try
+                    {
+                        return TryParseString(baseSoraEventArgs, s, type, out result);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
 
-            if (arg is SoraSegment)
-            {
-                var s = (SoraSegment)arg;
-                try
-                {
-                    return TryParseCQCode(baseSoraEventArgs, s, type, out result);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
+                case SoraSegment s:
+                    try
+                    {
+                        return TryParseCQCode(baseSoraEventArgs, s, type, out result);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
 
-            if (arg is MessageBody)
-            {
-                var s = (MessageBody)arg;
-                try
-                {
-                    return TryParseMessageBody(baseSoraEventArgs, s, type, out result);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }
+                case MessageBody s:
+                    try
+                    {
+                        return TryParseMessageBody(baseSoraEventArgs, s, type, out result);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
 
-            return false;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
@@ -335,10 +318,10 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseMessageBody(BaseSoraEventArgs baseSoraEventArgs, MessageBody arg, Type type, out object? result)
+        private static bool TryParseMessageBody(BaseSoraEventArgs baseSoraEventArgs, MessageBody arg, Type type, out object? result)
         {
             // ReSharper disable once RedundantAssignment
-            bool ret = false;
+            bool ret;
             if (type == typeof(MessageBody))
             {
                 ret = true;
@@ -353,10 +336,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                    var converter = type.GetMethod("op_Implicit", new[] { arg.GetType() });
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] {arg});
+                        result = converter.Invoke(null, new[] { arg });
                         // ReSharper disable once RedundantAssignment
                         ret = true;
                     }
@@ -369,9 +352,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
                 catch (Exception)
                 {
-                    result = null;
                     // ReSharper disable once RedundantAssignment
-                    ret = false;
                 }
                 result = null;
                 return false;
@@ -379,7 +360,7 @@ namespace OneBot.CommandRoute.Models.Entities
 
             return ret;
         }
-        
+
         /// <summary>
         /// 尝试解析 CQ 码
         /// </summary>
@@ -388,7 +369,7 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object? result)
+        private static bool TryParseCQCode(BaseSoraEventArgs baseSoraEventArgs, object arg, Type type, out object? result)
         {
             // ReSharper disable once RedundantAssignment
             bool ret = false;
@@ -399,7 +380,7 @@ namespace OneBot.CommandRoute.Models.Entities
             }
             else if (((SoraSegment)arg).MessageType == SegmentType.At)
             {
-                var cast = ( Sora.Entities.Segment.DataModel.AtSegment) ((SoraSegment)arg).Data;
+                var cast = (Sora.Entities.Segment.DataModel.AtSegment)((SoraSegment)arg).Data;
                 var succeed = long.TryParse(cast.Target, out long uid);
                 if (!succeed)
                 {
@@ -424,10 +405,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] {arg.GetType()});
+                    var converter = type.GetMethod("op_Implicit", new[] { arg.GetType() });
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new[] {arg});
+                        result = converter.Invoke(null, new[] { arg });
                         // ReSharper disable once RedundantAssignment
                         ret = true;
                     }
@@ -440,9 +421,7 @@ namespace OneBot.CommandRoute.Models.Entities
                 }
                 catch (Exception)
                 {
-                    result = null;
                     // ReSharper disable once RedundantAssignment
-                    ret = false;
                 }
                 result = null;
                 return false;
@@ -459,11 +438,10 @@ namespace OneBot.CommandRoute.Models.Entities
         /// <param name="type">要 cast 的类型</param>
         /// <param name="result">cast 结果</param>
         /// <returns>真: 成功 / 假: 失败</returns>
-        private bool TryParseString(BaseSoraEventArgs baseSoraEventArgs, string? arg, Type type, out object? result)
+        private static bool TryParseString(BaseSoraEventArgs baseSoraEventArgs, string? arg, Type type, out object? result)
         {
             // ReSharper disable once RedundantAssignment
-            bool ret = false;
-
+            bool ret;
             if (type == typeof(int) || type == typeof(int?))
             {
                 ret = int.TryParse(arg, out int number);
@@ -508,10 +486,10 @@ namespace OneBot.CommandRoute.Models.Entities
             {
                 try
                 {
-                    var converter = type.GetMethod("op_Implicit", new[] {typeof(string)});
+                    var converter = type.GetMethod("op_Implicit", new[] { typeof(string) });
                     if (converter != null)
                     {
-                        result = converter.Invoke(null, new object?[] {arg});
+                        result = converter.Invoke(null, new object?[] { arg });
                         ret = true;
                     }
                     else

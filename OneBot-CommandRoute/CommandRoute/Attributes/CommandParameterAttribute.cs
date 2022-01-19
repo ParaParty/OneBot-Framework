@@ -1,5 +1,3 @@
-using System;
-
 namespace OneBot.CommandRoute.Attributes
 {
     /// <summary>
@@ -10,7 +8,7 @@ namespace OneBot.CommandRoute.Attributes
         /// <summary>
         /// 参数名
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// 指令参数绑定
