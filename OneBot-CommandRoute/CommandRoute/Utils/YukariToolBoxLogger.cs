@@ -128,7 +128,7 @@ namespace OneBot.CommandRoute.Utils
                 errorLogBuilder.Append("，服务器将停止运行");
             }
 
-            _logger.LogCritical(args.ExceptionObject as Exception, errorLogBuilder.ToString());
+            _logger.LogCritical(args.ExceptionObject as Exception, "{errorLog}",errorLogBuilder.ToString());
             if (args.IsTerminating)
             {
                 _logger.LogWarning("[Sora] 将在5s后自动退出");

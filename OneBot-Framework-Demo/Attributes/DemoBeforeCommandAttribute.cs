@@ -18,12 +18,11 @@ namespace OneBot.FrameworkDemo.Attributes
         {
             IServiceScope scope = context.ServiceScope;
             BaseSoraEventArgs baseSoraEventArgs = context.SoraEventArgs;
-            
-            GroupMessageEventArgs p = baseSoraEventArgs as GroupMessageEventArgs;
-            if (p == null) return;
 
-            var taskValue = p.SoraApi.GetGroupMemberInfo(p.SourceGroup, p.Sender.Id, true);
-            taskValue.AsTask().Wait();
+            if (baseSoraEventArgs is not GroupMessageEventArgs p) return;
+
+            var taskValue = p.SoraApi.GetGroupMemberInfo(p.SourceGroup, p.Sender.Id, true).AsTask();
+            taskValue.Wait();
 
             if (taskValue.Result.apiStatus.RetCode != ApiStatusType.OK)
             {

@@ -269,9 +269,7 @@ namespace OneBot.CommandRoute.Models.Entities
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
-#pragma warning disable 8605
-                return (int)CommandMethod.Invoke(CommandObj, functionArgs);
-#pragma warning restore 8605
+                return CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
             }
 
             CommandMethod.Invoke(CommandObj, functionArgs);

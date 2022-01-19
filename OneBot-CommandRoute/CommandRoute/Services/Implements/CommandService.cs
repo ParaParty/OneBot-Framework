@@ -116,13 +116,13 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 if (!Event.FireException(oneBotContext, exception))
                 {
-                    _logger.LogError(exception.Message, exception);
+                    _logger.LogError(exception, "{exception}", exception.Message);
                 }
             }
             catch (Exception e1)
             {
-                _logger.LogError(exception.Message, exception);
-                _logger.LogError(e1.Message, e1);
+                _logger.LogError(exception, "{exception}", exception.Message);
+                _logger.LogError(e1, "{e1}", e1.Message);
             }
             return ValueTask.CompletedTask;
         }
@@ -208,24 +208,20 @@ namespace OneBot.CommandRoute.Services.Implements
                     if (Attribute.IsDefined(method, typeof(CommandAttribute)))
                     {
                         var attr = Attribute.GetCustomAttribute(method, typeof(CommandAttribute)) as CommandAttribute;
-#pragma warning disable 8604
-                        RegisterCommand(s, method, attr);
-#pragma warning restore 8604
+                        RegisterCommand(s, method, attr!);
                     }
 
                     if (Attribute.IsDefined(method, typeof(CQJsonAttribute)))
                     {
                         if (_jsonRouterService == null)
                         {
-                            _logger.LogWarning($"检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。{clazz.FullName}::{method.Name}");
+                            _logger.LogWarning("检测到 CQ:Json 路由功能已被关闭，但依然有方法使用了 [CQJson]。{clazz.FullName}::{method.Name}", clazz.FullName, method.Name);
                         }
                         else
                         {
                             var attr = Attribute.GetCustomAttribute(method, typeof(CQJsonAttribute)) as CQJsonAttribute;
-#pragma warning disable 8604
-                            _jsonRouterService.Register(s, method, attr);
-                            _logger.LogDebug($"成功添加 CQ:Json ：{attr.AppId}\r\n{clazz.FullName}::{method.Name}");
-#pragma warning restore 8604
+                            _jsonRouterService.Register(s, method, attr!);
+                            _logger.LogDebug("成功添加 CQ:Json ：{attr.AppId}\r\n{clazz.FullName}::{method.Name}", attr!.AppId,clazz.FullName, method.Name);
                         }
                     }
                 }
@@ -250,7 +246,7 @@ namespace OneBot.CommandRoute.Services.Implements
             }
             catch (ArgumentException e)
             {
-                _logger.LogError(e.Message, e);
+                _logger.LogError(e, "{e.Message}", e.Message);
             }
 
             foreach (var c in aliasList.Select(s => s.Split(' ').ToList()))
@@ -261,7 +257,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 }
                 catch (ArgumentException e)
                 {
-                    _logger.LogError(e.Message, e);
+                    _logger.LogError(e, "{e.Message}", e.Message);
                 }
             }
         }
@@ -413,7 +409,8 @@ namespace OneBot.CommandRoute.Services.Implements
                     parametersType, parametersMatchingType, parametersName, parameterPositionMapping,
                     attribute)
                 , 0);
-            _logger.LogDebug($"成功添加指令：{string.Join(", ", matchPattern.ToArray())}\r\n{commandObj.GetType().FullName}::{commandMethod.Name}");
+            _logger.LogDebug("成功添加指令：{matchPattern}\r\n{commandType}::{commandMethod}",
+                string.Join(", ", matchPattern.ToArray()), commandObj.GetType().FullName, commandMethod.Name);
         }
 
         #endregion 注册指令

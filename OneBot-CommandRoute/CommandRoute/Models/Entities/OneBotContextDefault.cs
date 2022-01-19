@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +20,7 @@ public class OneBotContextDefault : OneBotContext
     /// <returns></returns>
     public override T WrapSoraEventArgs<T>()
     {
-        var ret = SoraEventArgs as T;
-        if (ret == null)
+        if (SoraEventArgs is not T ret)
         {
             throw new ArgumentException($"SoraEventArgs is not an instance of {typeof(T).Name}", $"SoraEventArgs");
         }

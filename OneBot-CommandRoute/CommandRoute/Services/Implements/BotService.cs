@@ -33,6 +33,8 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <summary>
         /// OneBot 启动后的 Task
         /// </summary>
+        // ValueTask instances returned from member invocations are intended to be directly awaited. Attempts to consume a ValueTask multiple times or to directly access one's result before it's known to be completed may result in an exception or corruption. Ignoring such a ValueTask is likely an indication of a functional bug and may degrade performance.
+        // TODO: This should be removed, or change it to Task.
         // ReSharper disable once NotAccessedField.Local
         private ValueTask _startTask;
 
@@ -62,6 +64,8 @@ namespace OneBot.CommandRoute.Services.Implements
             eventService.RegisterEventHandler();
 
             // 启动 CQHTTP
+            // ValueTask instances returned from member invocations are intended to be directly awaited. Attempts to consume a ValueTask multiple times or to directly access one's result before it's known to be completed may result in an exception or corruption. Ignoring such a ValueTask is likely an indication of a functional bug and may degrade performance.
+            // TODO: This should be removed, or convert it to Task.
             _startTask = SoraService.StartService();
         }
     }
