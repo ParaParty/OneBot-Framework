@@ -17,8 +17,8 @@ namespace OneBot.CommandRoute.Mixin
         public static void ConfigureOneBot(this IServiceCollection services)
         {
             // OneBot
-            services.AddSingleton<IBotService, BotService>();
-            services.AddSingleton<IHostedService, OneBotHostedService>();
+            services.AddSingleton<IBotService, BotService>()
+                .AddHostedService<OneBotHostedService>();
 
             // 事件服务
             services.AddSingleton<IEventService, EventService>();
