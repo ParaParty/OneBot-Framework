@@ -94,21 +94,15 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnSelfMessage(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
                 Event.FireSelfMessage(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
-                exception = e1;
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -130,7 +124,6 @@ namespace OneBot.CommandRoute.Services.Implements
                 _logger.LogError(exception.Message, exception);
                 _logger.LogError(e1.Message, e1);
             }
-
             return ValueTask.CompletedTask;
         }
 
@@ -141,22 +134,15 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask OnGeneralEvent(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
                 Event.Fire(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
-                exception = e1;
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-
-            return ValueTask.CompletedTask;
         }
 
         #endregion 事件处理
@@ -170,24 +156,17 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnPrivateMessage(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
                 if (Event.FirePrivateMessageReceived(oneBotContext) != 0) return ValueTask.CompletedTask;
                 if (_matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) return ValueTask.CompletedTask;
                 Event.Fire(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
-            {
-                exception = e1;
+            {            
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-
-            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -197,24 +176,17 @@ namespace OneBot.CommandRoute.Services.Implements
         /// <returns></returns>
         private ValueTask EventOnGroupMessage(OneBotContext oneBotContext)
         {
-            Exception? exception = null;
             try
             {
                 if (Event.FireGroupMessageReceived(oneBotContext) != 0) return ValueTask.CompletedTask;
                 if (_matchingRootNode.ProcessingCommandMapping(oneBotContext) != 0) return ValueTask.CompletedTask;
                 Event.Fire(oneBotContext);
+                return ValueTask.CompletedTask;
             }
             catch (Exception e1)
             {
-                exception = e1;
+                return EventOnException(oneBotContext, e1);
             }
-
-            if (exception != null)
-            {
-                return EventOnException(oneBotContext, exception);
-            }
-
-            return ValueTask.CompletedTask;
         }
 
         #endregion 指令路由
@@ -278,10 +250,7 @@ namespace OneBot.CommandRoute.Services.Implements
             }
             catch (ArgumentException e)
             {
-                _logger.LogError(
-                    $"{e.Message} : \n" +
-                    $"{e.StackTrace}"
-                );
+                _logger.LogError(e.Message, e);
             }
 
             foreach (var c in aliasList.Select(s => s.Split(' ').ToList()))
@@ -292,10 +261,7 @@ namespace OneBot.CommandRoute.Services.Implements
                 }
                 catch (ArgumentException e)
                 {
-                    _logger.LogError(
-                        $"{e.Message} : \n" +
-                        $"{e.StackTrace}"
-                    );
+                    _logger.LogError(e.Message, e);
                 }
             }
         }
