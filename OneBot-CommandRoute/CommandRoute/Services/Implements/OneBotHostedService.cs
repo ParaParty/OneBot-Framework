@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 namespace OneBot.CommandRoute.Services.Implements;
@@ -18,7 +18,7 @@ public class OneBotHostedService: IHostedService
         _botService = botService;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         // 初始化指令系统
         _commandService.RegisterCommand();
@@ -27,8 +27,7 @@ public class OneBotHostedService: IHostedService
         _eventService.RegisterEventHandler();
 
         // 启动 CQHTTP
-        _botService.SoraService.StartService();
-        return Task.CompletedTask;
+        await _botService.SoraService.StartService();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
