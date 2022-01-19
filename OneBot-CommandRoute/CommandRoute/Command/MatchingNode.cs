@@ -96,11 +96,16 @@ namespace OneBot.CommandRoute.Command
             {
                 foreach (var s in _children)
                 {
-                    var nextStepForComparing = (_configuration.IsCaseSensitive) ? s.Key : s.Key.ToUpper();
-                    var tokenForComparing = (_configuration.IsCaseSensitive) ? token : token.ToUpper();
+                    var nextStepForComparing = _configuration.IsCaseSensitive ? s.Key : s.Key.ToUpper();
+                    var tokenForComparing = _configuration.IsCaseSensitive ? token : token.ToUpper();
 
                     // 如果是根，并且有设置指令前缀，并且是英文指令，那么我们就处理指令前缀匹配
-                    if (IsRoot && _configuration.CommandPrefix.Length > 0 && nextStepForComparing[0] >= 'A' && nextStepForComparing[0] <= 'Z')
+                    if (IsRoot && 
+                        _configuration.CommandPrefix.Length > 0 && 
+                        (
+                            (nextStepForComparing[0] >= 'A' && nextStepForComparing[0] <= 'Z') ||
+                            (nextStepForComparing[0] >= 'a' && nextStepForComparing[0] <= 'z'))
+                        )
                     {
                         if (!_configuration.CommandPrefix.Contains("" + token[0])) continue;
                         if (nextStepForComparing != tokenForComparing[1..]) continue;
