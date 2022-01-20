@@ -1,5 +1,8 @@
 ﻿namespace OneBot.CommandRoute.Services;
 
+/// <summary>
+/// OneBot 事件服务
+/// </summary>
 public interface IEventService
 {
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace OneBot.CommandRoute.Services
+﻿namespace OneBot.CommandRoute.Configuration
 {
     public interface IOneBotCommandRouteConfiguration
     {
