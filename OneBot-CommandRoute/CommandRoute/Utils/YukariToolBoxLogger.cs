@@ -109,12 +109,12 @@ namespace OneBot.CommandRoute.Utils
             GetLogger().LogDebug("[{source}] {message} {context}", source, message, context);
         }
 
-        public void Verbos(string source, string message)
+        public void Verbose(string source, string message)
         {
             GetLogger().LogDebug("[{source}] {message}", source, message);
         }
 
-        public void Verbos<T>(string source, string message, T context)
+        public void Verbose<T>(string source, string message, T context)
         {
             GetLogger().LogDebug("[{source}] {message} {context}", source, message, context);
         }
