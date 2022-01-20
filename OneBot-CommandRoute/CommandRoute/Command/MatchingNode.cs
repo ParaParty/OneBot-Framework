@@ -88,7 +88,7 @@ namespace OneBot.CommandRoute.Command
             {
                 nextToken = lexer.GetNextNotBlank();
             }
-            catch (ParserToTheEndException)
+            catch (ParseToTheEndException)
             {
             }
 

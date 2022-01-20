@@ -195,7 +195,7 @@ namespace OneBot.CommandRoute.Lexer
             // 检查是否扫描到末尾
             if (ScanObjectPointer >= SourceCommand.Count)
             {
-                throw new ParserToTheEndException();
+                throw new ParseToTheEndException();
             }
 
             // 当前扫描到的消息段
@@ -220,7 +220,7 @@ namespace OneBot.CommandRoute.Lexer
                 ScanStringPointer = 0;
                 if (ScanObjectPointer >= SourceCommand.Count)
                 {
-                    throw new ParserToTheEndException();
+                    throw new ParseToTheEndException();
                 }
 
                 // 获取下一个消息段
