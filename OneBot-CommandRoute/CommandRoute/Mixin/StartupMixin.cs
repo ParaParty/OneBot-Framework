@@ -20,6 +20,9 @@ namespace OneBot.CommandRoute.Mixin
             services.AddSingleton<IBotService, BotService>();
             services.AddSingleton<IHostedService, OneBotHostedService>();
 
+            // OneBot 上下文持有者
+            services.AddScoped<IOneBotContextHolder, OneBotContextHolder>();
+            
             // 事件服务
             services.AddSingleton<IEventService, EventService>();
 

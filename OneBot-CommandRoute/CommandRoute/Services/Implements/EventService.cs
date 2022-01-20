@@ -90,6 +90,12 @@ public class EventService : IEventService
         ctx.SetSoraEventArgs(e);
         ctx.SoraServiceScope(scope);
 
+        var ctxHolder = scope.ServiceProvider.GetService<IOneBotContextHolder>();
+        if (ctxHolder is OneBotContextHolder holder)
+        {
+            holder.SetOneBotContext(ctx);
+        }
+        
         var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
         var count = middleware.Length;
 
