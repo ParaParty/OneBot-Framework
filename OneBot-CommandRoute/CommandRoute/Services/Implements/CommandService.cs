@@ -67,7 +67,7 @@ namespace OneBot.CommandRoute.Services.Implements
             {
                 // ReSharper disable once ConvertIfStatementToSwitchStatement
                 // ReSharper disable once ConvertIfStatementToReturnStatement
-                if (groupMessageEventArgs.IsSelfMessage)
+                if (groupMessageEventArgs.SenderInfo.UserId == groupMessageEventArgs.LoginUid)
                 {
                     await EventOnSelfMessage(oneBotContext);
                 }
