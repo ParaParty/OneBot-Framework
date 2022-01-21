@@ -349,7 +349,7 @@ namespace OneBot.CommandRoute.Models.Entities
             else if (type == typeof(string))
             {
                 ret = true;
-                result = arg.Serialize();
+                result = arg.SerializeMessage();
             }
             else
             {

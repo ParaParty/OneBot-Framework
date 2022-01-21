@@ -24,7 +24,7 @@ namespace OneBot.FrameworkDemo.Attributes
             var taskValue = p.SoraApi.GetGroupMemberInfo(p.SourceGroup, p.Sender.Id, true).AsTask();
             taskValue.Wait();
 
-            if (taskValue.Result.apiStatus.RetCode != ApiStatusType.OK)
+            if (taskValue.Result.apiStatus.RetCode != ApiStatusType.Ok)
             {
                 return;
             }
