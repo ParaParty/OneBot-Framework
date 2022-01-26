@@ -69,16 +69,23 @@ namespace OneBot.CommandRoute.Services.Implements
                 // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (groupMessageEventArgs.SenderInfo.UserId == groupMessageEventArgs.LoginUid)
                 {
-                    await EventOnSelfMessage(oneBotContext);
+                    await EventOnSelfGroupMessage(oneBotContext);
                 }
                 else
                 {
                     await EventOnGroupMessage(oneBotContext);
                 }
             }
-            else if (eventArgs is PrivateMessageEventArgs)
+            else if (eventArgs is PrivateMessageEventArgs privateMessageEventArgs)
             {
-                await EventOnPrivateMessage(oneBotContext);
+                if (privateMessageEventArgs.SenderInfo.UserId == privateMessageEventArgs.LoginUid)
+                {
+                    await EventOnSelfPrivateMessage(oneBotContext);
+                }
+                else
+                {
+                    await EventOnPrivateMessage(oneBotContext);
+                }
             }
             else
             {
@@ -89,15 +96,33 @@ namespace OneBot.CommandRoute.Services.Implements
         #region 事件处理
 
         /// <summary>
-        /// 登录账号发送消息事件
+        /// 登录账号发送消息事件（群聊）
         /// </summary>
         /// <param name="oneBotContext"></param>
         /// <returns></returns>
-        private ValueTask EventOnSelfMessage(OneBotContext oneBotContext)
+        private ValueTask EventOnSelfGroupMessage(OneBotContext oneBotContext)
         {
             try
             {
-                Event.FireSelfMessage(oneBotContext);
+                Event.FireSelfGroupMessage(oneBotContext);
+                return ValueTask.CompletedTask;
+            }
+            catch (Exception e1)
+            {
+                return EventOnException(oneBotContext, e1);
+            }
+        }
+        
+        /// <summary>
+        /// 登录账号发送消息事件（私聊）
+        /// </summary>
+        /// <param name="oneBotContext"></param>
+        /// <returns></returns>
+        private ValueTask EventOnSelfPrivateMessage(OneBotContext oneBotContext)
+        {
+            try
+            {
+                Event.FireSelfPrivateMessage(oneBotContext);
                 return ValueTask.CompletedTask;
             }
             catch (Exception e1)

@@ -72,7 +72,8 @@ public class EventService : IEventService
         _bot.SoraService.Event.OnGroupMessage += OnGeneralEvent;
         _bot.SoraService.Event.OnPrivateMessage += OnGeneralEvent;
 
-        _bot.SoraService.Event.OnSelfMessage += OnGeneralEvent;
+        _bot.SoraService.Event.OnSelfGroupMessage += OnGeneralEvent;
+        _bot.SoraService.Event.OnSelfPrivateMessage += OnGeneralEvent;
     }
 
     /// <summary>

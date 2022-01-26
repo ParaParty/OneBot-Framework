@@ -15,8 +15,11 @@ namespace OneBot.CommandRoute.Events
         /// <summary>群聊事件（触发指令之前）</summary>
         public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnGroupMessageReceived;
 
-        /// <summary> 登录账号发送消息事件 </summary>
-        public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnSelfMessage;
+        /// <summary> 登录账号发送消息事件（群聊） </summary>
+        public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnSelfGroupMessage;
+        
+        /// <summary> 登录账号发送消息事件（私聊） </summary>
+        public event EventAsyncCallBackHandler<GroupMessageEventArgs>? OnSelfPrivateMessage;
 
         /// <summary>私聊事件（触发指令之后）</summary>
         public event EventAsyncCallBackHandler<PrivateMessageEventArgs>? OnPrivateMessage;
@@ -236,12 +239,21 @@ namespace OneBot.CommandRoute.Events
         }
 
         /// <summary>
-        /// 分发登录账号发送消息事件
+        /// 分发登录账号发送消息事件（群聊）
         /// </summary>
         /// <param name="scope"></param>
-        internal void FireSelfMessage(OneBotContext scope)
+        internal void FireSelfGroupMessage(OneBotContext scope)
         {
-            Fire(scope, OnSelfMessage);
+            Fire(scope, OnSelfGroupMessage);
+        }
+        
+        /// <summary>
+        /// 分发登录账号发送消息事件（私聊）
+        /// </summary>
+        /// <param name="scope"></param>
+        internal void FireSelfPrivateMessage(OneBotContext scope)
+        {
+            Fire(scope, OnSelfPrivateMessage);
         }
     }
 }
