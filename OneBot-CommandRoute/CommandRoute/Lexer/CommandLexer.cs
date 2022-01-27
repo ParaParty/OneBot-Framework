@@ -31,7 +31,7 @@ namespace OneBot.CommandRoute.Lexer
         /// <summary>
         /// 已经解析了的参数信息
         /// </summary>
-        public List<object> ParsedArguments { get; private set; } = new List<object>();
+        public List<object> ParsedArguments { get; private init; } = new List<object>();
 
         /// <summary>
         /// 当前扫描到 <code>SourceCommand</code> 的哪一个位置。
@@ -80,6 +80,7 @@ namespace OneBot.CommandRoute.Lexer
                 scanObjectPointer = 1;
             }
 
+            // ReSharper disable once JoinDeclarationAndInitializer
             string s;
             var flag = false;
 

@@ -23,7 +23,6 @@ namespace OneBot.CommandRoute.Services
         /// <summary>
         /// 事件处理
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
         /// <returns></returns>
         public ValueTask HandleEvent(OneBotContext oneBotContext);
@@ -32,7 +31,6 @@ namespace OneBot.CommandRoute.Services
         /// <summary>
         /// 异常处理
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="oneBotContext"></param>
         /// <param name="exception"></param>
         public ValueTask EventOnException(OneBotContext oneBotContext, Exception exception);

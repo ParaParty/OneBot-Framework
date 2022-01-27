@@ -4,7 +4,6 @@ using OneBot.CommandRoute.Configuration;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Entities;
-using OneBot.CommandRoute.Services;
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Command

@@ -21,6 +21,7 @@ public class EventService : IEventService
     /// <summary>`
     /// 服务容器
     /// </summary>
+    // ReSharper disable once NotAccessedField.Local
     private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
@@ -31,6 +32,7 @@ public class EventService : IEventService
     /// <summary>
     /// 日志
     /// </summary>
+    // ReSharper disable once NotAccessedField.Local
     private ILogger<EventService> _logger;
 
     /// <summary>

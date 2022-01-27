@@ -78,6 +78,7 @@ namespace OneBot.CommandRoute.Events
         /// <summary>其他客户端在线状态变更事件</summary>
         public event EventAsyncCallBackHandler<EssenceChangeEventArgs>? OnEssenceChange;
 
+        // ReSharper disable once UnusedTypeParameter
         public delegate int EventAsyncCallBackHandler<in TEventArgs>(OneBotContext scope) where TEventArgs : EventArgs;
 
         /// <summary>

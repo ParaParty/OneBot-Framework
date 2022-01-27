@@ -51,6 +51,7 @@ public class OneBotContextDefault : OneBotContext
     /// <summary>
     /// Sora Sender
     /// </summary>
+    // ReSharper disable once MemberCanBePrivate.Global
     public object Sender { get; private set; } = "";
 
     internal void SetSoraEventSender(object sender)
