@@ -1,21 +1,20 @@
 using System.Threading.Tasks;
 using Sora.Interfaces;
 
-namespace OneBot.CommandRoute.Services
+namespace OneBot.CommandRoute.Services;
+
+/// <summary>
+/// OneBot 客户端（Sora）
+/// </summary>
+public interface IBotService
 {
     /// <summary>
-    /// OneBot 客户端（Sora）
+    /// Sora WS 服务
     /// </summary>
-    public interface IBotService
-    {
-        /// <summary>
-        /// Sora WS 服务
-        /// </summary>
-        ISoraService SoraService { get; }
+    ISoraService SoraService { get; }
 
-        /// <summary>
-        /// Sora WS 服务设置
-        /// </summary>
-        public ISoraConfig ServiceConfig { get; }
-    }
+    /// <summary>
+    /// Sora WS 服务设置
+    /// </summary>
+    public ISoraConfig ServiceConfig { get; }
 }

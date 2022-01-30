@@ -1,9 +1,8 @@
-namespace OneBot.CommandRoute.Services
+namespace OneBot.CommandRoute.Services;
+
+/// <summary>
+/// OneBot 控制器
+/// </summary>
+public interface IOneBotController
 {
-    /// <summary>
-    /// OneBot 控制器
-    /// </summary>
-    public interface IOneBotController
-    {
-    }
 }

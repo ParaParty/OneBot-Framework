@@ -1,13 +1,12 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace OpenTelemetry.Trace
+namespace OpenTelemetry.Trace;
+
+public static class TraceProviderBuilderExtensions
 {
-    public static class TraceProviderBuilderExtensions
+    public static TracerProviderBuilder AddOneBotInstrumentation(
+        this TracerProviderBuilder builder)
     {
-        public static TracerProviderBuilder AddOneBotInstrumentation(
-            this TracerProviderBuilder builder)
-        {
-            builder.AddSource("OneBot.Event", "OneBot.Middleware", "OneBot.CommandRoute");
-            return builder;
-        }
+        builder.AddSource("OneBot.Event", "OneBot.Middleware", "OneBot.CommandRoute");
+        return builder;
     }
 }
