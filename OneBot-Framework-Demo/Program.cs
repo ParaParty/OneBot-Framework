@@ -38,6 +38,6 @@ public class Program
         });
 
         // 开始运行
-        builder.Start();
+        builder.Build().Run();
     }
 }
