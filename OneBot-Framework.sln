@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
+Project("{4AD52A7F-365F-49B1-8B11-36E3F408488E}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
+EndProject
+Project("{EE6532C9-9C4E-47DB-A487-9200572B7553}") = "OneBot-OpenTelemetry", "OneBot-OpenTelemetry\OneBot-OpenTelemetry.csproj", "{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,6 +34,10 @@ Global
 		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

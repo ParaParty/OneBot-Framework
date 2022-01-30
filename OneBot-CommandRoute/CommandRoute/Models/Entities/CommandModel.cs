@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +76,11 @@ namespace OneBot.CommandRoute.Models.Entities
         /// 可选参数的个数
         /// </summary>
         public int WeightB { get; private set; }
+
+        /// <summary>
+        /// 事件源
+        /// </summary>
+        private readonly ActivitySource _activitySource = new ActivitySource("OneBot.CommandRoute", Assembly.GetExecutingAssembly().GetName().Version!.ToString());
 
         /// <summary>
         /// 构造函数
@@ -262,18 +268,33 @@ namespace OneBot.CommandRoute.Models.Entities
                 var attrs = System.Attribute.GetCustomAttributes(CommandMethod, typeof(BeforeCommandAttribute));
                 foreach (var t in attrs)
                 {
+                    var operationName = t.GetType().FullName ?? "?";
+                    var activity = _activitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+                    activity.Start();
                     (t as BeforeCommandAttribute)?.Invoke(context);
+                    activity.Stop();
                 }
             }
 
             // 调用
             if (CommandMethod.ReturnType == typeof(int))
             {
-                return CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
+                var operationName = (CommandObj.GetType().FullName ?? "?") + "::" + (CommandMethod.Name);
+                var activity = _activitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+                activity.Start();
+                var ret = CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
+                activity.Stop();
+                return ret;
             }
 
-            CommandMethod.Invoke(CommandObj, functionArgs);
-            return 1;
+            {
+                var operationName = (CommandObj.GetType().FullName ?? "?") + "::" + (CommandMethod.Name);
+                var activity = _activitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+                activity.Start();
+                CommandMethod.Invoke(CommandObj, functionArgs);
+                activity.Stop();
+                return 1;
+            }
         }
 
         /// <summary>

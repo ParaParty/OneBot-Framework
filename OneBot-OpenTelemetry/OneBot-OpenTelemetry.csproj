@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>OneBot</RootNamespace>
+    <Authors>ParaParty</Authors>
+    <Company>ParaParty</Company>
+    <Product>ParaParty</Product>
+    <Description>OneBot-CommandRoute OpenTelemetry 支持</Description>
+    <Copyright>ParaParty 2021</Copyright>
+    <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ParaParty/OneBot-Framework/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ParaParty/OneBot-Framework/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>OneBot</PackageTags>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <Version>3.1.0</Version>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Api" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>
