@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OneBot.CommandRoute.Mixin;
@@ -19,16 +18,10 @@ public class Program
         // 配置 OneBot 主机
         builder.ConfigureOneBotHost();
 
-        // 读取配置文件
-        IConfigurationRoot configuration = null!;
-        builder.ConfigureHostConfiguration((configure) =>
-        {
-            configuration = configure.Build();
-        });
-
         // 配置服务
-        builder.ConfigureServices(services =>
+        builder.ConfigureServices((context, services) =>
         {
+            var configuration = context.Configuration;
             // 配置机器人核心
             // 设置 OneBot 配置
             services.Configure<CQHttpServerConfigModel>(configuration.GetSection("CQHttpConfig"));
@@ -45,6 +38,6 @@ public class Program
         });
 
         // 开始运行
-        builder.Build().Run();
+        builder.Start();
     }
 }
