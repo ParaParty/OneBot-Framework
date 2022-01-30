@@ -1,20 +1,50 @@
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OneBot.CommandRoute.Mixin;
+using OneBot.CommandRoute.Models.VO;
+using OneBot.CommandRoute.Services;
+using OneBot.FrameworkDemo.Middleware;
+using OneBot.FrameworkDemo.Modules;
 
-namespace OneBot.FrameworkDemo
+namespace OneBot.FrameworkDemo;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+        // 创建主机
+        var builder = Host.CreateDefaultBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        // 配置 OneBot 主机
+        builder.ConfigureOneBotHost();
+
+        // 读取配置文件
+        IConfigurationRoot configuration = null!;
+        builder.ConfigureHostConfiguration((configure) =>
+        {
+            configuration = configure.Build();
+        });
+
+        // 配置服务
+        builder.ConfigureServices(services =>
+        {
+            // 配置机器人核心
+            // 设置 OneBot 配置
+            services.Configure<CQHttpServerConfigModel>(configuration.GetSection("CQHttpConfig"));
+            services.ConfigureOneBot();
+
+            // 添加中间件
+            // 单例模式或原型模式都可以，问题不大。
+            services.AddScoped<IOneBotMiddleware, TestMiddleware>();
+
+            // 添加指令 / 事件
+            // 推荐使用单例模式（而实际上框架代码也是当单例模式使用的）
+            services.AddSingleton<IOneBotController, TestModule>();
+            // 一行一行地将指令模块加进去
+        });
+
+        // 开始运行
+        builder.Build().Run();
     }
 }

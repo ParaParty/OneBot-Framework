@@ -1,3 +1,6 @@
+using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OneBot.CommandRoute.OneBotControllers;
@@ -35,6 +38,13 @@ namespace OneBot.CommandRoute.Mixin
 
             // 日志服务
             services.AddSingleton<ILogService, YukariToolBoxLogger>();
+        }
+
+
+        public static IHostBuilder ConfigureOneBotHost(this IHostBuilder builder)
+        {
+            builder.ConfigureServices(s => s.AddSingleton<IServer, OneBotServer>());
+            return builder;
         }
     }
 }
