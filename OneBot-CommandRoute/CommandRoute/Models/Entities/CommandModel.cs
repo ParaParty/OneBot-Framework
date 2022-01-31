@@ -80,7 +80,7 @@ public class CommandModel
     /// <summary>
     /// 事件源
     /// </summary>
-    private readonly ActivitySource _activitySource = new ActivitySource("OneBot.CommandRoute", Assembly.GetExecutingAssembly().GetName().Version!.ToString());
+    private static readonly ActivitySource ActivitySource = new ActivitySource("OneBot.CommandRoute", Assembly.GetExecutingAssembly().GetName().Version!.ToString());
 
     /// <summary>
     /// 构造函数
@@ -163,7 +163,7 @@ public class CommandModel
             {
                 if (ParametersMatchingType[i] == 0)
                 {
-                    succeed = (newArg is string s) && s == ParametersName[i];
+                    succeed = newArg is string s && s == ParametersName[i];
                 }
                 else
                 {
@@ -269,7 +269,7 @@ public class CommandModel
             foreach (var t in attrs)
             {
                 var operationName = t.GetType().FullName ?? "?";
-                var activity = _activitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+                var activity = ActivitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
                 activity.Start();
                 (t as BeforeCommandAttribute)?.Invoke(context);
                 activity.Stop();
@@ -279,8 +279,8 @@ public class CommandModel
         // 调用
         if (CommandMethod.ReturnType == typeof(int))
         {
-            var operationName = (CommandObj.GetType().FullName ?? "?") + "::" + (CommandMethod.Name);
-            var activity = _activitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+            var operationName = (CommandObj.GetType().FullName ?? "?") + "::" + CommandMethod.Name;
+            var activity = ActivitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
             activity.Start();
             var ret = CommandMethod.Invoke(CommandObj, functionArgs) is int i ? i : throw new InvalidCastException();
             activity.Stop();
@@ -288,8 +288,8 @@ public class CommandModel
         }
 
         {
-            var operationName = (CommandObj.GetType().FullName ?? "?") + "::" + (CommandMethod.Name);
-            var activity = _activitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+            var operationName = (CommandObj.GetType().FullName ?? "?") + "::" + CommandMethod.Name;
+            var activity = ActivitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
             activity.Start();
             CommandMethod.Invoke(CommandObj, functionArgs);
             activity.Stop();

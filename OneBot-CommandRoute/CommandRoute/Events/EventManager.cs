@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using OneBot.CommandRoute.Models;
 using Sora.EventArgs.SoraEvent;
 
@@ -82,93 +84,98 @@ public class EventManager
     public delegate int EventAsyncCallBackHandler<in TEventArgs>(OneBotContext scope) where TEventArgs : EventArgs;
 
     /// <summary>
+    /// 事件源
+    /// </summary>
+    private static readonly ActivitySource EventRouteActivitySource = new ActivitySource("OneBot.EventRoute", Assembly.GetExecutingAssembly().GetName().Version!.ToString());
+
+    /// <summary>
     /// 分发事件
     /// </summary>
-    /// <param name="scope"></param>
-    internal void Fire(OneBotContext scope)
+    /// <param name="context"></param>
+    internal void Fire(OneBotContext context)
     {
-        var eventArgs = scope.SoraEventArgs;
+        var eventArgs = context.SoraEventArgs;
 
         // ReSharper disable once ConvertIfStatementToSwitchStatement
         if (eventArgs is ConnectEventArgs)
         {
-            Fire(scope, OnClientConnect);
+            Fire(context, OnClientConnect);
         }
         else if (eventArgs is GroupMessageEventArgs)
         {
-            Fire(scope, OnGroupMessage);
+            Fire(context, OnGroupMessage);
         }
         else if (eventArgs is PrivateMessageEventArgs)
         {
-            Fire(scope, OnPrivateMessage);
+            Fire(context, OnPrivateMessage);
         }
         else if (eventArgs is AddGroupRequestEventArgs)
         {
-            Fire(scope, OnGroupRequest);
+            Fire(context, OnGroupRequest);
         }
         else if (eventArgs is FriendRequestEventArgs)
         {
-            Fire(scope, OnFriendRequest);
+            Fire(context, OnFriendRequest);
         }
         else if (eventArgs is FileUploadEventArgs)
         {
-            Fire(scope, OnFileUpload);
+            Fire(context, OnFileUpload);
         }
         else if (eventArgs is GroupAdminChangeEventArgs)
         {
-            Fire(scope, OnGroupAdminChange);
+            Fire(context, OnGroupAdminChange);
         }
         else if (eventArgs is GroupMemberChangeEventArgs)
         {
-            Fire(scope, OnGroupMemberChange);
+            Fire(context, OnGroupMemberChange);
         }
         else if (eventArgs is GroupMuteEventArgs)
         {
-            Fire(scope, OnGroupMemberMute);
+            Fire(context, OnGroupMemberMute);
         }
         else if (eventArgs is FriendAddEventArgs)
         {
-            Fire(scope, OnFriendAdd);
+            Fire(context, OnFriendAdd);
         }
         else if (eventArgs is GroupRecallEventArgs)
         {
-            Fire(scope, OnGroupRecall);
+            Fire(context, OnGroupRecall);
         }
         else if (eventArgs is FriendRecallEventArgs)
         {
-            Fire(scope, OnFriendRecall);
+            Fire(context, OnFriendRecall);
         }
         else if (eventArgs is GroupCardUpdateEventArgs)
         {
-            Fire(scope, OnGroupCardUpdate);
+            Fire(context, OnGroupCardUpdate);
         }
         else if (eventArgs is GroupPokeEventArgs)
         {
-            Fire(scope, OnGroupPoke);
+            Fire(context, OnGroupPoke);
         }
         else if (eventArgs is LuckyKingEventArgs)
         {
-            Fire(scope, OnLuckyKingEvent);
+            Fire(context, OnLuckyKingEvent);
         }
         else if (eventArgs is HonorEventArgs)
         {
-            Fire(scope, OnHonorEvent);
+            Fire(context, OnHonorEvent);
         }
         else if (eventArgs is TitleUpdateEventArgs)
         {
-            Fire(scope, OnTitleUpdate);
+            Fire(context, OnTitleUpdate);
         }
         else if (eventArgs is OfflineFileEventArgs)
         {
-            Fire(scope, OnOfflineFileEvent);
+            Fire(context, OnOfflineFileEvent);
         }
         else if (eventArgs is ClientStatusChangeEventArgs)
         {
-            Fire(scope, OnClientStatusChangeEvent);
+            Fire(context, OnClientStatusChangeEvent);
         }
         else if (eventArgs is EssenceChangeEventArgs)
         {
-            Fire(scope, OnEssenceChange);
+            Fire(context, OnEssenceChange);
         }
         else
         {
@@ -180,11 +187,11 @@ public class EventManager
     /// 触发事件
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="scope"></param>
+    /// <param name="context"></param>
     /// <param name="eventAsyncCallBackHandler"></param>
     /// <returns></returns>
     // ReSharper disable once MemberCanBeMadeStatic.Local
-    private int Fire<T>(OneBotContext scope, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
+    private int Fire<T>(OneBotContext context, EventAsyncCallBackHandler<T>? eventAsyncCallBackHandler)
         where T : BaseSoraEventArgs
     {
         Delegate[]? listeners = eventAsyncCallBackHandler?.GetInvocationList();
@@ -192,7 +199,15 @@ public class EventManager
 
         for (int counter = listeners.Length - 1; counter >= 0; counter--)
         {
-            int ret = ((EventAsyncCallBackHandler<T>)listeners[counter])(scope);
+            var func = (EventAsyncCallBackHandler<T>)listeners[counter];
+            var target = func.Target;
+            var method = func.Method;
+            var operationName = (target?.GetType().FullName ?? "?") + "::" + method.Name;
+            var activity = EventRouteActivitySource.CreateActivity(operationName, ActivityKind.Internal) ?? new Activity(operationName);
+            activity.Start();
+            int ret = func(context);
+            activity.Stop();
+
             if (ret != 0) return ret;
         }
 
@@ -234,8 +249,9 @@ public class EventManager
     /// <returns></returns>
     internal bool FireException(OneBotContext scope, Exception exception)
     {
-        if (OnException == null) return false;
-        OnException?.Invoke(scope, exception);
+        var onException = OnException;
+        if (onException == null) return false;
+        onException(scope, exception);
         return true;
     }
 
