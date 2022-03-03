@@ -34,14 +34,14 @@ public class CQJsonRouterController : IOneBotController
     private int EventOnGroupMessageReceived(OneBotContext scope)
     {
         var eventArgs = scope.WrapSoraEventArgs<GroupMessageEventArgs>();
-        var p = eventArgs.Message.MessageBody.FirstOrDefault();
+        var p = eventArgs.Message.MessageBody.FirstOrDefault(p => p.MessageType == SegmentType.Json);
         return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
     }
 
     private int EventOnPrivateMessageReceived(OneBotContext scope)
     {
         var eventArgs = scope.WrapSoraEventArgs<PrivateMessageEventArgs>();
-        var p = eventArgs.Message.MessageBody.FirstOrDefault();
+        var p = eventArgs.Message.MessageBody.FirstOrDefault(p => p.MessageType == SegmentType.Json);
         return p == default ? 0 : UniversalProcess(scope, eventArgs, p);
     }
 
