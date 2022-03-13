@@ -94,7 +94,7 @@ public class CommandService : ICommandService
         }
     }
 
-        #region 事件处理
+    #region 事件处理
 
     /// <summary>
     /// 登录账号发送消息事件（群聊）
@@ -172,9 +172,9 @@ public class CommandService : ICommandService
         }
     }
 
-        #endregion 事件处理
+    #endregion 事件处理
 
-        #region 指令路由
+    #region 指令路由
 
     /// <summary>
     /// 私聊消息分发
@@ -216,9 +216,9 @@ public class CommandService : ICommandService
         }
     }
 
-        #endregion 指令路由
+    #endregion 指令路由
 
-        #region 注册指令
+    #region 注册指令
 
     /// <summary>
     /// 注册指令
@@ -440,5 +440,5 @@ public class CommandService : ICommandService
             string.Join(", ", matchPattern.ToArray()), commandObj.GetType().FullName, commandMethod.Name);
     }
 
-        #endregion 注册指令
+    #endregion 注册指令
 }
