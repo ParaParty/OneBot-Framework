@@ -7,7 +7,6 @@ using OneBot.CommandRoute.Models.Entities;
 using Sora.EventArgs.SoraEvent;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace OneBot.CommandRoute.Services.Implements;
 /// </summary>
 public class CommandService : ICommandService
 {
-    /// <summary>`
+    /// <summary>
     /// 服务容器
     /// </summary>
     private readonly IServiceProvider _serviceProvider;
