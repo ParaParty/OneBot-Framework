@@ -27,6 +27,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    <PackageReference Include="Sora" Version="1.0.0-rc.47" />
+    <PackageReference Include="Sora" Version="1.0.0-rc.50" />
   </ItemGroup>
 </Project>
