@@ -3,18 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{4AD52A7F-365F-49B1-8B11-36E3F408488E}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
+Project("{41DB3D2D-DE48-451D-BB95-EE2F82842A27 }") = "OneBot-Interface", "OneBot-Interface\OneBot-Interface.csproj", "{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Core", "OneBot-Core\OneBot-Core.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
+EndProject
+Project("{B45E742E-8FBF-4A3B-B65C-12D8783039E1}") = "OneBot-Provider-Konata", "OneBot-Provider-Konata\OneBot-Provider-Konata.csproj", "{3436604C-42E3-46EA-948C-CE66C503CBDB}"
+EndProject
+Project("{210C2910-3709-41AC-B143-DE0B5D0A2F68}") = "OneBot-Provider-Sora", "OneBot-Provider-Sora\OneBot-Provider-Sora.csproj", "{13AEA574-2E83-4CF0-9375-1D1ED66A8405}"
 EndProject
 Project("{EE6532C9-9C4E-47DB-A487-9200572B7553}") = "OneBot-OpenTelemetry", "OneBot-OpenTelemetry\OneBot-OpenTelemetry.csproj", "{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}"
+EndProject
+Project("{4AD52A7F-365F-49B1-8B11-36E3F408488E}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBot-UnitTest", "OneBot-UnitTest\OneBot-UnitTest.csproj", "{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBot-UnitTest", "OneBot-UnitTest\OneBot-UnitTest.csproj", "{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,22 +28,35 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64442450-B821-4036-8993-3FC3FFE06CDE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3436604C-42E3-46EA-948C-CE66C503CBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3436604C-42E3-46EA-948C-CE66C503CBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3436604C-42E3-46EA-948C-CE66C503CBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3436604C-42E3-46EA-948C-CE66C503CBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13AEA574-2E83-4CF0-9375-1D1ED66A8405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13AEA574-2E83-4CF0-9375-1D1ED66A8405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13AEA574-2E83-4CF0-9375-1D1ED66A8405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13AEA574-2E83-4CF0-9375-1D1ED66A8405}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD94F698-0595-469B-8ECE-4D4CD362D81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.Build.0 = Release|Any CPU
+
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

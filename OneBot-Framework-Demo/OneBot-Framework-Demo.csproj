@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OneBot-CommandRoute\OneBot-CommandRoute.csproj" />
+    <ProjectReference Include="..\OneBot-Core\OneBot-Core.csproj" />
   </ItemGroup>
 
 </Project>

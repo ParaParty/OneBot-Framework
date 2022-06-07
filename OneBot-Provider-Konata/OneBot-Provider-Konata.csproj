@@ -6,7 +6,7 @@
     <Authors>ParaParty</Authors>
     <Company>ParaParty</Company>
     <Product>ParaParty</Product>
-    <Description>OneBot-CommandRoute OpenTelemetry 支持</Description>
+    <Description>使用 Sora 作 OneBot 客户端，Microsoft.Extensions.DependencyInjection 作 IOC 框架的 OneBot 指令路由系统。</Description>
     <Copyright>ParaParty 2021</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ParaParty/OneBot-Framework/</PackageProjectUrl>
@@ -22,7 +22,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTelemetry.Api" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Sora" Version="1.0.0-rc.51" />
   </ItemGroup>
-
 </Project>
