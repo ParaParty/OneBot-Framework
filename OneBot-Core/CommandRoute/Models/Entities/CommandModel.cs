@@ -513,6 +513,10 @@ public class CommandModel
             result = arg;
             ret = true;
         }
+        else if (type.IsEnum)
+        {
+            ret = Enum.TryParse(type, arg, out result);
+        }
         /*else if (type == typeof(Duration))
         {
             ret = Duration.TryParse(arg, out Duration duration);
