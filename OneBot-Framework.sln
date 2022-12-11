@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{41DB3D2D-DE48-451D-BB95-EE2F82842A27 }") = "OneBot-Interface", "OneBot-Interface\OneBot-Interface.csproj", "{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}"
+Project("{41DB3D2D-DE48-451D-BB95-EE2F82842A27}") = "OneBot-Interface", "OneBot-Interface\OneBot-Interface.csproj", "{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Core", "OneBot-Core\OneBot-Core.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
 EndProject
@@ -17,7 +17,9 @@ Project("{4AD52A7F-365F-49B1-8B11-36E3F408488E}") = "OneBot-Framework-Demo", "On
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBot-UnitTest", "OneBot-UnitTest\OneBot-UnitTest.csproj", "{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
+Project("{5845C2B6-57B9-4018-82ED-298EBAF1EFD1}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{111140C3-C58A-415C-A62C-C5C786880180}"
+EndProject
+Project("{19b66eaf-684f-49ca-9635-eaa7441b28f1}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
@@ -56,7 +58,10 @@ Global
 		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}.Release|Any CPU.Build.0 = Release|Any CPU
-
+		{111140C3-C58A-415C-A62C-C5C786880180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{111140C3-C58A-415C-A62C-C5C786880180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{111140C3-C58A-415C-A62C-C5C786880180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{111140C3-C58A-415C-A62C-C5C786880180}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -35,6 +35,9 @@ public static class StartupMixin
         // CQ:Json 路由服务
         services.AddSingleton<ICQJsonRouterService, CQJsonRouterService>();
         services.AddSingleton<IOneBotController, CQJsonRouterController>();
+
+        // 日志服务
+        services.AddSingleton<ILogService, YukariToolBoxLogger>();
     }
 
 

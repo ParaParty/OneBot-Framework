@@ -28,12 +28,4 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CommandRoute\Utils" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="CommandRoute\Utils\YukariToolBoxLogger.cs" />
-  </ItemGroup>
 </Project>
