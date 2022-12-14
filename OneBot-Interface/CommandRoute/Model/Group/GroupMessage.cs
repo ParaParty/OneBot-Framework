@@ -14,8 +14,3 @@ public interface GroupMessage
     
     string UserId { get; } 
 }
-
-public interface UnderlayModel<T>
-{
-    T UnderlayModel { get;  }
-}
