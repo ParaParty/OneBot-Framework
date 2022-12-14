@@ -1,5 +1,4 @@
 using System;
-using OneBot.CommandRoute.Models;
 
 namespace OneBot.CommandRoute.Attributes;
 

@@ -8,7 +8,7 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using YukariToolBox.LightLog;
 
-namespace OneBot.CommandRoute.Utils;
+namespace OneBot.CommandRoute.Provider.Sora.Util;
 
 public class YukariToolBoxLogger : ILogService
 {

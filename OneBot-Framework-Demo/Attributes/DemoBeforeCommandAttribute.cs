@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Models;
+using OneBot.Core.Attributes;
 using Sora.Entities.Info;
 using Sora.Enumeration.ApiType;
 using Sora.Enumeration.EventParamsType;

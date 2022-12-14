@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OneBot.CommandRoute.Lexer;
+using OneBot.Core.Lexer;
 using OneBot_UnitTest.Util;
 using Sora.Entities;
 using Sora.Entities.Segment;

@@ -4,15 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Sora.Enumeration;
-using Sora.EventArgs.SoraEvent;
-using Sora.Entities;
-using OneBot.CommandRoute.Services;
 using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Lexer;
 using OneBot.CommandRoute.Models.Enumeration;
-using Sora.Entities.Segment;
-using Sora.Util;
+using OneBot.CommandRoute.Services;
 
 namespace OneBot.CommandRoute.Models.Entities;
 

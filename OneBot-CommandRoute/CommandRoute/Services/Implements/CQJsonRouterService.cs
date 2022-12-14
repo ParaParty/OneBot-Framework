@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using OneBot.CommandRoute.Attributes;
-using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Entities;
 using OneBot.CommandRoute.Models.Enumeration;
-using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Services.Implements;
 

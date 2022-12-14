@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneBot.CommandRoute.Models.Entities;
-using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Services.Implements;
 

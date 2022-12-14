@@ -1,8 +1,8 @@
 using System;
 using Microsoft.Extensions.Logging;
-using OneBot.CommandRoute.Attributes;
-using OneBot.CommandRoute.Models.Enumeration;
 using OneBot.CommandRoute.Services;
+using OneBot.Core.Attributes;
+using OneBot.Core.Models.Enumeration;
 using OneBot.FrameworkDemo.Attributes;
 using OneBot.FrameworkDemo.Models;
 using Sora.Entities;

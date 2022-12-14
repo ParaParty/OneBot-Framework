@@ -2,10 +2,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OneBot.CommandRoute.Models.VO;
-using Sora;
-using Sora.Interfaces;
-using Sora.Net.Config;
-using YukariToolBox.LightLog;
 
 namespace OneBot.CommandRoute.Services.Implements;
 

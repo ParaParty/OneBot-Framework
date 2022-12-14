@@ -1,7 +1,4 @@
 using System;
-using Newtonsoft.Json;
-using Sora.Interfaces;
-using Sora.Net.Config;
 
 namespace OneBot.CommandRoute.Models.VO;
 

@@ -1,8 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using OneBot.CommandRoute.Models;
-using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Events;
 

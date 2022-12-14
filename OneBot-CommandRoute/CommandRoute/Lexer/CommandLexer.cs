@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Sora.Entities;
-using Sora.Entities.Segment.DataModel;
-using Sora.Entities.Segment;
-using Sora.Enumeration;
 
 namespace OneBot.CommandRoute.Lexer;
 

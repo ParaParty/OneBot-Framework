@@ -28,4 +28,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CommandRoute\Models\VO" />
+  </ItemGroup>
 </Project>

@@ -1,14 +1,6 @@
 using System;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Services;
-using Sora.Entities.Segment;
-using Sora.Entities.Segment.DataModel;
-using Sora.Enumeration;
-using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.OneBotControllers;
 

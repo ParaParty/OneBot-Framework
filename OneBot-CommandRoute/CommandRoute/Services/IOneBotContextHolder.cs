@@ -1,6 +1,4 @@
-﻿using OneBot.CommandRoute.Models;
-
-namespace OneBot.CommandRoute.Services;
+﻿namespace OneBot.CommandRoute.Services;
 
 /// <summary>
 /// OneBot 上下文持有器

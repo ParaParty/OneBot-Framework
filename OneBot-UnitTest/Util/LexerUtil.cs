@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using OneBot.CommandRoute.Lexer;
+using OneBot.Core.Lexer;
 
 namespace OneBot_UnitTest.Util;
 

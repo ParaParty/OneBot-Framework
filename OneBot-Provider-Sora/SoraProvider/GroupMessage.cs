@@ -2,7 +2,7 @@
 
 using Sora.EventArgs.SoraEvent;
 
-public class GroupMessage : OneBot.CommandRoute.Model.GroupMessage, OneBot.CommandRoute.Model.UnderlayModel<GroupMessageEventArgs>
+public class GroupMessage : Core.Model.Group.GroupMessage, OneBot.Core.Model.UnderlayModel<GroupMessageEventArgs>
 {
     public GroupMessage(GroupMessageEventArgs t)
     {

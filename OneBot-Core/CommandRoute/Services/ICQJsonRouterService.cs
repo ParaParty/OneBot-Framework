@@ -1,7 +1,5 @@
 using System.Reflection;
-using OneBot.CommandRoute.Attributes;
 using OneBot.CommandRoute.Models;
-using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.CommandRoute.Services;
 
