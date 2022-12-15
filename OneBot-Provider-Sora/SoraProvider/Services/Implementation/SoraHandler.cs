@@ -1,12 +1,11 @@
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using OneBot.Core.Interface;
-using Sora.Enumeration.EventParamsType;
+using OneBot.Provider.SoraProvider.Model;
 using Sora.EventArgs.SoraEvent;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Provider.SoraProvider.Services.Implementation;
 
 public class SoraHandler : IAdapterHandler
 {
@@ -22,17 +21,20 @@ public class SoraHandler : IAdapterHandler
 
     private readonly ISoraProviderService _soraProviderService;
 
+    private readonly IOneBotEventDispatcher _dispatcher;
 
-    public SoraHandler(IServiceProvider serviceProvider, ILogger<SoraHandler> logger, ISoraProviderService soraProviderService)
+
+    public SoraHandler(IServiceProvider serviceProvider, ILogger<SoraHandler> logger, ISoraProviderService soraProviderService, IOneBotEventDispatcher dispatcher)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
         _soraProviderService = soraProviderService;
+        _dispatcher = dispatcher;
 
         var soraService = _soraProviderService.SoraService;
         var eventManager = soraService.Event;
-        eventManager.OnClientConnect += OnEvent;
-        eventManager.OnClientStatusChangeEvent += OnEvent;
+        eventManager.OnClientConnect += OnClientConnect;
+        eventManager.OnClientStatusChangeEvent += OnClientStatusChangeEvent;
         eventManager.OnEssenceChange += OnEvent;
         eventManager.OnFileUpload += OnEvent;
         eventManager.OnFriendAdd += OnEvent;
@@ -55,38 +57,9 @@ public class SoraHandler : IAdapterHandler
         eventManager.OnTitleUpdate += OnEvent;
     }
 
-    private static List<MemberChangeType> GroupMemberIncreaseSubType = new List<MemberChangeType>() { MemberChangeType.Approve, MemberChangeType.Invite };
-
-    private static bool GroupMemberIncreasePredictor(BaseSoraEventArgs s)
+    async ValueTask OnClientConnect(string eventtype, ConnectEventArgs eventargs)
     {
-        return GroupMemberIncreaseSubType.Contains(((GroupMemberChangeEventArgs)s).SubType);
-    }
-
-    private static List<MemberChangeType> GroupMemberDecreaseSubType = new List<MemberChangeType>() { MemberChangeType.Kick, MemberChangeType.KickMe, MemberChangeType.Leave };
-
-    private static bool GroupMemberDecreasePredictor(BaseSoraEventArgs s)
-    {
-        return GroupMemberDecreaseSubType.Contains(((GroupMemberChangeEventArgs)s).SubType);
-    }
-
-    private Dictionary<(Type?, string?, Func<BaseSoraEventArgs, bool>?), (string, string)> _typeMap = new()
-    {
-        { (typeof(ConnectEventArgs), "Meta Event", null), ("meta", "connect") },
-        { (typeof(ClientStatusChangeEventArgs), "Notice", null), ("meta", "connect") },
-        { (typeof(EssenceChangeEventArgs), "Message", null), ("message", "group") },
-        { (typeof(FileUploadEventArgs), "Message", null), ("message", "group") },
-        { (typeof(FriendAddEventArgs), "Notice", null), ("notice", "friend_increase") },
-        { (typeof(FriendRecallEventArgs), "Notice", null), ("notice", "private_message_delete") },
-        { (typeof(FriendRequestEventArgs), "Request", null), ("notice", "qq.friend_increase_request") },    // 名字未确定
-        { (typeof(GroupAdminChangeEventArgs), "Notice", null), ("notice", "qq.group_permission_changed") }, // 名字未确定
-        { (typeof(GroupCardUpdateEventArgs), "Notice", null), ("notice", "qq.group_card_changed") },        // 名字未确定
-        { (typeof(GroupMemberChangeEventArgs), "Notice", GroupMemberIncreasePredictor), ("notice", "group_member_increase") },
-        { (typeof(GroupMemberChangeEventArgs), "Notice", GroupMemberDecreasePredictor), ("notice", "group_member_decrease") },
-    };
-
-    private ValueTask OnEvent(string eventtype, BaseSoraEventArgs eventargs)
-    {
-        GroupMemberChangeEventArgs t = null!;
-        t.SubType.
+        var args = new SoraConnectEventArgs(eventargs);
+        await _dispatcher.Fire(args);
     }
 }

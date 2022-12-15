@@ -2,5 +2,5 @@
 
 public interface UnderlayModel<T>
 {
-    T UnderlayModel { get; }
+    T WrappedModel { get; }
 }
