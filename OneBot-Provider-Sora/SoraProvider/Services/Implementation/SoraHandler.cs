@@ -57,9 +57,15 @@ public class SoraHandler : IAdapterHandler
         eventManager.OnTitleUpdate += OnEvent;
     }
 
-    async ValueTask OnClientConnect(string eventtype, ConnectEventArgs eventargs)
+    private async ValueTask OnClientConnect(string eventtype, ConnectEventArgs eventargs)
     {
         var args = new SoraConnectEventArgs(eventargs);
         await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnClientStatusChangeEvent(string eventtype, ClientStatusChangeEventArgs eventargs)
+    {
+        var args = new SoraClientStatusChangeEventArgs(eventargs);
+        await _dispatcher.Fire(args);    
     }
 }

@@ -9,7 +9,7 @@ public class SoraConnectEventArgs : Connect, UnderlaySoraEvent<ConnectEventArgs>
     public SoraConnectEventArgs(ConnectEventArgs wrappedModel)
     {
         WrappedModel = wrappedModel;
-        version = new ConnVersion("", "", "11");
+        Version = new SoraConnVersion("", "", "11");
     }
 
     public string Id => WrappedModel.GenerateId();
@@ -22,14 +22,14 @@ public class SoraConnectEventArgs : Connect, UnderlaySoraEvent<ConnectEventArgs>
 
     public string SubType => "";
 
-    public Connect.Version version { get; }
+    public Connect.ConnVersion Version { get; }
 
     public ConnectEventArgs WrappedModel { get; init; }
 
-    class ConnVersion : Connect.Version
+    class SoraConnVersion : Connect.ConnVersion
     {
 
-        public ConnVersion(string impl, string version, string onebotVersion)
+        public SoraConnVersion(string impl, string version, string onebotVersion)
         {
             Impl = impl;
             Version = version;
@@ -42,5 +42,4 @@ public class SoraConnectEventArgs : Connect, UnderlaySoraEvent<ConnectEventArgs>
 
         public string OnebotVersion { get; init; }
     }
-
 }

@@ -1,15 +1,41 @@
-﻿namespace OneBot.Core.Model.Meta;
+﻿using System.Collections.Generic;
+
+namespace OneBot.Core.Model.Meta;
 
 public interface Connect : OneBotEvent
 {
-    Version version { get; }
+    ConnVersion Version { get; }
 
-    public interface Version
+    public interface ConnVersion
     {
         string Impl { get; }
 
         string Version { get; }
 
         string OnebotVersion { get; }
+    }
+}
+
+public interface Heartbeat : OneBotEvent
+{
+    long Interval { get; }
+}
+
+public interface StatusUpdate : OneBotEvent
+{
+    StatusModel Status { get; }
+
+    public interface StatusModel
+    {
+        bool Good { get; }
+
+        List<Bot> Bots { get; }
+    }
+
+    public interface Bot
+    {
+        object Self { get; }
+
+        bool Online { get; }
     }
 }
