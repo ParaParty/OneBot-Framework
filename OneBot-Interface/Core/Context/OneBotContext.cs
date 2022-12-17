@@ -15,7 +15,7 @@ public abstract class OneBotContext
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public abstract R GetUnderlayEvent<R>() where R;
+    public abstract R GetUnderlayEvent<R>();
 
     /// <summary>
     /// IOC Service Scope

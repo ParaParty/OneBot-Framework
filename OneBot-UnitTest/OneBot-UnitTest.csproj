@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>OneBot_UnitTest</RootNamespace>
+    <RootNamespace>OneBot</RootNamespace>
 
-    <IsPackable>false</IsPackable>
+      <Nullable>enable</Nullable>
+<!--      <WarningsAsErrors>Nullable</WarningsAsErrors>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OneBot-Framework-Demo\OneBot-Framework-Demo.csproj" />
+    <ProjectReference Include="..\OneBot-Interface\OneBot-Interface.csproj" />
   </ItemGroup>
 
 </Project>

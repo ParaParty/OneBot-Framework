@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OneBot_UnitTest.Util;
+namespace OneBot.UnitTest.Util;
 
 public static class AssertUtil
 {

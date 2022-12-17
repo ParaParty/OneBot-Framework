@@ -12,5 +12,5 @@ public class DefaultMessage : List<MessageSegmentRef>, Message
     public DefaultMessage(List<MessageSegmentRef> t) : base(t)
     {
         
-    };
+    }
 }
