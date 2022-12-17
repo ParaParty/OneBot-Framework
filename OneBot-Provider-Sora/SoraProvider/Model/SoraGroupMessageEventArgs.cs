@@ -1,12 +1,18 @@
-﻿namespace OneBot.Provider.SoraProvider;
-
+﻿using System.Collections.Generic;
+using System.Linq;
+using OneBot.Core.Model.Group;
+using OneBot.Core.Model.Message;
+using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
 
-public class GroupMessage : Core.Model.Group.GroupMessage, OneBot.Core.Model.UnderlayModel<GroupMessageEventArgs>
+namespace OneBot.Provider.SoraProvider.Model;
+
+public class SoraGroupMessageEventArgs : GroupMessage, UnderlaySoraEvent<GroupMessageEventArgs>
 {
-    public GroupMessage(GroupMessageEventArgs t)
+    public SoraGroupMessageEventArgs(GroupMessageEventArgs t)
     {
         WrappedModel = t;
+        Message = t.Message.ConvertToOneBotMessage();
     }
 
     public GroupMessageEventArgs WrappedModel { get; init; }
@@ -15,7 +21,7 @@ public class GroupMessage : Core.Model.Group.GroupMessage, OneBot.Core.Model.Und
 
     public string MessageId => WrappedModel.Message.MessageId.ToString();
 
-    public string Message => WrappedModel.Message.RawText;
+    public Message Message { get; }
 
     public string AltMessage => WrappedModel.Message.RawText;
 

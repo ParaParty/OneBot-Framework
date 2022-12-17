@@ -44,7 +44,7 @@ public class SoraHandler : IAdapterHandler
         eventManager.OnGroupCardUpdate += OnEvent;
         eventManager.OnGroupMemberChange += OnEvent;
         eventManager.OnGroupMemberMute += OnEvent;
-        eventManager.OnGroupMessage += OnEvent;
+        eventManager.OnGroupMessage += OnGroupMessage;
         eventManager.OnGroupPoke += OnEvent;
         eventManager.OnGroupRecall += OnEvent;
         eventManager.OnGroupRequest += OnEvent;
@@ -66,6 +66,12 @@ public class SoraHandler : IAdapterHandler
     private async ValueTask OnClientStatusChangeEvent(string eventtype, ClientStatusChangeEventArgs eventargs)
     {
         var args = new SoraClientStatusChangeEventArgs(eventargs);
+        await _dispatcher.Fire(args);    
+    }
+    
+    private async ValueTask OnGroupMessage(string eventtype, GroupMessageEventArgs eventargs)
+    {
+        var args = new SoraGroupMessageEventArgs(eventargs);
         await _dispatcher.Fire(args);    
     }
 }

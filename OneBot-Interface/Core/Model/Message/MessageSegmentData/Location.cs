@@ -1,6 +1,6 @@
-﻿namespace OneBot.Core.Model.Message.MessageSegment;
+﻿namespace OneBot.Core.Model.Message.MessageSegmentData;
 
-public interface MsgSegLocation
+public interface Location: MessageData
 {
     float Latitude { get; }
 

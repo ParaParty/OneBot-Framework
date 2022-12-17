@@ -6,7 +6,7 @@ public interface GroupMessage
 
     string MessageId { get; }
 
-    string Message { get; }
+    Message.Message Message { get; }
 
     string AltMessage { get; }
 
