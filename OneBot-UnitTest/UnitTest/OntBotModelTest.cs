@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.MessageSegmentData;
@@ -26,11 +27,23 @@ public class OntBotModelTest
         }
     }
 
-
     [TestMethod]
     public void TestGenericGet()
     {
         MessageSegmentRef seg = TestTextSegment.Build("Test", "anotherField");
         Assert.AreEqual("anotherField", seg.Get<string>("AnotherField"));
+    }
+
+    [TestMethod]
+    public void TestDictionaryGet()
+    {
+        var data = new DictionaryMessageSegment
+        {
+            ["field_a"] = "1",
+            ["field_b"] = 2
+        };
+        var t = new MessageSegment<DictionaryMessageSegment>("custom_type", data);
+        Assert.AreEqual("1", t.Get<string>("field_a"));
+        Assert.AreEqual(2, t.Get<int>("field_b"));
     }
 }
