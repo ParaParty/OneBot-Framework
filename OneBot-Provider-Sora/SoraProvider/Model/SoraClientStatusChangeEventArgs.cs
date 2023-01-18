@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OneBot.Core.Model.Meta;
+using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
 using Sora.Util;
 
@@ -20,10 +21,6 @@ public class SoraClientStatusChangeEventArgs : StatusUpdate, UnderlaySoraEvent<C
     public string Id => WrappedModel.GenerateId();
 
     public double Time => WrappedModel.Time.ToTimeStamp();
-
-    public string Type => "meta";
-
-    public string DetailType => "status_update";
 
     public string SubType => "";
 

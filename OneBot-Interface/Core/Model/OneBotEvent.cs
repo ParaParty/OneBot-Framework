@@ -6,9 +6,18 @@ public interface OneBotEvent
 
     double Time { get; }
 
-    string Type { get; }
+    public interface Type
+    {
+        string Type { get; }
+    }
 
-    string DetailType { get; }
+    public interface DetailType
+    {
+        string DetailType { get; }
+    }
 
-    string SubType { get; } 
+    public interface SubType
+    {
+        string SubType { get; }
+    }
 }

@@ -1,9 +1,10 @@
-﻿namespace OneBot.Core.Model.Channel;
+﻿using OneBot.Core.Attributes;
 
-public interface ChannelMessage
+namespace OneBot.Core.Model.Channel;
+
+[OneBotTypeProperty("message", "channel")]
+public interface ChannelMessage : OneBotEvent
 {
-    string DetailType { get; init; }
-
     string MessageId { get; }
 
     string Message { get; }

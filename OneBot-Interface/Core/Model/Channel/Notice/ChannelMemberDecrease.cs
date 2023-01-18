@@ -1,11 +1,10 @@
-﻿namespace OneBot.Core.Model.Channel.Notice;
+﻿using OneBot.Core.Attributes;
 
-public interface ChannelMemberDecrease
+namespace OneBot.Core.Model.Channel.Notice;
+
+[OneBotTypeProperty("notice", "channel_member_decrease")]
+public interface ChannelMemberDecrease: OneBotEvent, OneBotEvent.SubType
 {
-    string DetailType { get; }
-
-    string SubType { get; }
-
     string GuildId { get; }
 
     string ChannelId { get; }

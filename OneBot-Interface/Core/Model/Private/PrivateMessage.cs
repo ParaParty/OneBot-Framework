@@ -1,9 +1,9 @@
 ﻿using OneBot.Core.Attributes;
 
-namespace OneBot.Core.Model.Group;
+namespace OneBot.Core.Model.Private;
 
-[OneBotTypeProperty("message", "group")]
-public interface GroupMessage : OneBotEvent
+[OneBotTypeProperty("message", "private")]
+public interface PrivateMessage : OneBotEvent
 {
     string MessageId { get; }
 

@@ -1,9 +1,10 @@
-﻿namespace OneBot.Core.Model.Channel.Notice;
+﻿using OneBot.Core.Attributes;
 
+namespace OneBot.Core.Model.Channel.Notice;
+
+[OneBotTypeProperty("notice", "channel_create")]
 public interface ChannelCreate
 {
-    string DetailType { get; }
-
     string GuildId { get; }
 
     string ChannelId { get; }

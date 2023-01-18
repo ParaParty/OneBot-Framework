@@ -1,11 +1,10 @@
-﻿namespace OneBot.Core.Model.Channel.Notice;
+﻿using OneBot.Core.Attributes;
 
-public interface GuildMemberIncrease
+namespace OneBot.Core.Model.Channel.Notice;
+
+[OneBotTypeProperty("notice", "guild_member_increase")]
+public interface GuildMemberIncrease: OneBotEvent, OneBotEvent.SubType
 {
-    string DetailType { get; }
-
-    string SubType { get; }
-
     string GuildId { get; }
 
     string ChannelId { get; }

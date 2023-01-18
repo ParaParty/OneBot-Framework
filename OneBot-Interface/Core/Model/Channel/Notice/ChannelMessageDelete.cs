@@ -1,11 +1,10 @@
-﻿namespace OneBot.Core.Model.Channel.Notice;
+﻿using OneBot.Core.Attributes;
 
-public interface ChannelMessageDelete
+namespace OneBot.Core.Model.Channel.Notice;
+
+[OneBotTypeProperty("notice", "channel_message_delete")]
+public interface ChannelMessageDelete: OneBotEvent, OneBotEvent.SubType
 {
-    string DetailType { get; }
-
-    string SubType { get; }
-
     string GuildId { get; }
 
     string ChannelId { get; }

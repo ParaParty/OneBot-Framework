@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Meta;
 
+[OneBotTypeProperty("meta", "status_update")]
 public interface StatusUpdate : OneBotEvent
 {
     StatusModel Status { get; }

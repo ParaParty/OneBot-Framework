@@ -1,11 +1,10 @@
-﻿namespace OneBot.Core.Model.Group.Notice;
+﻿using OneBot.Core.Attributes;
 
-public interface GroupMemberDecrease
+namespace OneBot.Core.Model.Group.Notice;
+
+[OneBotTypeProperty("notice", "group_member_decrease")]
+public interface GroupMemberDecrease: OneBotEvent, OneBotEvent.SubType
 {
-    string DetailType { get; }
-
-    string SubType { get; }
-
     string GroupId { get; }
 
     string UserId { get; }

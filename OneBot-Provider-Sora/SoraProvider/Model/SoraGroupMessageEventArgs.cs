@@ -4,6 +4,7 @@ using OneBot.Core.Model.Group;
 using OneBot.Core.Model.Message;
 using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
+using Sora.Util;
 
 namespace OneBot.Provider.SoraProvider.Model;
 
@@ -14,11 +15,12 @@ public class SoraGroupMessageEventArgs : GroupMessage, UnderlaySoraEvent<GroupMe
         WrappedModel = t;
         Message = t.Message.ConvertToOneBotMessage();
     }
+    public string Id => WrappedModel.GenerateId();
+
+    public double Time => WrappedModel.Time.ToTimeStamp();
 
     public GroupMessageEventArgs WrappedModel { get; init; }
-
-    public string DetailType => WrappedModel.SourceType.ToString();
-
+    
     public string MessageId => WrappedModel.Message.MessageId.ToString();
 
     public Message Message { get; }

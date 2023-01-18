@@ -1,11 +1,10 @@
-﻿namespace OneBot.Core.Model.Group.Notice;
+﻿using OneBot.Core.Attributes;
 
-public interface GroupMessageDelete
+namespace OneBot.Core.Model.Group.Notice;
+
+[OneBotTypeProperty("notice", "group")]
+public interface GroupMessageDelete : OneBotEvent, OneBotEvent.SubType
 {
-    string DetailType { get; }
-
-    string SubType { get; }
-
     string GroupId { get; }
 
     string MessageId { get; }

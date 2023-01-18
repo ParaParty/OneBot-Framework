@@ -1,4 +1,5 @@
 ﻿using OneBot.Core.Model.Meta;
+using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
 using Sora.Util;
 
@@ -15,13 +16,7 @@ public class SoraConnectEventArgs : Connect, UnderlaySoraEvent<ConnectEventArgs>
     public string Id => WrappedModel.GenerateId();
 
     public double Time => WrappedModel.Time.ToTimeStamp();
-
-    public string Type => "meta";
-
-    public string DetailType => "connect";
-
-    public string SubType => "";
-
+    
     public Connect.ConnVersion Version { get; }
 
     public ConnectEventArgs WrappedModel { get; init; }
