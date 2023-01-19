@@ -37,49 +37,28 @@ public static class SoraMessageExtension
 
     internal static MessageSegmentRef ConvertToOneBotMessageSegment(this SoraSegment t)
     {
-        switch (t.MessageType)
+        return t.MessageType switch
         {
-            case SegmentType.Unknown:
-                throw new IgnoreException();
-            case SegmentType.Ignore:
-                throw new IgnoreException();
-            case SegmentType.Text:
-                return SoraTextSegment.Build((TextSegment)t.Data);
-            case SegmentType.Face:
-                return SoraFaceSegment.Build((FaceSegment)t.Data);
-            case SegmentType.Image:
-                return SoraImageSegment.Build((ImageSegment)t.Data);
-            case SegmentType.Record:
-                return SoraRecordSegment.Build((RecordSegment)t.Data);
-            case SegmentType.Video:
-                return SoraVideoSegment.Build((VideoSegment)t.Data);
-            case SegmentType.Music:
-                return SoraMusicSegment.Build((MusicSegment)t.Data);
-            case SegmentType.At:
-                return ((AtSegment)t.Data).Target == "all" ? SoraMentionAllSegment.Build((AtSegment)t.Data) : SoraMentionSegment.Build((AtSegment)t.Data);
-            case SegmentType.Share:
-                return SoraShareSegment.Build((ShareSegment)t.Data);
-            case SegmentType.Reply:
-                return SoraReplySegment.Build((ReplySegment)t.Data);
-            case SegmentType.Forward:
-                return SoraForwardSegment.Build((ForwardSegment)t.Data);
-            case SegmentType.Poke:
-                return SoraPokeSegment.Build((PokeSegment)t.Data);
-            case SegmentType.Xml:
-                return SoraXmlSegment.Build((CodeSegment)t.Data);
-            case SegmentType.Json:
-                return SoraJsonSegment.Build((CodeSegment)t.Data);
-            case SegmentType.RedBag:
-                return SoraRedBagSegment.Build((RedbagSegment)t.Data);
-            case SegmentType.CardImage:
-                return SoraCardImageSegment.Build((CardImageSegment)t.Data);
-            case SegmentType.TTS:
-                return SoraTtsSegment.Build((TtsSegment)t.Data);
-            case SegmentType.RPS:
-                return SoraRpsSegment.Build(t.Data);
-            default:
-                throw new ArgumentException();
-        }
-        throw new ArgumentException("?");
+            SegmentType.Unknown => throw new IgnoreException(),
+            SegmentType.Ignore => throw new IgnoreException(),
+            SegmentType.Text => SoraTextSegment.Build((TextSegment)t.Data),
+            SegmentType.Face => SoraFaceSegment.Build((FaceSegment)t.Data),
+            SegmentType.Image => SoraImageSegment.Build((ImageSegment)t.Data),
+            SegmentType.Record => SoraRecordSegment.Build((RecordSegment)t.Data),
+            SegmentType.Video => SoraVideoSegment.Build((VideoSegment)t.Data),
+            SegmentType.Music => SoraMusicSegment.Build((MusicSegment)t.Data),
+            SegmentType.At => ((AtSegment)t.Data).Target == "all" ? SoraMentionAllSegment.Build((AtSegment)t.Data) : SoraMentionSegment.Build((AtSegment)t.Data),
+            SegmentType.Share => SoraShareSegment.Build((ShareSegment)t.Data),
+            SegmentType.Reply => SoraReplySegment.Build((ReplySegment)t.Data),
+            SegmentType.Forward => SoraForwardSegment.Build((ForwardSegment)t.Data),
+            SegmentType.Poke => SoraPokeSegment.Build((PokeSegment)t.Data),
+            SegmentType.Xml => SoraXmlSegment.Build((CodeSegment)t.Data),
+            SegmentType.Json => SoraJsonSegment.Build((CodeSegment)t.Data),
+            SegmentType.RedBag => SoraRedBagSegment.Build((RedbagSegment)t.Data),
+            SegmentType.CardImage => SoraCardImageSegment.Build((CardImageSegment)t.Data),
+            SegmentType.TTS => SoraTtsSegment.Build((TtsSegment)t.Data),
+            SegmentType.RPS => SoraRpsSegment.Build(t.Data),
+            _ => throw new ArgumentException()
+        };
     }
 }
