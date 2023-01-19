@@ -11,5 +11,5 @@ public interface GroupMessageDelete : OneBotEvent, OneBotEvent.SubType
 
     string UserId { get; }
 
-    string Operator { get; }
+    string OperatorId { get; }
 }

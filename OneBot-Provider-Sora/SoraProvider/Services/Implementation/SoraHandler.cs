@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OneBot.Core.Interface;
+using OneBot.Core.Model;
 using OneBot.Provider.SoraProvider.Model;
+using Sora.Enumeration.EventParamsType;
 using Sora.EventArgs.SoraEvent;
 
 namespace OneBot.Provider.SoraProvider.Services.Implementation;
@@ -37,41 +39,81 @@ public class SoraHandler : IAdapterHandler
         eventManager.OnClientStatusChangeEvent += OnClientStatusChangeEvent;
         eventManager.OnEssenceChange += OnEvent;
         eventManager.OnFileUpload += OnEvent;
-        eventManager.OnFriendAdd += OnEvent;
-        eventManager.OnFriendRecall += OnEvent;
+        eventManager.OnFriendAdd += OnFriendAdd;
+        eventManager.OnFriendRecall += OnFriendRecall;
         eventManager.OnFriendRequest += OnEvent;
         eventManager.OnGroupAdminChange += OnEvent;
         eventManager.OnGroupCardUpdate += OnEvent;
-        eventManager.OnGroupMemberChange += OnEvent;
+        eventManager.OnGroupMemberChange += OnGroupMemberChange;
         eventManager.OnGroupMemberMute += OnEvent;
         eventManager.OnGroupMessage += OnGroupMessage;
         eventManager.OnGroupPoke += OnEvent;
-        eventManager.OnGroupRecall += OnEvent;
+        eventManager.OnGroupRecall += OnGroupRecall;
         eventManager.OnGroupRequest += OnEvent;
         eventManager.OnHonorEvent += OnEvent;
         eventManager.OnLuckyKingEvent += OnEvent;
         eventManager.OnOfflineFileEvent += OnEvent;
-        eventManager.OnPrivateMessage += OnEvent;
-        eventManager.OnSelfGroupMessage += OnEvent;   // 
-        eventManager.OnSelfPrivateMessage += OnEvent; //    
+        eventManager.OnPrivateMessage += OnPrivateMessage;
+        eventManager.OnSelfGroupMessage += OnEvent;
+        eventManager.OnSelfPrivateMessage += OnEvent;
         eventManager.OnTitleUpdate += OnEvent;
     }
 
-    private async ValueTask OnClientConnect(string eventtype, ConnectEventArgs eventargs)
+    private async ValueTask OnClientConnect(string eventType, ConnectEventArgs eventArgs)
     {
-        var args = new SoraConnectEventArgs(eventargs);
+        var args = new SoraConnectEventArgs(eventArgs);
         await _dispatcher.Fire(args);
     }
 
-    private async ValueTask OnClientStatusChangeEvent(string eventtype, ClientStatusChangeEventArgs eventargs)
+    private async ValueTask OnClientStatusChangeEvent(string eventType, ClientStatusChangeEventArgs eventArgs)
     {
-        var args = new SoraClientStatusChangeEventArgs(eventargs);
-        await _dispatcher.Fire(args);    
+        var args = new SoraClientStatusChangeEventArgs(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnFriendAdd(string eventType, FriendAddEventArgs eventArgs)
+    {
+        var args = new SoraFriendAdd(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnFriendRecall(string eventType, FriendRecallEventArgs eventArgs)
+    {
+        var args = new SoraFriendRecall(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnGroupMemberChange(string eventType, GroupMemberChangeEventArgs eventArgs)
+    {
+        OneBotEvent args = eventArgs.SubType switch
+        {
+
+            MemberChangeType.Unknown => throw new ArgumentException("eventArgs.SubType not acceptable"),
+            MemberChangeType.Leave => new SoraGroupMemberDecrease(eventArgs),
+            MemberChangeType.Kick => new SoraGroupMemberDecrease(eventArgs),
+            MemberChangeType.KickMe => new SoraGroupMemberDecrease(eventArgs),
+            MemberChangeType.Approve => new SoraGroupMemberIncrease(eventArgs),
+            MemberChangeType.Invite => new SoraGroupMemberIncrease(eventArgs),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        await _dispatcher.Fire(args);
     }
     
-    private async ValueTask OnGroupMessage(string eventtype, GroupMessageEventArgs eventargs)
+    private async ValueTask OnGroupRecall(string eventType, GroupRecallEventArgs eventArgs)
     {
-        var args = new SoraGroupMessageEventArgs(eventargs);
-        await _dispatcher.Fire(args);    
+        var args = new SoraGroupRecall(eventArgs);
+        await _dispatcher.Fire(args);
+    }  
+    
+    private async ValueTask OnGroupMessage(string eventType, GroupMessageEventArgs eventArgs)
+    {
+        var args = new SoraGroupMessageEventArgs(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+    
+    private async ValueTask OnPrivateMessage(string eventType, PrivateMessageEventArgs eventArgs)
+    {
+        var args = new SoraPrivateMessageEventArgs(eventArgs);
+        await _dispatcher.Fire(args);
     }
 }

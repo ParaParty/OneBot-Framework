@@ -9,5 +9,5 @@ public interface GroupMemberIncrease: OneBotEvent, OneBotEvent.SubType
 
     string UserId { get; }
 
-    string Operator { get; }
+    string OperatorId { get; }
 }
