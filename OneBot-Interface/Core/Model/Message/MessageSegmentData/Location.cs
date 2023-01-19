@@ -1,10 +1,13 @@
-﻿namespace OneBot.Core.Model.Message.MessageSegmentData;
+﻿using OneBot.Core.Attributes;
 
+namespace OneBot.Core.Model.Message.MessageSegmentData;
+
+[OneBotTypeProperty("location")]
 public interface Location: MessageData
 {
-    float Latitude { get; }
+    double Latitude { get; }
 
-    float Longitude { get; }
+    double Longitude { get; }
 
     string Title { get; }
 

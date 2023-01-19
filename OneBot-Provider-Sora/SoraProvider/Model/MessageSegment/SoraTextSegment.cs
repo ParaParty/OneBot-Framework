@@ -19,6 +19,6 @@ public class SoraTextSegment : Text, UnderlayModel<TextSegment>
 
     public static MessageSegmentRef Build(TextSegment tData)
     {
-        return new MessageSegment<Text>("text", new SoraTextSegment(tData));
+        return new MessageSegment<Text>(new SoraTextSegment(tData));
     }
 }
