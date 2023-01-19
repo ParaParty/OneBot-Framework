@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBot-UnitTest", "OneBot-U
 EndProject
 Project("{5845C2B6-57B9-4018-82ED-298EBAF1EFD1}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{111140C3-C58A-415C-A62C-C5C786880180}"
 EndProject
-Project("{19b66eaf-684f-49ca-9635-eaa7441b28f1}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
+Project("{1BEC648D-4B42-4AC3-AE14-127EB1F0EE7A}") = "OneBot-Platform-QQ", "OneBot-Platform-QQ\OneBot-Platform-QQ.csproj", "{2B56B38B-44C5-496C-A048-00F6D2C378B4}"
+EndProject
+Project("{19B66EAF-684F-49CA-9635-EAA7441B28F1}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
@@ -62,6 +64,10 @@ Global
 		{111140C3-C58A-415C-A62C-C5C786880180}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{111140C3-C58A-415C-A62C-C5C786880180}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{111140C3-C58A-415C-A62C-C5C786880180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

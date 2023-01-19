@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>OneBot.Provider</RootNamespace>
+        <RootNamespace>OneBot</RootNamespace>
         <Authors>ParaParty</Authors>
         <Company>ParaParty</Company>
         <Product>ParaParty</Product>
-        <Description>使用 Sora 作 OneBot 客户端，Microsoft.Extensions.DependencyInjection 作 IOC 框架的 OneBot 指令路由系统。</Description>
+        <Description>OneBot Framework QQ 通用模型</Description>
         <Copyright>ParaParty 2021</Copyright>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/ParaParty/OneBot-Framework/</PackageProjectUrl>
@@ -22,15 +22,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Sora" Version="1.1.0" />
-    </ItemGroup>
-
-
-    <ItemGroup>
         <ProjectReference Include="..\OneBot-Interface\OneBot-Interface.csproj" />
     </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\OneBot-Platform-QQ\OneBot-Platform-QQ.csproj" />
-    </ItemGroup>
-
 </Project>

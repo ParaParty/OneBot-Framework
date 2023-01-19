@@ -46,7 +46,7 @@ public static class SoraMessageExtension
             case SegmentType.Text:
                 return SoraTextSegment.Build((TextSegment)t.Data);
             case SegmentType.Face:
-                break; // TODO
+                return SoraFaceSegment.Build((FaceSegment)t.Data);
             case SegmentType.Image:
                 return SoraImageSegment.Build((ImageSegment)t.Data);
             case SegmentType.Record:
@@ -54,29 +54,29 @@ public static class SoraMessageExtension
             case SegmentType.Video:
                 return SoraVideoSegment.Build((VideoSegment)t.Data);
             case SegmentType.Music:
-                break; // TODO
+                return SoraMusicSegment.Build((MusicSegment)t.Data);
             case SegmentType.At:
                 return ((AtSegment)t.Data).Target == "all" ? SoraMentionAllSegment.Build((AtSegment)t.Data) : SoraMentionSegment.Build((AtSegment)t.Data);
             case SegmentType.Share:
-                break; // TODO
+                return SoraShareSegment.Build((ShareSegment)t.Data);
             case SegmentType.Reply:
                 return SoraReplySegment.Build((ReplySegment)t.Data);
             case SegmentType.Forward:
-                break; // TODO
+                return SoraForwardSegment.Build((ForwardSegment)t.Data);
             case SegmentType.Poke:
-                break; // TODO
+                return SoraPokeSegment.Build((PokeSegment)t.Data);
             case SegmentType.Xml:
-                break; // TODO
+                return SoraXmlSegment.Build((CodeSegment)t.Data);
             case SegmentType.Json:
-                break; // TODO
+                return SoraJsonSegment.Build((CodeSegment)t.Data);
             case SegmentType.RedBag:
-                break; // TODO
+                return SoraRedBagSegment.Build((RedbagSegment)t.Data);
             case SegmentType.CardImage:
-                break; // TODO
+                return SoraCardImageSegment.Build((CardImageSegment)t.Data);
             case SegmentType.TTS:
-                break; // TODO
+                return SoraTtsSegment.Build((TtsSegment)t.Data);
             case SegmentType.RPS:
-                break; // TODO
+                return SoraRpsSegment.Build(t.Data);
             default:
                 throw new ArgumentException();
         }
