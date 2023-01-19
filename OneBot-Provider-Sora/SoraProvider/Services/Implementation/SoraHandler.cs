@@ -61,13 +61,13 @@ public class SoraHandler : IAdapterHandler
 
     private async ValueTask OnClientConnect(string eventType, ConnectEventArgs eventArgs)
     {
-        var args = new SoraConnectEventArgs(eventArgs);
+        var args = new SoraConnect(eventArgs);
         await _dispatcher.Fire(args);
     }
 
     private async ValueTask OnClientStatusChangeEvent(string eventType, ClientStatusChangeEventArgs eventArgs)
     {
-        var args = new SoraClientStatusChangeEventArgs(eventArgs);
+        var args = new SoraClientStatusChange(eventArgs);
         await _dispatcher.Fire(args);
     }
 

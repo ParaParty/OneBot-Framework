@@ -6,9 +6,9 @@ using Sora.Util;
 
 namespace OneBot.Provider.SoraProvider.Model;
 
-public class SoraClientStatusChangeEventArgs : StatusUpdate, UnderlaySoraEvent<ClientStatusChangeEventArgs>
+public class SoraClientStatusChange : StatusUpdate, UnderlaySoraEvent<ClientStatusChangeEventArgs>
 {
-    public SoraClientStatusChangeEventArgs(ClientStatusChangeEventArgs e)
+    public SoraClientStatusChange(ClientStatusChangeEventArgs e)
     {
         WrappedModel = e;
         var bots = new List<StatusUpdate.Bot>()

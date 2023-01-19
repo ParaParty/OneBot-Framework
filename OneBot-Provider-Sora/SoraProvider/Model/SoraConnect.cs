@@ -5,9 +5,9 @@ using Sora.Util;
 
 namespace OneBot.Provider.SoraProvider.Model;
 
-public class SoraConnectEventArgs : Connect, UnderlaySoraEvent<ConnectEventArgs>
+public class SoraConnect : Connect, UnderlaySoraEvent<ConnectEventArgs>
 {
-    public SoraConnectEventArgs(ConnectEventArgs wrappedModel)
+    public SoraConnect(ConnectEventArgs wrappedModel)
     {
         WrappedModel = wrappedModel;
         Version = new SoraConnVersion("", "", "11");
