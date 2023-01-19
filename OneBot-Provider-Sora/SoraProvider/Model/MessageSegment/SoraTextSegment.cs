@@ -9,11 +9,10 @@ public class SoraTextSegment : Text, UnderlayModel<TextSegment>
 {
     public SoraTextSegment(TextSegment data)
     {
-        Text = data.Content;
         WrappedModel = data;
     }
 
-    public string Text { get; }
+    public string Text => WrappedModel.Content;
 
     public TextSegment WrappedModel { get; }
 

@@ -13,12 +13,13 @@ public class SoraGroupMessageEventArgs : GroupMessage, UnderlaySoraEvent<GroupMe
         WrappedModel = t;
         Message = t.Message.ConvertToOneBotMessage();
     }
+
     public string Id => WrappedModel.GenerateId();
 
     public double Time => WrappedModel.Time.ToTimeStamp();
 
     public GroupMessageEventArgs WrappedModel { get; init; }
-    
+
     public string MessageId => WrappedModel.Message.MessageId.ToString();
 
     public Message Message { get; }

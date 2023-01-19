@@ -28,7 +28,7 @@ public static class SoraMessageExtension
             }
             catch (IgnoreException)
             {
-                
+
             }
         }
 
@@ -46,40 +46,40 @@ public static class SoraMessageExtension
             case SegmentType.Text:
                 return SoraTextSegment.Build((TextSegment)t.Data);
             case SegmentType.Face:
-                break;
+                break; // TODO
             case SegmentType.Image:
-                break;
+                return SoraImageSegment.Build((ImageSegment)t.Data);
             case SegmentType.Record:
-                break;
+                return SoraRecordSegment.Build((RecordSegment)t.Data);
             case SegmentType.Video:
-                break;
+                return SoraVideoSegment.Build((VideoSegment)t.Data);
             case SegmentType.Music:
-                break;
+                break; // TODO
             case SegmentType.At:
-                break;
+                return ((AtSegment)t.Data).Target == "all" ? SoraMentionAllSegment.Build((AtSegment)t.Data) : SoraMentionSegment.Build((AtSegment)t.Data);
             case SegmentType.Share:
-                break;
+                break; // TODO
             case SegmentType.Reply:
-                break;
+                return SoraReplySegment.Build((ReplySegment)t.Data);
             case SegmentType.Forward:
-                break;
+                break; // TODO
             case SegmentType.Poke:
-                break;
+                break; // TODO
             case SegmentType.Xml:
-                break;
+                break; // TODO
             case SegmentType.Json:
-                break;
+                break; // TODO
             case SegmentType.RedBag:
-                break;
+                break; // TODO
             case SegmentType.CardImage:
-                break;
+                break; // TODO
             case SegmentType.TTS:
-                break;
+                break; // TODO
             case SegmentType.RPS:
-                break;
+                break; // TODO
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentException();
         }
+        throw new ArgumentException("?");
     }
-
 }

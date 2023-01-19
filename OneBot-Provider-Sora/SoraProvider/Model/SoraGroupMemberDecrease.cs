@@ -31,7 +31,7 @@ public class SoraGroupMemberDecrease : GroupMemberDecrease, UnderlaySoraEvent<Gr
     public string GroupId => WrappedModel.SourceGroup.Id.ToString();
 
     public string UserId => WrappedModel.ChangedUser.Id.ToString();
-    
+
     public string OperatorId => WrappedModel.Operator.Id.ToString();
 
     public GroupMemberChangeEventArgs WrappedModel { get; }

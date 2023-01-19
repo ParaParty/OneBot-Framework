@@ -16,7 +16,7 @@ public class SoraConnectEventArgs : Connect, UnderlaySoraEvent<ConnectEventArgs>
     public string Id => WrappedModel.GenerateId();
 
     public double Time => WrappedModel.Time.ToTimeStamp();
-    
+
     public Connect.ConnVersion Version { get; }
 
     public ConnectEventArgs WrappedModel { get; init; }

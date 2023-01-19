@@ -12,12 +12,12 @@ public class SoraGroupRecall : GroupMessageDelete, UnderlaySoraEvent<GroupRecall
         SubType = t.Operator == t.MessageSender ? "recall" : "delete";
         WrappedModel = t;
     }
-    
+
     public string Id => WrappedModel.GenerateId();
 
     public double Time => WrappedModel.Time.ToTimeStamp();
 
-    public string SubType { get; init;  }
+    public string SubType { get; init; }
 
     public string GroupId => WrappedModel.SourceGroup.Id.ToString();
 
@@ -26,6 +26,6 @@ public class SoraGroupRecall : GroupMessageDelete, UnderlaySoraEvent<GroupRecall
     public string UserId => WrappedModel.MessageSender.Id.ToString();
 
     public string OperatorId => WrappedModel.Operator.Id.ToString();
-    
+
     public GroupRecallEventArgs WrappedModel { get; init; }
 }
