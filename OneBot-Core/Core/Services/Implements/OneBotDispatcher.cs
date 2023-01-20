@@ -45,7 +45,7 @@ public class OneBotDispatcher : IOneBotEventDispatcher
     {
         _listenerManager = listenerManager;
     }
-    
+
     public async ValueTask Dispatch(OneBotEvent e)
     {
         var act = _eventActivitySource.CreateActivity("onebot-event", ActivityKind.Server);
@@ -100,6 +100,7 @@ public class OneBotDispatcher : IOneBotEventDispatcher
                         ret.DetailTypeValue = str;
                     }
                 }
+
                 {
                     if (prop.TryGetValue(OneBotEvent.SubType.PropertyName, out var t) && t is string str)
                     {
@@ -131,7 +132,7 @@ public class OneBotDispatcher : IOneBotEventDispatcher
                 act.AddTag("onebot.event.detail_type", entry.DetailTypeValue);
                 break;
             case NameCacheEntry.State.InCode:
-                act.AddTag("onebot.event.type", (e as OneBotEvent.DetailType)!.DetailType);
+                act.AddTag("onebot.event.detail_type", (e as OneBotEvent.DetailType)!.DetailType);
                 break;
         }
 
@@ -141,7 +142,7 @@ public class OneBotDispatcher : IOneBotEventDispatcher
                 act.AddTag("onebot.event.sub_type", entry.SubTypeValue);
                 break;
             case NameCacheEntry.State.InCode:
-                act.AddTag("onebot.event.type", (e as OneBotEvent.SubType)!.SubType);
+                act.AddTag("onebot.event.sub_type", (e as OneBotEvent.SubType)!.SubType);
                 break;
         }
     }
