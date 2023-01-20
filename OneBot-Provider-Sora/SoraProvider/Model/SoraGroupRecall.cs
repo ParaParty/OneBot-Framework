@@ -1,4 +1,4 @@
-﻿using OneBot.Core.Model.Group.Notice;
+﻿using OneBot.Core.Event;
 using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
 using Sora.Util;
@@ -9,7 +9,7 @@ public class SoraGroupRecall : GroupMessageDelete, UnderlaySoraEvent<GroupRecall
 {
     public SoraGroupRecall(GroupRecallEventArgs t)
     {
-        SubType = t.Operator == t.MessageSender ? "recall" : "delete";
+        SubType = t.Operator == t.MessageSender ? GroupMessageDelete.SubType.Recall : GroupMessageDelete.SubType.Delete;
         WrappedModel = t;
     }
 

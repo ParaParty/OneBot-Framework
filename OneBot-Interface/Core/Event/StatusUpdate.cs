@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OneBot.Core.Attributes;
 
-namespace OneBot.Core.Model.Meta;
+namespace OneBot.Core.Event;
 
 [OneBotTypeProperty("meta", "status_update")]
 public interface StatusUpdate : OneBotEvent

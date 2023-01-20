@@ -1,6 +1,6 @@
 ﻿using OneBot.Core.Attributes;
 
-namespace OneBot.Core.Model.Channel.Notice;
+namespace OneBot.Core.Event;
 
 [OneBotTypeProperty("notice", "channel_member_decrease")]
 public interface ChannelMemberDecrease: OneBotEvent, OneBotEvent.SubType

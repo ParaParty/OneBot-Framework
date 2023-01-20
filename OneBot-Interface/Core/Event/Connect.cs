@@ -1,6 +1,6 @@
 ﻿using OneBot.Core.Attributes;
 
-namespace OneBot.Core.Model.Meta;
+namespace OneBot.Core.Event;
 
 [OneBotTypeProperty("meta", "connect")]
 public interface Connect : OneBotEvent

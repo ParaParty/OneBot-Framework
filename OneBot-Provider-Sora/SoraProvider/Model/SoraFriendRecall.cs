@@ -1,4 +1,4 @@
-﻿using OneBot.Core.Model.Private.Notice;
+﻿using OneBot.Core.Event;
 using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
 using Sora.Util;

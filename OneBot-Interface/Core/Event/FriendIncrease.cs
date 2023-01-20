@@ -1,6 +1,6 @@
 ﻿using OneBot.Core.Attributes;
 
-namespace OneBot.Core.Model.Private.Notice;
+namespace OneBot.Core.Event;
 
 [OneBotTypeProperty("notice", "friend_increase")]
 public interface FriendIncrease: OneBotEvent

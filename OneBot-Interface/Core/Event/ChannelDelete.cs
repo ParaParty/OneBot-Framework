@@ -1,9 +1,9 @@
 ﻿using OneBot.Core.Attributes;
 
-namespace OneBot.Core.Model.Channel.Notice;
+namespace OneBot.Core.Event;
 
-[OneBotTypeProperty("notice", "channel_create")]
-public interface ChannelCreate
+[OneBotTypeProperty("notice", "channel_delete")]
+public interface ChannelDelete
 {
     string GuildId { get; }
 

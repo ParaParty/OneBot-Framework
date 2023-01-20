@@ -1,5 +1,4 @@
-﻿using System;
-using OneBot.Core.Model;
+﻿using OneBot.Core.Model;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.MessageSegmentData;
 using Sora.Entities.Segment.DataModel;

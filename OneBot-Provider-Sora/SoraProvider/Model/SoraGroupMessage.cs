@@ -1,4 +1,4 @@
-﻿using OneBot.Core.Model.Group;
+﻿using OneBot.Core.Event;
 using OneBot.Core.Model.Message;
 using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
@@ -6,9 +6,9 @@ using Sora.Util;
 
 namespace OneBot.Provider.SoraProvider.Model;
 
-public class SoraGroupMessageEventArgs : GroupMessage, UnderlaySoraEvent<GroupMessageEventArgs>
+public class SoraGroupMessage : GroupMessage, UnderlaySoraEvent<GroupMessageEventArgs>
 {
-    public SoraGroupMessageEventArgs(GroupMessageEventArgs t)
+    public SoraGroupMessage(GroupMessageEventArgs t)
     {
         WrappedModel = t;
         Message = t.Message.ConvertToOneBotMessage();

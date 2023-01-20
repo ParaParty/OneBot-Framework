@@ -1,4 +1,4 @@
-﻿namespace OneBot.Core.Model;
+﻿namespace OneBot.Core.Event;
 
 public interface OneBotEvent
 {

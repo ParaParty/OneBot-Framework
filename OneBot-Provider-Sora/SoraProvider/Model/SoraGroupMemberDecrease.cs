@@ -1,5 +1,5 @@
 ﻿using System;
-using OneBot.Core.Model.Group.Notice;
+using OneBot.Core.Event;
 using OneBot.Provider.SoraProvider.Util;
 using Sora.Enumeration.EventParamsType;
 using Sora.EventArgs.SoraEvent;
@@ -13,9 +13,9 @@ public class SoraGroupMemberDecrease : GroupMemberDecrease, UnderlaySoraEvent<Gr
     {
         SubType = wrappedModel.SubType switch
         {
-            MemberChangeType.Leave => "leave",
-            MemberChangeType.Kick => "kick",
-            MemberChangeType.KickMe => "kick",
+            MemberChangeType.Leave => GroupMemberDecrease.SubType.Leave,
+            MemberChangeType.Kick => GroupMemberDecrease.SubType.Kick,
+            MemberChangeType.KickMe => GroupMemberDecrease.SubType.Kick,
             _ => throw new ArgumentOutOfRangeException()
         };
 

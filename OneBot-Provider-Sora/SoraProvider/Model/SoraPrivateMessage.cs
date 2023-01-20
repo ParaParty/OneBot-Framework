@@ -1,14 +1,14 @@
-﻿using OneBot.Core.Model.Message;
-using OneBot.Core.Model.Private;
+﻿using OneBot.Core.Event;
+using OneBot.Core.Model.Message;
 using OneBot.Provider.SoraProvider.Util;
 using Sora.EventArgs.SoraEvent;
 using Sora.Util;
 
 namespace OneBot.Provider.SoraProvider.Model;
 
-public class SoraPrivateMessageEventArgs : PrivateMessage, UnderlaySoraEvent<PrivateMessageEventArgs>
+public class SoraPrivateMessage : PrivateMessage, UnderlaySoraEvent<PrivateMessageEventArgs>
 {
-    public SoraPrivateMessageEventArgs(PrivateMessageEventArgs t)
+    public SoraPrivateMessage(PrivateMessageEventArgs t)
     {
         WrappedModel = t;
         Message = t.Message.ConvertToOneBotMessage();

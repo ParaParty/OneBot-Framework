@@ -15,9 +15,9 @@ public class DefaultOneBotContext<T> : OneBotContext
 
     public override object UnderlayEvent { get; protected set; }
 
-    public override R GetUnderlayEvent<R>()
+    public override TR GetUnderlayEvent<TR>()
     {
-        if (UnderlayEvent is not R ret)
+        if (UnderlayEvent is not TR ret)
         {
             throw new InvalidCastException($"UnderlayEvent is not an instance of {typeof(T).Name}");
         }

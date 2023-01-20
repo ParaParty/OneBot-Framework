@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using OneBot.Core.Event;
 using OneBot.Core.Interface;
-using OneBot.Core.Model;
 using OneBot.Provider.SoraProvider.Model;
 using Sora.Enumeration.EventParamsType;
 using Sora.EventArgs.SoraEvent;
@@ -12,51 +12,43 @@ namespace OneBot.Provider.SoraProvider.Services.Implementation;
 public class SoraHandler : IAdapterHandler
 {
     /// <summary>
-    /// 服务容器
-    /// </summary>
-    private readonly IServiceProvider _serviceProvider;
-
-    /// <summary>
     /// 日志
     /// </summary>
     private readonly ILogger<SoraHandler> _logger;
 
-    private readonly ISoraProviderService _soraProviderService;
-
     private readonly IOneBotEventDispatcher _dispatcher;
 
 
-    public SoraHandler(IServiceProvider serviceProvider, ILogger<SoraHandler> logger, ISoraProviderService soraProviderService, IOneBotEventDispatcher dispatcher)
+    public SoraHandler(ILogger<SoraHandler> logger, ISoraProviderService soraProviderService, IOneBotEventDispatcher dispatcher)
     {
-        _serviceProvider = serviceProvider;
         _logger = logger;
-        _soraProviderService = soraProviderService;
         _dispatcher = dispatcher;
 
-        var soraService = _soraProviderService.SoraService;
+        var soraService = soraProviderService.SoraService;
         var eventManager = soraService.Event;
+
         eventManager.OnClientConnect += OnClientConnect;
         eventManager.OnClientStatusChangeEvent += OnClientStatusChangeEvent;
-        eventManager.OnEssenceChange += OnEvent;
-        eventManager.OnFileUpload += OnEvent;
+        eventManager.OnEssenceChange += OnEssenceChange;
+        eventManager.OnFileUpload += OnFileUpload;
         eventManager.OnFriendAdd += OnFriendAdd;
         eventManager.OnFriendRecall += OnFriendRecall;
-        eventManager.OnFriendRequest += OnEvent;
-        eventManager.OnGroupAdminChange += OnEvent;
-        eventManager.OnGroupCardUpdate += OnEvent;
+        eventManager.OnFriendRequest += OnFriendRequest;
+        eventManager.OnGroupAdminChange += OnGroupAdminChange;
+        eventManager.OnGroupCardUpdate += OnGroupCardUpdate;
         eventManager.OnGroupMemberChange += OnGroupMemberChange;
-        eventManager.OnGroupMemberMute += OnEvent;
+        eventManager.OnGroupMemberMute += OnGroupMemberMute;
         eventManager.OnGroupMessage += OnGroupMessage;
-        eventManager.OnGroupPoke += OnEvent;
+        eventManager.OnGroupPoke += OnGroupPoke;
         eventManager.OnGroupRecall += OnGroupRecall;
-        eventManager.OnGroupRequest += OnEvent;
-        eventManager.OnHonorEvent += OnEvent;
-        eventManager.OnLuckyKingEvent += OnEvent;
-        eventManager.OnOfflineFileEvent += OnEvent;
+        eventManager.OnGroupRequest += OnGroupRequest;
+        eventManager.OnHonorEvent += OnHonorEvent;
+        eventManager.OnLuckyKingEvent += OnLuckyKingEvent;
+        eventManager.OnOfflineFileEvent += OnOfflineFileEvent;
         eventManager.OnPrivateMessage += OnPrivateMessage;
-        eventManager.OnSelfGroupMessage += OnEvent;
-        eventManager.OnSelfPrivateMessage += OnEvent;
-        eventManager.OnTitleUpdate += OnEvent;
+        eventManager.OnSelfGroupMessage += OnSelfGroupMessage;
+        eventManager.OnSelfPrivateMessage += OnSelfPrivateMessage;
+        eventManager.OnTitleUpdate += OnTitleUpdate;
     }
 
     private async ValueTask OnClientConnect(string eventType, ConnectEventArgs eventArgs)
@@ -107,13 +99,97 @@ public class SoraHandler : IAdapterHandler
     
     private async ValueTask OnGroupMessage(string eventType, GroupMessageEventArgs eventArgs)
     {
-        var args = new SoraGroupMessageEventArgs(eventArgs);
+        var args = new SoraGroupMessage(eventArgs);
         await _dispatcher.Fire(args);
     }
     
     private async ValueTask OnPrivateMessage(string eventType, PrivateMessageEventArgs eventArgs)
     {
-        var args = new SoraPrivateMessageEventArgs(eventArgs);
+        var args = new SoraPrivateMessage(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+    
+    private async ValueTask OnEssenceChange(string eventType, EssenceChangeEventArgs eventArgs)
+    {
+        var args = new SoraEssenceChange(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnFileUpload(string eventType, FileUploadEventArgs eventArgs)
+    {
+        var args = new SoraFileUpload(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnFriendRequest(string eventType, FriendRequestEventArgs eventArgs)
+    {
+        var args = new SoraFriendRequest(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnGroupAdminChange(string eventType, GroupAdminChangeEventArgs eventArgs)
+    {
+        var args = new SoraGroupAdminChange(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnGroupCardUpdate(string eventType, GroupCardUpdateEventArgs eventArgs)
+    {
+        var args = new SoraGroupCardUpdate(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnGroupMemberMute(string eventType, GroupMuteEventArgs eventArgs)
+    {
+        var args = new SoraGroupMemberMute(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnGroupPoke(string eventType, GroupPokeEventArgs eventArgs)
+    {
+        var args = new SoraGroupPoke(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnGroupRequest(string eventType, AddGroupRequestEventArgs eventArgs)
+    {
+        var args = new SoraGroupRequest(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnHonorEvent(string eventType, HonorEventArgs eventArgs)
+    {
+        var args = new SoraHonorEvent(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnLuckyKingEvent(string eventType, LuckyKingEventArgs eventArgs)
+    {
+        var args = new SoraLuckyKingEvent(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnOfflineFileEvent(string eventType, OfflineFileEventArgs eventArgs)
+    {
+        var args = new SoraOfflineFileEvent(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnSelfGroupMessage(string eventType, GroupMessageEventArgs eventArgs)
+    {
+        var args = new SoraSelfGroupMessage(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnSelfPrivateMessage(string eventType, PrivateMessageEventArgs eventArgs)
+    {
+        var args = new SoraSelfPrivateMessage(eventArgs);
+        await _dispatcher.Fire(args);
+    }
+
+    private async ValueTask OnTitleUpdate(string eventType, TitleUpdateEventArgs eventArgs)
+    {
+        var args = new SoraTitleUpdate(eventArgs);
         await _dispatcher.Fire(args);
     }
 }
