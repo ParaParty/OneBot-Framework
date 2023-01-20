@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace OneBot.CommandRoute.Services.Implements;
+namespace OneBot.Core.Services.Implements;
 
 public class OneBotServer : IServer
 {

@@ -1,4 +1,4 @@
-﻿namespace OneBot.CommandRoute.Configuration;
+﻿namespace OneBot.Core.Configuration;
 
 public class DefaultOneBotCommandRouteConfiguration : IOneBotCommandRouteConfiguration
 {

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using OneBot.Core.Attributes;
+using OneBot.Core.Util;
 
 namespace OneBot.Core.Model.Message;
 
@@ -29,41 +28,15 @@ public class MessageSegment<T> : IMessageSegment<T> where T : MessageData
 
     private static string GeneratedType(Type start)
     {
-        var pending = new Queue<Type>();
-        var mark = new Collection<Type>();
-        pending.Enqueue(start);
-        mark.Add(start);
-
-        while (pending.TryPeek(out var type))
+        var walker = new AttributeWalker(start);
+        var attr = walker.FindFirst<OneBotExtraPropertiesAttribute>(s => s.GetType().IsAssignableTo(typeof(OneBotExtraPropertiesAttribute)))
+                   ?? throw new ArgumentException("message segment type not acceptable");
+        var s = attr.GetProperties()["type"];
+        if (s is string ret)
         {
-            pending.Dequeue();
-
-            var attributes = type.GetCustomAttributes(true);
-            foreach (var attribute in attributes)
-            {
-                if (!attribute.GetType().IsAssignableTo(typeof(OneBotExtraPropertiesAttribute)))
-                {
-                    continue;
-                }
-
-                var prop = ((OneBotExtraPropertiesAttribute)attribute).GetProperties();
-                var s = prop["type"];
-                if (s is string ret)
-                {
-                    return ret;
-                }
-            }
-
-            foreach (var item in type.GetInterfaces())
-            {
-                if (mark.Contains(item))
-                {
-                    continue;
-                }
-                pending.Enqueue(item);
-                mark.Add(item);
-            }
+            return ret;
         }
+
         throw new ArgumentException("message segment type not acceptable");
     }
 

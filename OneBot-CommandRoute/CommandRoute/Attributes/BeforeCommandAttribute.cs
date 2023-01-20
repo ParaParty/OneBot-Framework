@@ -1,6 +1,6 @@
 using System;
 
-namespace OneBot.CommandRoute.Attributes;
+namespace OneBot.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
 public abstract class BeforeCommandAttribute : Attribute

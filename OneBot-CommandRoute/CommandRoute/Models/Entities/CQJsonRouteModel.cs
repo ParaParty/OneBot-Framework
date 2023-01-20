@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot.CommandRoute.Attributes;
-using OneBot.CommandRoute.Services;
+using OneBot.Core.Attributes;
+using OneBot.Core.Services;
 
-namespace OneBot.CommandRoute.Models.Entities;
+namespace OneBot.Core.Models.Entities;
 
 public class CQJsonRouteModel
 {

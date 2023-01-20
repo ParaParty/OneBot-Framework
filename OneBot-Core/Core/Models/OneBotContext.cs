@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace OneBot.CommandRoute.Models;
+namespace OneBot.Core.Models;
 
 public abstract class OneBotContext
 {

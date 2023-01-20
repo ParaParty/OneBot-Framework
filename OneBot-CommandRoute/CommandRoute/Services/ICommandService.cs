@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using OneBot.CommandRoute.Events;
+using OneBot.Core.Events;
 
-namespace OneBot.CommandRoute.Services;
+namespace OneBot.Core.Services;
 
 /// <summary>
 /// 指令路由服务

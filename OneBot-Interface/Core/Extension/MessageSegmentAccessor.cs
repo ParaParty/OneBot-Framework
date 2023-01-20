@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using OneBot.Core.Model.Message;
 
-namespace OneBot.Core.Util;
+namespace OneBot.Core.Extension;
 
 public static class MessageSegmentAccessor
 {
@@ -48,28 +48,5 @@ public static class MessageSegmentAccessor
             return (T?)((IDictionary)data)[key];
         }
         return default;
-    }
-
-    public static void Set<T, R>(this MessageSegment<R> it, string key, T value) where R : MessageData
-    {
-        R data = it.Data;
-        var type = data.GetType();
-        var properties = type.GetProperties();
-        var prop = properties.FirstOrDefault(s => s?.Name == key && s.CanRead, null);
-        if (prop != null)
-        {
-            prop.SetValue(data, value);
-            return;
-        }
-
-        var dictionaryInterface = type.GetInterfaces().Where(s => s == typeof(IDictionary)).ToList();
-        if (dictionaryInterface.Count > 0)
-        {
-            ((IDictionary)data)[key] = value;
-        }
-        else
-        {
-            // 我们手搓字节码给他 Mixin 一个 IDictionary 进去
-        }
     }
 }

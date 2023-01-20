@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OneBot.CommandRoute.Lexer;
+namespace OneBot.Core.Lexer;
 
 /// <summary>
 /// 指令解析器

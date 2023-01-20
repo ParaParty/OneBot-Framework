@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using OneBot.Core.Event;
-using OneBot.Core.Model;
 
-namespace OneBot.Core.Interface;
+namespace OneBot.Core.Services;
 
-public interface IOneBotEventDispatcher
+public interface IListenerManager
 {
     ValueTask Dispatch(OneBotEvent e);
 }

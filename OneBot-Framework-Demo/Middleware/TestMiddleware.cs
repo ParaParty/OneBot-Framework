@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using OneBot.CommandRoute.Models;
-using OneBot.CommandRoute.Services;
+using OneBot.Core.Models;
+using OneBot.Core.Services;
 
 namespace OneBot.FrameworkDemo.Middleware;
 

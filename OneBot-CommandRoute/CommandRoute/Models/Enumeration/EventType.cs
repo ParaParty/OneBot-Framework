@@ -1,6 +1,6 @@
 using System;
 
-namespace OneBot.CommandRoute.Models.Enumeration;
+namespace OneBot.Core.Models.Enumeration;
 
 /// <summary>
 /// 指令类型

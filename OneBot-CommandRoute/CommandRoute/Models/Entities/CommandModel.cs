@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot.CommandRoute.Attributes;
-using OneBot.CommandRoute.Lexer;
-using OneBot.CommandRoute.Models.Enumeration;
-using OneBot.CommandRoute.Services;
+using OneBot.Core.Attributes;
+using OneBot.Core.Lexer;
+using OneBot.Core.Models.Enumeration;
+using OneBot.Core.Services;
 
-namespace OneBot.CommandRoute.Models.Entities;
+namespace OneBot.Core.Models.Entities;
 
 /// <summary>
 /// 指令信息

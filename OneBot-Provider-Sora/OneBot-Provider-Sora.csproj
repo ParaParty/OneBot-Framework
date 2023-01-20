@@ -6,7 +6,7 @@
         <Authors>ParaParty</Authors>
         <Company>ParaParty</Company>
         <Product>ParaParty</Product>
-        <Description>使用 Sora 作 OneBot 客户端，Microsoft.Extensions.DependencyInjection 作 IOC 框架的 OneBot 指令路由系统。</Description>
+        <Description>OneBot Framework Sora Provider</Description>
         <Copyright>ParaParty 2021</Copyright>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/ParaParty/OneBot-Framework/</PackageProjectUrl>

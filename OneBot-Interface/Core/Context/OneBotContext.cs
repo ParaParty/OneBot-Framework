@@ -1,21 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using OneBot.Core.Event;
 
 namespace OneBot.Core.Context;
 
-public abstract class OneBotContext 
+public abstract class OneBotContext
 {
     /// <summary>
     /// 底层事件对象
     /// </summary>
-    public abstract object UnderlayEvent { get; protected set; }
-
-    /// <summary>
-    /// Sora 基本事件参数
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public abstract R GetUnderlayEvent<R>();
+    public abstract OneBotEvent UnderlayEvent { get; protected set; }
 
     /// <summary>
     /// IOC Service Scope

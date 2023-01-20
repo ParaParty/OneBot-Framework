@@ -1,6 +1,6 @@
 using System;
 
-namespace OneBot.CommandRoute.Attributes;
+namespace OneBot.Core.Attributes;
 
 /// <summary>
 /// 获取全部的参数列表

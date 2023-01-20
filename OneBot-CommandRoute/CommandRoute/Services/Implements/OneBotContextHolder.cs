@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OneBot.CommandRoute.Services.Implements;
+namespace OneBot.Core.Services.Implements;
 
 public class OneBotContextHolder : IOneBotContextHolder
 {

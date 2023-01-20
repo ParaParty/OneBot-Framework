@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Extensions.Logging;
-using OneBot.CommandRoute.Services;
+using OneBot.Core.Services;
 using OneBot.Core.Attributes;
 using OneBot.Core.Models.Enumeration;
 using OneBot.FrameworkDemo.Attributes;

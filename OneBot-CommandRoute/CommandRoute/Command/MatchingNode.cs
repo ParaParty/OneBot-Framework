@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using OneBot.CommandRoute.Configuration;
-using OneBot.CommandRoute.Lexer;
-using OneBot.CommandRoute.Models.Entities;
+using OneBot.Core.Configuration;
+using OneBot.Core.Lexer;
+using OneBot.Core.Models.Entities;
 
-namespace OneBot.CommandRoute.Command;
+namespace OneBot.Core.Command;
 
 /// <summary>
 /// 匹配结点

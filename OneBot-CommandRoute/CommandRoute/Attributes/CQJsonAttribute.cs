@@ -1,7 +1,7 @@
 using System;
-using OneBot.CommandRoute.Models.Enumeration;
+using OneBot.Core.Models.Enumeration;
 
-namespace OneBot.CommandRoute.Attributes;
+namespace OneBot.Core.Attributes;
 
 /// <summary>
 /// CQ:Json 路由

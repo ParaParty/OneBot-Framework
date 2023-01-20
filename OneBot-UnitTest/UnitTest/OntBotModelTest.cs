@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OneBot.Core.Extension;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.MessageSegmentData;
-using OneBot.Core.Util;
 
 namespace OneBot.UnitTest;
 

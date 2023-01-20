@@ -1,6 +1,6 @@
 using System;
 
-namespace OneBot.CommandRoute.Attributes;
+namespace OneBot.Core.Attributes;
 
 /// <summary>
 /// 指令参数绑定

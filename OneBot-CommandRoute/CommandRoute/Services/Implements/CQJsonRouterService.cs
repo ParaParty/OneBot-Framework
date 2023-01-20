@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Reflection;
-using OneBot.CommandRoute.Attributes;
-using OneBot.CommandRoute.Models.Entities;
-using OneBot.CommandRoute.Models.Enumeration;
+using OneBot.Core.Attributes;
+using OneBot.Core.Models.Entities;
+using OneBot.Core.Models.Enumeration;
 
-namespace OneBot.CommandRoute.Services.Implements;
+namespace OneBot.Core.Services.Implements;
 
 class CQJsonRouterService : ICQJsonRouterService
 {

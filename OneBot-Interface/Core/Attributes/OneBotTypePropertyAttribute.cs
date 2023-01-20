@@ -1,21 +1,23 @@
-﻿namespace OneBot.Core.Attributes;
+﻿using OneBot.Core.Event;
+
+namespace OneBot.Core.Attributes;
 
 public class OneBotTypePropertyAttribute : OneBotExtraPropertiesAttribute
 {
     public OneBotTypePropertyAttribute(string type, string detailType, string subType) :
-        base("type", type, "detail_type", detailType, "sub_type", subType)
+        base(OneBotEvent.Type.PropertyName, type, OneBotEvent.DetailType.PropertyName, detailType, OneBotEvent.SubType.PropertyName, subType)
     {
 
     }
 
     public OneBotTypePropertyAttribute(string type, string detailType) :
-        base("type", type, "detail_type", detailType)
+        base(OneBotEvent.Type.PropertyName, type, OneBotEvent.DetailType.PropertyName, detailType)
     {
 
     }
 
     public OneBotTypePropertyAttribute(string type) :
-        base("type", type)
+        base(OneBotEvent.Type.PropertyName, type)
     {
 
     }

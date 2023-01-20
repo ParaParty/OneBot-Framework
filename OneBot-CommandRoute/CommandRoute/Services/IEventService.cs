@@ -1,4 +1,4 @@
-﻿namespace OneBot.CommandRoute.Services;
+﻿namespace OneBot.Core.Services;
 
 /// <summary>
 /// OneBot 事件服务

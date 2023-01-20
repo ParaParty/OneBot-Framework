@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot.CommandRoute.Models;
+using OneBot.Core.Models;
 using OneBot.Core.Attributes;
 using Sora.Entities.Info;
 using Sora.Enumeration.ApiType;

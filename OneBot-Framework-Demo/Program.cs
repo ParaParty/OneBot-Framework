@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OneBot.CommandRoute.Mixin;
-using OneBot.CommandRoute.Models.VO;
-using OneBot.CommandRoute.Services;
+using OneBot.Core.Mixin;
+using OneBot.Core.Models.VO;
+using OneBot.Core.Services;
 using OneBot.FrameworkDemo.Middleware;
 using OneBot.FrameworkDemo.Modules;
 

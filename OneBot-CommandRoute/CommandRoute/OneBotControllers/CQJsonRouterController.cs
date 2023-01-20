@@ -1,8 +1,8 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using OneBot.CommandRoute.Services;
+using OneBot.Core.Services;
 
-namespace OneBot.CommandRoute.OneBotControllers;
+namespace OneBot.Core.OneBotControllers;
 
 public class CQJsonRouterController : IOneBotController
 {

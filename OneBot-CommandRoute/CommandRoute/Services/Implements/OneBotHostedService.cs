@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace OneBot.CommandRoute.Services.Implements;
+namespace OneBot.Core.Services.Implements;
 
 public class OneBotHostedService: IHostedService
 {
