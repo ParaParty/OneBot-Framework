@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using OneBot.Core.Context;
 
-namespace OneBot.Core.Services;
+namespace OneBot.CommandRoute.Services;
 
 /// <summary>
 /// OneBot 中间件

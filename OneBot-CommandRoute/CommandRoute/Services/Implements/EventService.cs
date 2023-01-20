@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.CommandRoute.Services.Implements;
 
 /// <summary>
 /// 事件服务

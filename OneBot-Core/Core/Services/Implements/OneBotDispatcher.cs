@@ -21,7 +21,7 @@ public class OneBotDispatcher : IOneBotEventDispatcher
 
             InAttr,
 
-            InCode
+            InCode,
         }
 
         internal State Type = State.None;

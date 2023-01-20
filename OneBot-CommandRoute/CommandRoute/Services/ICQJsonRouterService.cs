@@ -1,7 +1,7 @@
 using System.Reflection;
-using OneBot.Core.Attributes;
+using OneBot.CommandRoute.Attributes;
 
-namespace OneBot.Core.Services;
+namespace OneBot.CommandRoute.Services;
 
 /// <summary>
 /// CQJson 路由服务

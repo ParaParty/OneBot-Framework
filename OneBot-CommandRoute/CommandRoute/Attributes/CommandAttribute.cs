@@ -1,7 +1,7 @@
 using System;
-using OneBot.Core.Models.Enumeration;
+using OneBot.CommandRoute.Models.Enumeration;
 
-namespace OneBot.Core.Attributes;
+namespace OneBot.CommandRoute.Attributes;
 
 /// <summary>
 /// 指令路由

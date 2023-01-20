@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OneBot.Core.Services;
-using OneBot.Core.Services.Implements;
 
 namespace OneBot.Core.Mixin;
 
@@ -14,28 +11,13 @@ public static class StartupMixin
     /// <param name="services"></param>
     public static void ConfigureOneBot(this IServiceCollection services)
     {
-        // OneBot
-        services.AddSingleton<IBotService, BotService>();
-        services.AddSingleton<IHostedService, OneBotHostedService>();
-
-        // OneBot 上下文持有者
-        services.AddScoped<IOneBotContextHolder, OneBotContextHolder>();
-            
-        // 事件服务
-        services.AddSingleton<IEventService, EventService>();
-
-        // 指令路由服务
-        services.AddSingleton<ICommandService, CommandService>();
-
-        // CQ:Json 路由服务
-        services.AddSingleton<ICQJsonRouterService, CQJsonRouterService>();
-        services.AddSingleton<IOneBotController, CQJsonRouterController>();
+        // services.AddSingleton<IHostedService, OneBotHostedService>();
     }
 
 
     public static IHostBuilder ConfigureOneBotHost(this IHostBuilder builder)
     {
-        builder.ConfigureServices(s => s.AddSingleton<IServer, OneBotServer>());
+        // builder.ConfigureServices(s => s.AddSingleton<IServer, OneBotServer>());
         return builder;
     }
 }

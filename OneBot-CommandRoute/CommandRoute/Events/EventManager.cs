@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace OneBot.Core.Events;
+namespace OneBot.CommandRoute.Events;
 
 public class EventManager
 {

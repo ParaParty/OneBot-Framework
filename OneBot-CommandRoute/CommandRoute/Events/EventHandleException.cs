@@ -1,6 +1,6 @@
 using System;
 
-namespace OneBot.Core.Events;
+namespace OneBot.CommandRoute.Events;
 
 internal class EventHandleException : Exception
 {

@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OneBot.Core.OneBotControllers;
-using OneBot.Core.Services;
-using OneBot.Core.Services.Implements;
+using OneBot.CommandRoute.OneBotControllers;
+using OneBot.CommandRoute.Services;
+using OneBot.CommandRoute.Services.Implements;
 
-namespace OneBot.Core.Mixin;
+namespace OneBot.CommandRoute.Mixin;
 
 public static class StartupMixin
 {

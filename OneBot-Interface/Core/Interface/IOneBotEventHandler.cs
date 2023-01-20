@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using OneBot.Core.Context;
-using OneBot.Core.Event;
+﻿namespace OneBot.Core.Interface;
 
-namespace OneBot.Core.Interface;
-
-public interface IOneBotEventHandler<T> where T : OneBotEvent
+/// <summary>
+/// 需要一个名为 <code>Invoke</code> 的方法。
+/// </summary>
+public interface IOneBotEventHandler
 {
-    ValueTask Invoke(OneBotContext ctx);
 }

@@ -1,4 +1,6 @@
-﻿namespace OneBot.Core.Services;
+﻿using OneBot.Core.Context;
+
+namespace OneBot.CommandRoute.Services;
 
 /// <summary>
 /// OneBot 上下文持有器
