@@ -4,7 +4,7 @@ using OneBot.Core.Interface;
 namespace OneBot.Core.Event;
 
 [OneBotTypeProperty("message", "private")]
-public interface PrivateMessage : OneBotEvent, IMessageEvent
+public interface PrivateMessage : OneBotEvent
 {
     string MessageId { get; }
 

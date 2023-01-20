@@ -29,9 +29,4 @@ public class SoraGroupMessage : GroupMessage, UnderlaySoraEvent<GroupMessageEven
     public string GroupId => WrappedModel.SourceGroup.Id.ToString();
 
     public string UserId => WrappedModel.Sender.Id.ToString();
-
-    public Message GetMessage()
-    {
-        return Message;
-    }
 }

@@ -4,7 +4,7 @@ using OneBot.Core.Interface;
 namespace OneBot.Core.Event;
 
 [OneBotTypeProperty("message", "group")]
-public interface GroupMessage : OneBotEvent, IMessageEvent
+public interface GroupMessage : OneBotEvent
 {
     string MessageId { get; }
 

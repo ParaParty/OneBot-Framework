@@ -26,11 +26,5 @@ public class SoraPrivateMessage : PrivateMessage, UnderlaySoraEvent<PrivateMessa
 
     public string AltMessage => WrappedModel.Message.RawText;
 
-
     public string UserId => WrappedModel.Sender.Id.ToString();
-
-    public Message GetMessage()
-    {
-        return Message;
-    }
 }
