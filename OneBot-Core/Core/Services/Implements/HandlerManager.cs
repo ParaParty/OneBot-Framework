@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using OneBot.Core.Attributes;
 using OneBot.Core.Context;
 using OneBot.Core.Interface;
 using OneBot.Core.Util;
@@ -16,7 +18,7 @@ public class HandlerManager : IHandlerManager
 
     private readonly IEnumerable<Type> _listenerResolvers;
 
-    private readonly IEnumerable<Type> _handlerList;
+    private readonly IEnumerable<KeyValuePair<Type, MethodInfo>> _handlerList;
 
     public HandlerManager(IServiceProvider serviceProvider, IHandlerInvokeTool handlerInvokeTool)
     {
@@ -24,7 +26,20 @@ public class HandlerManager : IHandlerManager
         _handlerInvokeTool = handlerInvokeTool;
 
         _listenerResolvers = ClassScanner.ScanCurrentDomain(s => s.IsAssignableTo(typeof(IHandlerResolver)));
-        _handlerList = ClassScanner.ScanCurrentDomain(s => s.IsAssignableTo(typeof(IEventHandler)) && s.GetMethods().Any(c => c.Name == "Invoke"));
+
+        var typeList = ClassScanner.ScanCurrentDomain(s => s.IsAssignableTo(typeof(IEventHandler)));
+        var handlerList = new List<KeyValuePair<Type, MethodInfo>>();
+        foreach (var type in typeList)
+        {
+            foreach (var method in type.GetMethods())
+            {
+                if (method.GetCustomAttributes(false).Any(a => a.GetType().IsAssignableTo(typeof(OneBotEventHandlerAttribute))))
+                {
+                    handlerList.Add(new KeyValuePair<Type, MethodInfo>(type, method));
+                }
+            }
+        }
+        _handlerList = handlerList;
     }
 
     public async ValueTask Handle(OneBotContext ctx)
@@ -34,9 +49,9 @@ public class HandlerManager : IHandlerManager
             foreach (var hType in _handlerList)
             {
                 var resolver = _serviceProvider.GetService(rType) as IHandlerResolver;
-                if (resolver!.Supports(ctx, hType))
+                if (resolver!.Supports(ctx, hType.Key, hType.Value))
                 {
-                    await _handlerInvokeTool.Invoke(ctx, hType);
+                    await _handlerInvokeTool.Invoke(ctx,  hType.Key, hType.Value);
                 }
             }
         }
