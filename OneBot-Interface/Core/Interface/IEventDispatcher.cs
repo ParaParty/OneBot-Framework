@@ -4,7 +4,7 @@ using OneBot.Core.Model;
 
 namespace OneBot.Core.Interface;
 
-public interface IOneBotEventDispatcher
+public interface IEventDispatcher
 {
     ValueTask Dispatch(OneBotEvent e);
 }

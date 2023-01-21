@@ -5,7 +5,7 @@ using OneBot.Core.Interface;
 
 namespace OneBot.Core.Services.Implements;
 
-public class DefaultListenerResolver : IListenerResolver
+public class DefaultHandlerResolver : IHandlerResolver
 {
     public bool Supports(OneBotContext ctx, Type handlerType)
     {

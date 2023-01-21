@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using OneBot.Core.Context;
 
-namespace OneBot.CommandRoute.Services;
+namespace OneBot.Core.Interface;
 
 /// <summary>
 /// OneBot 中间件
@@ -14,5 +14,5 @@ public interface IOneBotMiddleware
     /// <param name="oneBotContext">OneBot 事件上下文</param>
     /// <param name="next">下一步</param>
     /// <returns></returns>
-    public ValueTask Invoke(OneBotContext oneBotContext, OneBotRequestDelegate next);
+    public ValueTask Invoke(OneBotContext oneBotContext, OneBotEventDelegate next);
 }

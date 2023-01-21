@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using OneBot.Core.Attributes;
 using OneBot.Core.Event;
-using OneBot.Core.Interface;
-using OneBot.Core.Util;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Util;
 
-public class OneBotDispatcher : IOneBotEventDispatcher
+public static class OneBotEventUtil
 {
-    private readonly IListenerManager _listenerManager;
 
     internal class NameCacheEntry
     {
@@ -37,31 +34,11 @@ public class OneBotDispatcher : IOneBotEventDispatcher
         internal string? SubTypeValue;
     }
 
-    private readonly ActivitySource _eventActivitySource = new ActivitySource("OneBot.Event", Common.Version);
+    private static readonly ConcurrentDictionary<Type, NameCacheEntry> TypeCache = new ConcurrentDictionary<Type, NameCacheEntry>();
 
-    private static readonly ConcurrentDictionary<Type, NameCacheEntry> typeCache = new ConcurrentDictionary<Type, NameCacheEntry>();
-
-    public OneBotDispatcher(IListenerManager listenerManager)
+    public static Dictionary<string, object?> GetType(this OneBotEvent e)
     {
-        _listenerManager = listenerManager;
-    }
-
-    public async ValueTask Dispatch(OneBotEvent e)
-    {
-        var act = _eventActivitySource.CreateActivity("onebot-event", ActivityKind.Server);
-        using (act?.Start())
-        {
-            if (act != null)
-            {
-                GenerateTag(act, e);
-            }
-            await _listenerManager.Dispatch(e);
-        }
-    }
-
-    private void GenerateTag(Activity act, OneBotEvent e)
-    {
-        var entry = typeCache.GetOrAdd(e.GetType(), s =>
+        var entry = TypeCache.GetOrAdd(e.GetType(), s =>
         {
             var ret = new NameCacheEntry();
 
@@ -116,34 +93,37 @@ public class OneBotDispatcher : IOneBotEventDispatcher
         });
 
 
+        var ret = new Dictionary<string, object?>();
+
         switch (entry.Type)
         {
             case NameCacheEntry.State.InAttr:
-                act.AddTag("onebot.event.type", entry.TypeValue);
+                ret[OneBotEvent.Type.PropertyName] = entry.TypeValue;
                 break;
             case NameCacheEntry.State.InCode:
-                act.AddTag("onebot.event.type", (e as OneBotEvent.Type)!.Type);
+                ret[OneBotEvent.Type.PropertyName] = (e as OneBotEvent.Type)!.Type;
                 break;
         }
 
         switch (entry.DetailType)
         {
             case NameCacheEntry.State.InAttr:
-                act.AddTag("onebot.event.detail_type", entry.DetailTypeValue);
+                ret[OneBotEvent.DetailType.PropertyName] = entry.DetailTypeValue;
                 break;
             case NameCacheEntry.State.InCode:
-                act.AddTag("onebot.event.detail_type", (e as OneBotEvent.DetailType)!.DetailType);
+                ret[OneBotEvent.DetailType.PropertyName] = (e as OneBotEvent.DetailType)!.DetailType;
                 break;
         }
 
         switch (entry.SubType)
         {
             case NameCacheEntry.State.InAttr:
-                act.AddTag("onebot.event.sub_type", entry.SubTypeValue);
+                ret[OneBotEvent.SubType.PropertyName] = entry.SubTypeValue;
                 break;
             case NameCacheEntry.State.InCode:
-                act.AddTag("onebot.event.sub_type", (e as OneBotEvent.SubType)!.SubType);
+                ret[OneBotEvent.SubType.PropertyName] = (e as OneBotEvent.SubType)!.SubType;
                 break;
         }
+        return ret;
     }
 }

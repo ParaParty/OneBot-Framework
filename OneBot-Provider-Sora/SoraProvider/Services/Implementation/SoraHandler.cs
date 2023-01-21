@@ -16,10 +16,10 @@ public class SoraHandler : IAdapterHandler
     /// </summary>
     private readonly ILogger<SoraHandler> _logger;
 
-    private readonly IOneBotEventDispatcher _dispatcher;
+    private readonly IEventDispatcher _dispatcher;
 
 
-    public SoraHandler(ILogger<SoraHandler> logger, ISoraProviderService soraProviderService, IOneBotEventDispatcher dispatcher)
+    public SoraHandler(ILogger<SoraHandler> logger, ISoraProviderService soraProviderService, IEventDispatcher dispatcher)
     {
         _logger = logger;
         _dispatcher = dispatcher;
