@@ -1,32 +1,23 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using OneBot.Core.Event;
 using OneBot.Core.Interface;
 using OneBot.Provider.SoraProvider.Model;
 using Sora.Enumeration.EventParamsType;
 using Sora.EventArgs.SoraEvent;
+using Sora.Interfaces;
 
 namespace OneBot.Provider.SoraProvider.Services.Implementation;
 
-public class SoraHandler : IAdapterHandler
+public class SoraHandler
 {
-    /// <summary>
-    /// 日志
-    /// </summary>
-    private readonly ILogger<SoraHandler> _logger;
-
     private readonly IEventDispatcher _dispatcher;
 
-
-    public SoraHandler(ILogger<SoraHandler> logger, ISoraProviderService soraProviderService, IEventDispatcher dispatcher)
+    public SoraHandler(ISoraService soraService, IEventDispatcher dispatcher)
     {
-        _logger = logger;
         _dispatcher = dispatcher;
 
-        var soraService = soraProviderService.SoraService;
         var eventManager = soraService.Event;
-
         eventManager.OnClientConnect += OnClientConnect;
         eventManager.OnClientStatusChangeEvent += OnClientStatusChangeEvent;
         eventManager.OnEssenceChange += OnEssenceChange;

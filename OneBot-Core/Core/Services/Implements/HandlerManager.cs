@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using OneBot.Core.Context;
-using OneBot.Core.Event;
 using OneBot.Core.Interface;
-using OneBot.Core.Model;
 using OneBot.Core.Util;
 
 namespace OneBot.Core.Services.Implements;

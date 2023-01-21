@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using OneBot.Core.Configuration;
 using OneBot.Core.Context;
 using OneBot.Core.Interface;
 using OneBot.Core.Util;
@@ -15,31 +17,25 @@ public class PipelineManager : IPipelineManager
     private readonly ActivitySource _middlewareActivitySource = new ActivitySource("OneBot.Middleware", Assembly.GetExecutingAssembly().GetName().Version!.ToString());
 
     private readonly IHandlerManager _handlerManager;
-    
+
     private readonly IExceptionHandlerManager _exceptionHandlerManager;
 
-    public PipelineManager(IHandlerManager handlerManager, IExceptionHandlerManager exceptionHandlerManager)
+    private readonly OneBotConfiguration _cfg;
+
+    public PipelineManager(IHandlerManager handlerManager, IExceptionHandlerManager exceptionHandlerManager, OneBotConfiguration cfg)
     {
         _handlerManager = handlerManager;
         _exceptionHandlerManager = exceptionHandlerManager;
+        _cfg = cfg;
     }
 
     public async ValueTask Handle(OneBotContext ctx)
     {
         var scope = ctx.ServiceScope;
 
-        OneBotEventDelegate entry = async context =>
-        {
-            const string middleOperationName = "OneBot.HandlerManager";
-            var middlewareActivity = _middlewareActivitySource.CreateActivity(middleOperationName, ActivityKind.Server);
-            using (middlewareActivity?.Start())
-            {
-                await _handlerManager.Handle(context);
-            }
-        };
+        OneBotEventDelegate entry = _ => ValueTask.CompletedTask;
 
-        // TODO 换成 Pipeline Builder
-        var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
+        var middleware = _cfg.Pipeline.Select(s => (scope.ServiceProvider.GetRequiredService(s) as IOneBotMiddleware)!).ToImmutableArray();
         var count = middleware.Length;
 
         for (int i = count - 1; i >= 0; i--)
