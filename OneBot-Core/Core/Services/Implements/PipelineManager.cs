@@ -38,6 +38,7 @@ public class PipelineManager : IPipelineManager
             }
         };
 
+        // TODO 换成 Pipeline Builder
         var middleware = scope.ServiceProvider.GetServices<IOneBotMiddleware>().ToImmutableArray();
         var count = middleware.Length;
 
@@ -47,7 +48,7 @@ public class PipelineManager : IPipelineManager
             var realEntry = entry;
             entry = async context =>
             {
-                var middleOperationName = middleware[idx].ToDiagnosisName();
+                var middleOperationName = middleware[idx].GetName();
                 var middlewareActivity = _middlewareActivitySource.CreateActivity(middleOperationName, ActivityKind.Server);
                 using (middlewareActivity?.Start())
                 {
