@@ -14,20 +14,27 @@ public class OneBotBuilder
 
     private List<Type> _pipeline = new List<Type>();
 
+    private List<Type> _preparationList = new List<Type>();
+
     public OneBotBuilder(IServiceCollection services)
     {
         Services = services;
     }
 
-    public OneBotBuilder AddPlatformProvider<T>() where T : class, IPlatformProvider
+    public OneBotBuilder AddPlatformProvider(Type t)
     {
-        if (_platformProviders.Contains(typeof(T)))
+        if (_platformProviders.Contains(t))
         {
-            throw new ArgumentException($"platform provider {typeof(T).Name} duplicated");
+            throw new ArgumentException($"platform provider {t.Name} duplicated");
+        }
+        if (!t.IsAssignableTo(typeof(IPlatformProvider)))
+        {
+            throw new ArgumentException("platform provider must be a subtype of IPlatformProvider");
         }
 
-        Services.AddSingleton<IPlatformProvider, T>();
-        _platformProviders.Add(typeof(T));
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IPlatformProvider), s => s.GetRequiredService(t));
+        _platformProviders.Add(t);
         return this;
     }
 
@@ -39,8 +46,73 @@ public class OneBotBuilder
         return this;
     }
 
+    public OneBotBuilder AddPreparation(Type t)
+    {
+        _preparationList.Add(t);
+        return this;
+    }
+
+    public OneBotBuilder AddMiddleware(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IOneBotMiddleware)))
+        {
+            throw new ArgumentException("middleware must be a subtype of IOneBotMiddleware");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IOneBotMiddleware), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddExceptionHandler(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IExceptionHandler)))
+        {
+            throw new ArgumentException("exception handler must be a subtype of IOneBotMiddleware");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IExceptionHandler), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddHandlerResolver(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IHandlerResolver)))
+        {
+            throw new ArgumentException("handler resolver must be a subtype of IHandlerResolver");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IHandlerResolver), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddEventHandler(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IEventHandler)))
+        {
+            throw new ArgumentException("event handler must be a subtype of IEventHandler");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IEventHandler), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddArgumentResolver(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IArgumentResolver)))
+        {
+            throw new ArgumentException("argument resolver must be a subtype of IArgumentResolver");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IArgumentResolver), s => s.GetRequiredService(t));
+        return this;
+    }
+
     public OneBotConfiguration Build()
     {
-        return new OneBotConfiguration(_platformProviders.ToImmutableArray(), _pipeline.ToImmutableArray());
+        return new OneBotConfiguration(
+            platformProviders: _platformProviders.ToImmutableArray(),
+            pipeline: _pipeline.ToImmutableArray(),
+            preparationList: _preparationList.ToImmutableArray()
+        );
     }
 }

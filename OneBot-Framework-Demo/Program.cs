@@ -23,10 +23,15 @@ public class Program
 
             services.AddOneBot(ob =>
             {
+                ob.AddOneBotCore(s =>
+                {
+                    s.AddArgumentDependencyInjectionResolver();
+                });
+                
                 ob.ConfigurePipeline(pipe =>
                 {
                     services.AddSingleton<TestMiddleware>();
-                    pipe.Use(typeof(TestMiddleware));
+                    pipe.Use<TestMiddleware>();
                 });
             });
         });

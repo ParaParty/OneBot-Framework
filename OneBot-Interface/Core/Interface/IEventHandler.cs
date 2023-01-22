@@ -1,8 +1,11 @@
-﻿namespace OneBot.Core.Interface;
+﻿using JetBrains.Annotations;
+
+namespace OneBot.Core.Interface;
 
 /// <summary>
-/// 需要一个名为 <code>Invoke</code> 的方法。
+/// OneBot 事件处理器
 /// </summary>
+[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IEventHandler
 {
 }

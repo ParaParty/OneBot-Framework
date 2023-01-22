@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace OneBot.Core.Interface;
 
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
-public interface IPlatformProvider
+public interface IOneBotService
 {
     public ValueTask Start();
 

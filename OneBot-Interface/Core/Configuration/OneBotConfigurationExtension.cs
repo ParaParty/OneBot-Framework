@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace OneBot.Core.Configuration;
 
-public static class OneBotConfigurationOneBotConfigurationExtension
+public static class OneBotConfigurationExtension
 {
     public static void AddOneBot(this IServiceCollection services, Action<OneBotBuilder> closure)
     {

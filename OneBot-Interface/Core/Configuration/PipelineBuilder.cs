@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OneBot.Core.Interface;
 
 namespace OneBot.Core.Configuration;
 
@@ -9,6 +10,10 @@ public class PipelineBuilder
 
     public PipelineBuilder Use(Type t)
     {
+        if (!t.IsAssignableTo(typeof(IOneBotMiddleware)))
+        {
+            throw new ArgumentException("middleware registered in pipeline must be a subtype of IOneBotMiddleware");
+        }
         _item.Add(t);
         return this;
     }

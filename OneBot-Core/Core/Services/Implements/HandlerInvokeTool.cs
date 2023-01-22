@@ -27,7 +27,7 @@ public class HandlerInvokeTool : IHandlerInvokeTool
         _serviceProvider = serviceProvider;
         _resolvers = _serviceProvider.GetServices<IArgumentResolver>().ToImmutableArray();
     }
-    
+
     public async ValueTask Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod)
     {
         var fun = _invoker.GetOrAdd(new KeyValuePair<Type, MethodInfo>(handlerType, handlerMethod),
@@ -48,7 +48,7 @@ public class HandlerInvokeTool : IHandlerInvokeTool
                     .ToList()
                     .Where(sp => sp.SupportsParameter(handlerType, handlerMethod, parameter));
         }
-    
+
         if (list == null || list.Count() != 1)
             throw new ArgumentException("Argument not suitable, for null or not equal with one.");
 

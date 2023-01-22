@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneBot.Core.Attributes;
 using OneBot.Core.Event;
 using OneBot.Core.Interface;
 using OneBot.Core.Model;
@@ -33,6 +30,9 @@ public class EventDispatcher : IEventDispatcher
     {
         using var scope = _scopeFactory.CreateScope();
         var ctx = new DefaultOneBotContext(scope, e);
+
+        var ctxHolder = scope.ServiceProvider.GetService<IOneBotContextHolder>();
+        ctxHolder?.SetOneBotContext(ctx);
 
         var act = _eventActivitySource.CreateActivity("onebot-event", ActivityKind.Server);
         using (act?.Start())
