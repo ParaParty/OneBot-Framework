@@ -4,9 +4,9 @@ using OneBot.Core.Context;
 using OneBot.Core.Event;
 using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Resolvers.Handlers;
 
-public class DefaultHandlerResolver : IHandlerResolver
+public class DefaultResolver : IHandlerResolver
 {
     public bool Supports(OneBotContext ctx, Type handlerType, MethodInfo handler)
     {

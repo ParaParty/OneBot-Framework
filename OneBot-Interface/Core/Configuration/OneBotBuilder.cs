@@ -39,6 +39,61 @@ public class OneBotBuilder
         return this;
     }
 
+    public OneBotBuilder AddMiddleware(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IOneBotMiddleware)))
+        {
+            throw new ArgumentException("middleware must be a subtype of IOneBotMiddleware");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IOneBotMiddleware), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddExceptionHandler(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IExceptionHandler)))
+        {
+            throw new ArgumentException("exception handler must be a subtype of IOneBotMiddleware");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IExceptionHandler), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddHandlerResolver(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IHandlerResolver)))
+        {
+            throw new ArgumentException("exception handler must be a subtype of IHandlerResolver");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IHandlerResolver), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddEventHandler(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IEventHandler)))
+        {
+            throw new ArgumentException("event handler must be a subtype of IEventHandler");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IEventHandler), s => s.GetRequiredService(t));
+        return this;
+    }
+
+    public OneBotBuilder AddArgumentResolver(Type t)
+    {
+        if (!t.IsAssignableTo(typeof(IArgumentResolver)))
+        {
+            throw new ArgumentException("event handler must be a subtype of IArgumentResolver");
+        }
+        Services.AddSingleton(t);
+        Services.AddSingleton(typeof(IArgumentResolver), s => s.GetRequiredService(t));
+        return this;
+    }
+
     public OneBotConfiguration Build()
     {
         return new OneBotConfiguration(_platformProviders.ToImmutableArray(), _pipeline.ToImmutableArray());

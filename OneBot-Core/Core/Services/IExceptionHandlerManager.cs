@@ -6,4 +6,4 @@ namespace OneBot.Core.Services;
 
 public interface IExceptionHandlerManager{
     public ValueTask Handle(OneBotContext ctx, Exception exception);
-} ;}
+}

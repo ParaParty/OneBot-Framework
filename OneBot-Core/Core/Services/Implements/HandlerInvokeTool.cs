@@ -24,7 +24,7 @@ public class HandlerInvokeTool : IHandlerInvokeTool
         _serviceProvider = serviceProvider;
         _resolvers = _serviceProvider.GetServices<IArgumentResolver>().ToImmutableArray();
     }
-    
+
     public async ValueTask Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod)
     {
         var fun = _invoker.GetOrAdd(new KeyValuePair<Type, MethodInfo>(handlerType, handlerMethod),
