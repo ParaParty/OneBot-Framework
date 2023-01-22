@@ -14,16 +14,16 @@ public class HandlerManager : IHandlerManager
 {
     private readonly IServiceProvider _serviceProvider;
 
-    private readonly IHandlerInvokeTool _handlerInvokeTool;
+    private readonly IHandlerInvoker _handlerInvoker;
 
     private readonly IEnumerable<Type> _listenerResolvers;
 
     private readonly IEnumerable<KeyValuePair<Type, MethodInfo>> _handlerList;
 
-    public HandlerManager(IServiceProvider serviceProvider, IHandlerInvokeTool handlerInvokeTool)
+    public HandlerManager(IServiceProvider serviceProvider, IHandlerInvoker handlerInvoker)
     {
         _serviceProvider = serviceProvider;
-        _handlerInvokeTool = handlerInvokeTool;
+        _handlerInvoker = handlerInvoker;
 
         _listenerResolvers = ClassScanner.ScanCurrentDomain(s => s.IsAssignableTo(typeof(IHandlerResolver)));
 
@@ -51,7 +51,7 @@ public class HandlerManager : IHandlerManager
                 var resolver = _serviceProvider.GetService(rType) as IHandlerResolver;
                 if (resolver!.Supports(ctx, hType.Key, hType.Value))
                 {
-                    await _handlerInvokeTool.Invoke(ctx, hType.Key, hType.Value);
+                    await _handlerInvoker.Invoke(ctx, hType.Key, hType.Value);
                 }
             }
         }

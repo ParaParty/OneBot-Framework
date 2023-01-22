@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OneBot-Interface\OneBot-Interface.csproj" />
+    <ProjectReference Include="..\OneBot-Core\OneBot-Core.csproj" />
   </ItemGroup>
 
 </Project>

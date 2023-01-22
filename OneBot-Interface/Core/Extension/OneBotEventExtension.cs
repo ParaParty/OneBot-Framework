@@ -14,9 +14,4 @@ public static class OneBotEventExtension
         }
         return p.WrappedModel;
     }
-
-    public static string GetDiagnosisName(this OneBotEvent self)
-    {
-        
-    }
 }

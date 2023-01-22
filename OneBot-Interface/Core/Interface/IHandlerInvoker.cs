@@ -7,7 +7,7 @@ using OneBot.Core.Context;
 namespace OneBot.Core.Interface;
 
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
-public interface IHandlerInvokeTool
+public interface IHandlerInvoker
 {
     ValueTask Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod);
 }

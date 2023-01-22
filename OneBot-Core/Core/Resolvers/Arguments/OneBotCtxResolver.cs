@@ -9,7 +9,7 @@ public sealed class OneBotCtxResolver : IArgumentResolver
 {
     public bool SupportsParameter(Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
     {
-        return parameterInfo.GetType().IsAssignableFrom(typeof(OneBotContext));
+        return parameterInfo.ParameterType.IsAssignableTo(typeof(OneBotContext));
     }
 
     public object ResolveArgument(OneBotContext ctx, Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)

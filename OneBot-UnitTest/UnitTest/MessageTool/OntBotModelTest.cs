@@ -3,7 +3,7 @@ using OneBot.Core.Extension;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.MessageSegmentData;
 
-namespace OneBot.UnitTest;
+namespace OneBot.UnitTest.MessageTool;
 
 [TestClass]
 public class OntBotModelTest

@@ -20,7 +20,7 @@ public static class OneBotBuilderCoreExtension
         services.AddSingleton<IInitializationManager, InitializationManager>();
         
         services.AddSingleton<IExceptionHandlerManager, ExceptionHandlerManager>();
-        services.AddSingleton<IHandlerInvokeTool, HandlerInvokeTool>();
+        services.AddSingleton<IHandlerInvoker, HandlerInvoker>();
         services.AddSingleton<IHandlerManager, HandlerManager>();
         services.AddSingleton<IPipelineManager, PipelineManager>();
 
