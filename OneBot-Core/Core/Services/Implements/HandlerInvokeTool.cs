@@ -74,7 +74,7 @@ public class HandlerInvokeTool : IHandlerInvokeTool
             il.Emit(OpCodes.Callvirt,typeof(IArgumentResolver).GetMethod("ResolveArgument")!);
             il.Emit(OpCodes.Stloc,count++); //位 2 [0 -> sp , 1 -> handlerType]
         });
-        int matchCount = 2; //减一位，确保参数数目符合
+        int matchCount = 2;
         while (matchCount != count)
         {
             il.Emit(OpCodes.Ldloc,matchCount);
