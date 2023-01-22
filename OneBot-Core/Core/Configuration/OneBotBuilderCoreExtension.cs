@@ -14,7 +14,8 @@ public static class OneBotBuilderCoreExtension
         var services = self.Services;
 
         services.AddSingleton<IEventDispatcher, EventDispatcher>();
-
+        services.AddSingleton<IOneBotContextHolder, OneBotContextHolder>();
+        
         services.AddSingleton<IExceptionHandlerManager, ExceptionHandlerManager>();
         services.AddSingleton<IHandlerInvokeTool, HandlerInvokeTool>();
         services.AddSingleton<IHandlerManager, HandlerManager>();
@@ -24,6 +25,7 @@ public static class OneBotBuilderCoreExtension
         self.AddMiddleware<EventHandlerMiddleware>();
 
         self.AddArgumentResolver<OneBotCtxResolver>();
+        self.AddArgumentResolver<FromServiceResolver>();
 
         closure(new OneBotCoreBuilder(self));
 

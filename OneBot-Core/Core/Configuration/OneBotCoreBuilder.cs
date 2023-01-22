@@ -12,7 +12,7 @@ public class OneBotCoreBuilder
         _onebotBuilder = onebotBuilder;
     }
 
-    [Obsolete("may make argument resolving ambiguous")]
+    [Obsolete("may make argument resolving ambiguous, use FromServicesAttribute instead")]
     public OneBotCoreBuilder AddArgumentDependencyInjectionResolver()
     {
         _onebotBuilder.AddArgumentResolver<DependencyInjectionResolver>();
