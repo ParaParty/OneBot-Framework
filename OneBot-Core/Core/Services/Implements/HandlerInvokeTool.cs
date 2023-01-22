@@ -42,12 +42,12 @@ public class HandlerInvokeTool : IHandlerInvokeTool
         {
             _resolvers[0].SupportsParameter(handlerType, handlerMethod, parameter);
         }
-        
+
         // 如果确定可以解析所有的参数，就执行这个事件
         // handlerType.handlerMethod(把参数全丢进去)
         return ctx =>
         {
-            
+
         }
     }
 }

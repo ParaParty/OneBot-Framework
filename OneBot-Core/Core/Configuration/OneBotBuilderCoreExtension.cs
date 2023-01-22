@@ -16,6 +16,10 @@ public static class OneBotBuilderCoreExtension
         services.AddSingleton<IEventDispatcher, EventDispatcher>();
         services.AddSingleton<IOneBotContextHolder, OneBotContextHolder>();
         
+        services.AddSingleton<IOneBotService, OneBotService>();
+        services.AddSingleton<IPlatformProviderManager, PlatformProviderManager>();
+        services.AddSingleton<IInitializationManager, InitializationManager>();
+        
         services.AddSingleton<IExceptionHandlerManager, ExceptionHandlerManager>();
         services.AddSingleton<IHandlerInvokeTool, HandlerInvokeTool>();
         services.AddSingleton<IHandlerManager, HandlerManager>();

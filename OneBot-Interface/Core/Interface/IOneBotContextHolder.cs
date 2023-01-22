@@ -11,7 +11,7 @@ public interface IOneBotContextHolder
     /// 设置 OneBot 上下文。
     /// </summary>
     public void SetOneBotContext(OneBotContext context);
-    
+
     /// <summary>
     /// 获取 OneBot 上下文，若无则返回 Null。
     /// </summary>

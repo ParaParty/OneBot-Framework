@@ -5,7 +5,7 @@ using OneBot.Core.Context;
 
 namespace OneBot.Core.Interface;
 
-[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)] 
+[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IArgumentResolver
 {
     bool SupportsParameter(Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo);

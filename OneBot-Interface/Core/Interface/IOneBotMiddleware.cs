@@ -7,7 +7,7 @@ namespace OneBot.Core.Interface;
 /// <summary>
 /// OneBot 中间件
 /// </summary>
-[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)] 
+[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IOneBotMiddleware
 {
     /// <summary>

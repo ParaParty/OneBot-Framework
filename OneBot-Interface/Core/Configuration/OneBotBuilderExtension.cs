@@ -4,6 +4,17 @@ namespace OneBot.Core.Configuration;
 
 public static class OneBotBuilderExtension
 {
+
+    public static OneBotBuilder AddPlatformProvider<T>(this OneBotBuilder self) where T : class, IPlatformProvider
+    {
+        return self.AddPlatformProvider(typeof(T));
+    }
+    
+    public static OneBotBuilder AddPreparation<T>(this OneBotBuilder self) where T : class
+    {
+        return self.AddPreparation(typeof(T));
+    }
+
     public static OneBotBuilder AddMiddleware<T>(this OneBotBuilder self) where T : class, IOneBotMiddleware
     {
         return self.AddMiddleware(typeof(T));
@@ -23,7 +34,7 @@ public static class OneBotBuilderExtension
     {
         return self.AddEventHandler(typeof(T));
     }
-    
+
     public static OneBotBuilder AddArgumentResolver<T>(this OneBotBuilder self) where T : class, IArgumentResolver
     {
         return self.AddArgumentResolver(typeof(T));

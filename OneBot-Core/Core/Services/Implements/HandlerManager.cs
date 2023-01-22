@@ -51,7 +51,7 @@ public class HandlerManager : IHandlerManager
                 var resolver = _serviceProvider.GetService(rType) as IHandlerResolver;
                 if (resolver!.Supports(ctx, hType.Key, hType.Value))
                 {
-                    await _handlerInvokeTool.Invoke(ctx,  hType.Key, hType.Value);
+                    await _handlerInvokeTool.Invoke(ctx, hType.Key, hType.Value);
                 }
             }
         }

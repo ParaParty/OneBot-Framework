@@ -30,7 +30,7 @@ public class EventDispatcher : IEventDispatcher
     {
         using var scope = _scopeFactory.CreateScope();
         var ctx = new DefaultOneBotContext(scope, e);
-        
+
         var ctxHolder = scope.ServiceProvider.GetService<IOneBotContextHolder>();
         ctxHolder?.SetOneBotContext(ctx);
 

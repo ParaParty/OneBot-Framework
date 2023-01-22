@@ -5,7 +5,7 @@ namespace OneBot.Core.Interface;
 /// <summary>
 /// OneBot 事件处理器
 /// </summary>
-[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)] 
+[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IEventHandler
 {
 }

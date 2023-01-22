@@ -5,7 +5,7 @@ using OneBot.Core.Context;
 
 namespace OneBot.Core.Interface;
 
-[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)] 
+[UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IExceptionHandler
 {
     ValueTask Handle(OneBotContext ctx, Exception exception);
