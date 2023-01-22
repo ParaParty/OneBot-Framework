@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
-using OneBot.Core.Event;
 
-namespace OneBot.Core.Services;
+namespace OneBot.Core.Interface;
 
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IInitializationManager

@@ -2,7 +2,7 @@
 using OneBot.Core.Context;
 using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class OneBotContextHolder : IOneBotContextHolder
 {

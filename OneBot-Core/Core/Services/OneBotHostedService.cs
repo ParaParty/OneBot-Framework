@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class OneBotHostedService : IHostedService
 {

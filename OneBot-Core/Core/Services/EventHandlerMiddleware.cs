@@ -3,7 +3,7 @@ using OneBot.Core.Attributes;
 using OneBot.Core.Context;
 using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 [OneBotComponentName("OneBot.HandlerManager")]
 public class EventHandlerMiddleware : IOneBotMiddleware

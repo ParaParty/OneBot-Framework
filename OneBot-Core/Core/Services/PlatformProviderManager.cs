@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using OneBot.Core.Configuration;
 using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class PlatformProviderManager : IPlatformProviderManager
 {

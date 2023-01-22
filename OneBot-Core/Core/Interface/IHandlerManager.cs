@@ -2,10 +2,10 @@
 using JetBrains.Annotations;
 using OneBot.Core.Context;
 
-namespace OneBot.Core.Services;
+namespace OneBot.Core.Interface;
 
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
-public interface IPipelineManager
+public interface IHandlerManager
 {
-    ValueTask Handle(OneBotContext ctx);
+    ValueTask Handle(OneBotContext e);
 }

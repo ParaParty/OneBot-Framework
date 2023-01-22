@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OneBot.Core.Context;
+using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class ExceptionHandlerManager : IExceptionHandlerManager
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using OneBot.Core.Interface;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class OneBotService : IOneBotService
 {

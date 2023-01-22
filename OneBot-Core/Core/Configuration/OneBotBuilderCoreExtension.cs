@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using OneBot.Core.Interface;
 using OneBot.Core.Resolvers.Arguments;
 using OneBot.Core.Services;
-using OneBot.Core.Services.Implements;
 
 namespace OneBot.Core.Configuration;
 

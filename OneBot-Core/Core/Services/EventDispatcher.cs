@@ -7,7 +7,7 @@ using OneBot.Core.Interface;
 using OneBot.Core.Model;
 using OneBot.Core.Util;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class EventDispatcher : IEventDispatcher
 {

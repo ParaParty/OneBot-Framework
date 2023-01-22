@@ -8,7 +8,7 @@ using OneBot.Core.Context;
 using OneBot.Core.Interface;
 using OneBot.Core.Util;
 
-namespace OneBot.Core.Services.Implements;
+namespace OneBot.Core.Services;
 
 public class HandlerManager : IHandlerManager
 {
