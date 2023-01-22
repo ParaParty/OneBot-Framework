@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using OneBot.Core.Interface;
 using OneBot.Core.Resolvers.Arguments;
+using OneBot.Core.Resolvers.Handlers;
 using OneBot.Core.Services;
 
 namespace OneBot.Core.Configuration;
@@ -24,7 +25,7 @@ public static class OneBotBuilderCoreExtension
         services.AddSingleton<IHandlerManager, HandlerManager>();
         services.AddSingleton<IPipelineManager, PipelineManager>();
 
-        self.AddHandlerResolver<IHandlerResolver>();
+        self.AddHandlerResolver<DefaultResolver>();
         self.AddMiddleware<EventHandlerMiddleware>();
 
         self.AddArgumentResolver<OneBotCtxResolver>();
