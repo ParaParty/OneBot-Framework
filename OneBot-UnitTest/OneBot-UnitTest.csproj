@@ -17,5 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\OneBot-Core\OneBot-Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OneBot-CommandRoute\OneBot-CommandRoute.csproj" />
+  </ItemGroup>
 
 </Project>
