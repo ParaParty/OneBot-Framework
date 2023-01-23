@@ -7,12 +7,12 @@ namespace OneBot.Core.Resolvers.Arguments;
 
 public sealed class OneBotCtxResolver : IArgumentResolver
 {
-    public bool SupportsParameter(Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
+    public bool SupportsParameter(Type? handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
     {
-        return parameterInfo.ParameterType.IsAssignableTo(typeof(OneBotContext));
+        return parameterInfo.ParameterType == typeof(OneBotContext);
     }
 
-    public object ResolveArgument(OneBotContext ctx, Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
+    public object ResolveArgument(OneBotContext ctx, Type? handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
     {
         return ctx;
     }
