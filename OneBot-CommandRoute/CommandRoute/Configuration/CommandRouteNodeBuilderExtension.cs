@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Enumeration;
+using OneBot.CommandRoute.Util;
 using OneBot.Core.Context;
 
 namespace OneBot.CommandRoute.Configuration;
@@ -11,10 +12,8 @@ public static class CommandRouteNodeBuilderExtension
 {
     public static CommandRouteNodeBuilder Command<T>(this CommandRouteNodeBuilder self, string name, Func<T, Delegate> action)
     {
-        self.Command(name, (OneBotContext ctx) =>
-        {
-            return 0;
-        });
+        var wrapper = new HandlerDelegateWrapper<T>(action);
+        self.Command(name, async (OneBotContext ctx) => await wrapper.Invoke(ctx));
         return self;
     }
 
