@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using OneBot.CommandRoute.Models;
 using OneBot.CommandRoute.Models.Enumeration;
 using OneBot.Core.Interface;
@@ -77,7 +78,7 @@ public class CommandRouteNodeBuilder
     {
         if (name.MatchType == CommandMatchType.OptionalParameter)
         {
-            if (_fallbackNode == null )
+            if (_fallbackNode == null)
             {
                 _fallbackNode = new KeyValuePair<CommandMatchInfo, CommandRouteNodeBuilder>(name, new CommandRouteNodeBuilder());
                 return _fallbackNode.Value.Value;
@@ -87,12 +88,34 @@ public class CommandRouteNodeBuilder
             {
                 return _fallbackNode.Value.Value;
             }
-            
+
             throw new ArgumentException("command ambiguous");
         }
         else
         {
-            return _route.GetOrAdd(name,_ => new CommandRouteNodeBuilder());
+            return _route.GetOrAdd(name, _ => new CommandRouteNodeBuilder());
+        }
+    }
+
+    public CommandTreeNode Build()
+    {
+        if (_fallbackNode != null)
+        {
+            return new CommandTreeNode(
+                route: new Dictionary<CommandMatchInfo, CommandTreeNode>(_route.Select(s => new KeyValuePair<CommandMatchInfo, CommandTreeNode>(s.Key, s.Value.Build()))),
+                middleware: _middleware,
+                fallbackNode: new KeyValuePair<CommandMatchInfo, CommandTreeNode>(_fallbackNode.Value.Key, _fallbackNode.Value.Value.Build()),
+                command: _command
+            );
+        }
+        else
+        {
+            return new CommandTreeNode(
+                route: new Dictionary<CommandMatchInfo, CommandTreeNode>(_route.Select(s => new KeyValuePair<CommandMatchInfo, CommandTreeNode>(s.Key, s.Value.Build()))),
+                middleware: _middleware,
+                fallbackNode: null,
+                command: _command
+            );
         }
     }
 }

@@ -10,6 +10,7 @@ namespace OneBot.CommandRoute.Configuration;
 
 public static class CommandRouteNodeBuilderExtension
 {
+    [Obsolete("我不保证这个功能能用哈。")]
     public static CommandRouteNodeBuilder Command<T>(this CommandRouteNodeBuilder self, string name, Func<T, Delegate> action)
     {
         var wrapper = new HandlerDelegateWrapper<T>(action);
