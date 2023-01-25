@@ -56,7 +56,7 @@ public class MockOneBotContext : OneBotContext
 {
     public MockOneBotContext(IServiceScope serviceScope)
     {
-        Event = new MinimalEvent();
+        Event = new OneBot.UnitTest.Event.MinimalEvent();
         ServiceScope = serviceScope;
     }
 
