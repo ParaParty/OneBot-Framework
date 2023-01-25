@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -92,7 +93,6 @@ public class HandlerInvoker : IHandlerInvoker
     private Func<OneBotContext, ValueTask> GenerateInvokeDelegate(Type handlerType, MethodInfo handlerMethod)
     {
         var parameters = handlerMethod.GetParameters();
-
         var dic = new List<(object, ParameterInfo)>();
         for (int i = 0; i < parameters.Length; i++)
         {
@@ -112,15 +112,20 @@ public class HandlerInvoker : IHandlerInvoker
         var hash = handlerType + "|" + handlerMethod;
 
         HandlerDictionary.Join(hash, dic);
+        
         DynamicMethod dynamicMethod
-            = new DynamicMethod(handlerMethod.Name, typeof(ValueTask), new[] { typeof(OneBotContext) });
+            = new DynamicMethod(handlerMethod.Name,null, new[] { typeof(OneBotContext) });
         var il = dynamicMethod.GetILGenerator();
-        il.Emit(OpCodes.Ldarg, 0);
+
+        il.Emit(OpCodes.Ldarg, 0); //OneBotContext -> ctx
+        
         il.Emit(OpCodes.Callvirt, typeof(OneBotContext).GetProperty("ServiceScope")!.GetMethod!);
+        
         LocalBuilder ilServiceProvider = il.DeclareLocal(typeof(ServiceProvider));
         il.Emit(OpCodes.Callvirt, typeof(IServiceScope).GetProperty("ServiceProvider")!.GetMethod!);
         il.Emit(OpCodes.Stloc, ilServiceProvider);
-        LocalBuilder ilHanderType = il.DeclareLocal(handlerType);
+        
+        LocalBuilder ilHanderType = il.DeclareLocal(handlerType); //表示的是HandlerType
         il.Emit(OpCodes.Ldtoken, handlerType);
         il.Emit(OpCodes.Stloc, ilHanderType);
         LocalBuilder ilMethodInfo = il.DeclareLocal(typeof(MethodInfo));
@@ -137,28 +142,30 @@ public class HandlerInvoker : IHandlerInvoker
             il.Emit(OpCodes.Ldstr, hash);
             il.Emit(OpCodes.Ldc_I4, i);
             il.Emit(OpCodes.Call, typeof(HandlerDictionary).GetMethod("GetObject")!);
+
             il.Emit(OpCodes.Ldarg, 0);
             il.Emit(OpCodes.Ldloc, ilHanderType);
             il.Emit(OpCodes.Ldloc, ilMethodInfo);
+
             il.Emit(OpCodes.Ldstr, hash);
             il.Emit(OpCodes.Ldc_I4, i);
             il.Emit(OpCodes.Call, typeof(HandlerDictionary).GetMethod("GetParameterInfo")!);
+
             il.Emit(OpCodes.Callvirt, typeof(IArgumentResolver).GetMethod("ResolveArgument")!);
+
             if (dic[i].Item2.ParameterType.IsValueType)
             {
                 il.Emit(OpCodes.Unbox_Any, dic[i].Item2.ParameterType);
             }
         }
+        
         il.Emit(OpCodes.Callvirt, handlerMethod);
-        il.Emit(OpCodes.Nop);
-        LocalBuilder ilValueTask = il.DeclareLocal(typeof(object));
-        il.Emit(OpCodes.Ldtoken, ValueTask.CompletedTask.GetType());
-        il.Emit(OpCodes.Stloc, ilValueTask);
-        il.Emit(OpCodes.Ldloc, ilValueTask);
         il.Emit(OpCodes.Ret);
+
         return ctx =>
         {
-            dynamicMethod.CreateDelegate(typeof(Func<OneBotContext, ValueTask>)).DynamicInvoke(ctx);
+
+            dynamicMethod.CreateDelegate(typeof(Action<OneBotContext>)).DynamicInvoke(ctx);
             return ValueTask.CompletedTask;
         };
     }
