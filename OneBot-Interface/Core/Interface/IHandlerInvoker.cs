@@ -10,4 +10,6 @@ namespace OneBot.Core.Interface;
 public interface IHandlerInvoker
 {
     ValueTask Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod);
+
+    public ValueTask Invoke(OneBotContext ctx, Delegate action);
 }

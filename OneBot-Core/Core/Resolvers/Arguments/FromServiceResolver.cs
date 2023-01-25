@@ -9,7 +9,7 @@ namespace OneBot.Core.Resolvers.Arguments;
 
 public sealed class FromServiceResolver : IArgumentResolver
 {
-    public bool SupportsParameter(Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
+    public bool SupportsParameter(Type? handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
     {
         return parameterInfo.GetCustomAttributes().Any(s =>
         {
@@ -22,7 +22,7 @@ public sealed class FromServiceResolver : IArgumentResolver
         });
     }
 
-    public object? ResolveArgument(OneBotContext ctx, Type handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
+    public object? ResolveArgument(OneBotContext ctx, Type? handlerType, MethodInfo methodInfo, ParameterInfo parameterInfo)
     {
         return ctx.ServiceScope.ServiceProvider.GetService(parameterInfo.ParameterType);
     }
