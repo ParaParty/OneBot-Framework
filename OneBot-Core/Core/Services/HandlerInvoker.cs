@@ -14,6 +14,22 @@ namespace OneBot.Core.Services;
 
 public class HandlerInvoker : IHandlerInvoker
 {
+    internal class HandlerDictionary
+    {
+        private readonly Dictionary<string, List<(object, ParameterInfo)>> _hashSet = new Dictionary<string, List<(object, ParameterInfo)>>();
+
+        public void Add(string hashKey, List<(object, ParameterInfo)> list)
+        {
+            _hashSet.Add(hashKey,list);
+        }
+
+        public object GetObject(string key, int index) 
+            => _hashSet[key][index].Item1;
+    
+        public object GetParameterInfo(string key, int index) 
+            => _hashSet[key][index].Item2;
+    }
+
     private readonly ConcurrentDictionary<KeyValuePair<Type, MethodInfo>, Func<OneBotContext, ValueTask>> _invoker =
         new ConcurrentDictionary<KeyValuePair<Type, MethodInfo>, Func<OneBotContext, ValueTask>>();
 
@@ -21,6 +37,8 @@ public class HandlerInvoker : IHandlerInvoker
         new ConcurrentDictionary<Delegate, Func<OneBotContext, ValueTask>>();
 
     private readonly ImmutableArray<IArgumentResolver> _resolvers;
+    
+    private readonly HandlerDictionary _handlerDictionary = new HandlerDictionary();
 
     public HandlerInvoker(IEnumerable<IArgumentResolver> resolvers)
     {
@@ -111,7 +129,7 @@ public class HandlerInvoker : IHandlerInvoker
 
         var hash = handlerType + "|" + handlerMethod;
 
-        HandlerDictionary.Join(hash, dic);
+        _handlerDictionary.Add(hash, dic);
         DynamicMethod dynamicMethod
             = new DynamicMethod(handlerMethod.Name, typeof(ValueTask), new[] { typeof(OneBotContext) });
         var il = dynamicMethod.GetILGenerator();
