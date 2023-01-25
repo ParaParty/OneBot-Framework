@@ -42,7 +42,7 @@ public class HandlerManager : IHandlerManager
         _handlerList = handlerList;
     }
 
-    public async ValueTask Handle(OneBotContext ctx)
+    public async ValueTask<object?> Handle(OneBotContext ctx)
     {
         foreach (var rType in _listenerResolvers)
         {
@@ -55,5 +55,6 @@ public class HandlerManager : IHandlerManager
                 }
             }
         }
+        return ValueTask.FromResult<object?>(null);
     }
 }

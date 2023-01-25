@@ -8,16 +8,16 @@ namespace OneBot.Core.Services;
 [OneBotComponentName("OneBot.HandlerManager")]
 public class EventHandlerMiddleware : IOneBotMiddleware
 {
-    private readonly HandlerManager _handlerManager;
+    private readonly IHandlerManager _handlerManager;
 
-    public EventHandlerMiddleware(HandlerManager handlerManager)
+    public EventHandlerMiddleware(IHandlerManager handlerManager)
     {
         _handlerManager = handlerManager;
     }
 
-    public async ValueTask Invoke(OneBotContext ctx, OneBotEventDelegate next)
+    public async ValueTask<object?> Invoke(OneBotContext ctx, OneBotEventDelegate next)
     {
         await _handlerManager.Handle(ctx);
-        await next(ctx);
+        return await next(ctx);
     }
 }

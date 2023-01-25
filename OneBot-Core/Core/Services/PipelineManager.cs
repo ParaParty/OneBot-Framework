@@ -33,7 +33,7 @@ public class PipelineManager : IPipelineManager
     {
         var scope = ctx.ServiceScope;
 
-        OneBotEventDelegate entry = _ => ValueTask.CompletedTask;
+        OneBotEventDelegate entry = _ => ValueTask.FromResult<object?>(null);
 
         var middleware = _cfg.Pipeline.Select(s => (scope.ServiceProvider.GetRequiredService(s) as IOneBotMiddleware)!).ToImmutableArray();
         var count = middleware.Length;
@@ -48,7 +48,7 @@ public class PipelineManager : IPipelineManager
                 var middlewareActivity = _middlewareActivitySource.CreateActivity(middleOperationName, ActivityKind.Server);
                 using (middlewareActivity?.Start())
                 {
-                    await middleware[idx].Invoke(context, realEntry);
+                    return await middleware[idx].Invoke(context, realEntry);
                 }
             };
         }

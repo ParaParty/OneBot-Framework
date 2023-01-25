@@ -14,16 +14,14 @@ public class OneBotService : IOneBotService
         _platformProviderManager = platformProviderManager;
         _initializationManager = initializationManager;
     }
-    public ValueTask Start()
+    public async ValueTask Start()
     {
         _initializationManager.Initialize();
-        _platformProviderManager.Start();
-        return ValueTask.CompletedTask;
+        await _platformProviderManager.Start();
     }
 
-    public ValueTask Stop()
+    public async ValueTask Stop()
     {
-        _platformProviderManager.Stop();
-        return ValueTask.CompletedTask;
+        await _platformProviderManager.Stop();
     }
 }

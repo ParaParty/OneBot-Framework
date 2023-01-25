@@ -16,5 +16,5 @@ public interface IOneBotMiddleware
     /// <param name="ctx">OneBot 事件上下文</param>
     /// <param name="next">下一步</param>
     /// <returns></returns>
-    public ValueTask Invoke(OneBotContext ctx, OneBotEventDelegate next);
+    public ValueTask<object?> Invoke(OneBotContext ctx, OneBotEventDelegate next);
 }

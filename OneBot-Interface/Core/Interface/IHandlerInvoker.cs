@@ -9,7 +9,7 @@ namespace OneBot.Core.Interface;
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IHandlerInvoker
 {
-    ValueTask Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod);
+    ValueTask<object?> Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod);
 
-    public ValueTask Invoke(OneBotContext ctx, Delegate action);
+    public ValueTask<object?> Invoke(OneBotContext ctx, Delegate action);
 }

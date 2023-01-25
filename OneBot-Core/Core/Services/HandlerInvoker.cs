@@ -15,11 +15,11 @@ namespace OneBot.Core.Services;
 
 public class HandlerInvoker : IHandlerInvoker
 {
-    private readonly ConcurrentDictionary<KeyValuePair<Type, MethodInfo>, Func<OneBotContext, ValueTask>> _invoker =
-        new ConcurrentDictionary<KeyValuePair<Type, MethodInfo>, Func<OneBotContext, ValueTask>>();
+    private readonly ConcurrentDictionary<KeyValuePair<Type, MethodInfo>, Func<OneBotContext, ValueTask<object?>>> _invoker =
+        new ConcurrentDictionary<KeyValuePair<Type, MethodInfo>, Func<OneBotContext, ValueTask<object?>>>();
 
-    private readonly ConcurrentDictionary<Delegate, Func<OneBotContext, ValueTask>> _delegateInvoker =
-        new ConcurrentDictionary<Delegate, Func<OneBotContext, ValueTask>>();
+    private readonly ConcurrentDictionary<Delegate, Func<OneBotContext, ValueTask<object?>>> _delegateInvoker =
+        new ConcurrentDictionary<Delegate, Func<OneBotContext, ValueTask<object?>>>();
 
     private readonly ImmutableArray<IArgumentResolver> _resolvers;
 
@@ -33,18 +33,18 @@ public class HandlerInvoker : IHandlerInvoker
         _resolvers = serviceProvider.GetServices<IArgumentResolver>().ToImmutableArray();
     }
 
-    public async ValueTask Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod)
+    public async ValueTask<object?> Invoke(OneBotContext ctx, Type handlerType, MethodInfo handlerMethod)
     {
         var fun = _invoker.GetOrAdd(new KeyValuePair<Type, MethodInfo>(handlerType, handlerMethod),
             _ => GenerateInvokeDelegate(handlerType, handlerMethod)
         );
-        await fun(ctx);
+        return await fun(ctx);
     }
 
-    public async ValueTask Invoke(OneBotContext ctx, Delegate action)
+    public async ValueTask<object?> Invoke(OneBotContext ctx, Delegate action)
     {
         var fun = _delegateInvoker.GetOrAdd(action, _ => GenerateInvokeDelegate(action));
-        await fun(ctx);
+        return await fun(ctx);
     }
 
     private ImmutableArray<KeyValuePair<ParameterInfo, IArgumentResolver>> ResolveArgumentResolvers(Type? handlerType,
@@ -71,7 +71,7 @@ public class HandlerInvoker : IHandlerInvoker
         return resolverList.ToImmutableArray();
     }
 
-    private Func<OneBotContext, ValueTask> GenerateInvokeDelegate(Delegate action)
+    private Func<OneBotContext, ValueTask<object?>> GenerateInvokeDelegate(Delegate action)
     {
         var commitResolvers = ResolveArgumentResolvers(action.Target?.GetType(), action.Method);
         var handlerType = action.Target?.GetType();
@@ -85,12 +85,11 @@ public class HandlerInvoker : IHandlerInvoker
                 return resolver.ResolveArgument(ctx, handlerType, handlerMethod, parameter);
             }).ToArray();
 
-            action.DynamicInvoke(t);
-            return ValueTask.CompletedTask;
+            return ValueTask.FromResult(action.DynamicInvoke(t));
         };
     }
 
-    private Func<OneBotContext, ValueTask> GenerateInvokeDelegate(Type handlerType, MethodInfo handlerMethod)
+    private Func<OneBotContext, ValueTask<object?>> GenerateInvokeDelegate(Type handlerType, MethodInfo handlerMethod)
     {
         var parameters = handlerMethod.GetParameters();
         var dic = new List<(object, ParameterInfo)>();
@@ -112,19 +111,19 @@ public class HandlerInvoker : IHandlerInvoker
         var hash = handlerType + "|" + handlerMethod;
 
         HandlerDictionary.Join(hash, dic);
-        
+
         DynamicMethod dynamicMethod
-            = new DynamicMethod(handlerMethod.Name,null, new[] { typeof(OneBotContext) });
+            = new DynamicMethod(handlerMethod.Name, null, new[] { typeof(OneBotContext) });
         var il = dynamicMethod.GetILGenerator();
 
         il.Emit(OpCodes.Ldarg, 0); //OneBotContext -> ctx
-        
+
         il.Emit(OpCodes.Callvirt, typeof(OneBotContext).GetProperty("ServiceScope")!.GetMethod!);
-        
+
         LocalBuilder ilServiceProvider = il.DeclareLocal(typeof(ServiceProvider));
         il.Emit(OpCodes.Callvirt, typeof(IServiceScope).GetProperty("ServiceProvider")!.GetMethod!);
         il.Emit(OpCodes.Stloc, ilServiceProvider);
-        
+
         LocalBuilder ilHanderType = il.DeclareLocal(handlerType); //表示的是HandlerType
         il.Emit(OpCodes.Ldtoken, handlerType);
         il.Emit(OpCodes.Stloc, ilHanderType);
@@ -158,15 +157,10 @@ public class HandlerInvoker : IHandlerInvoker
                 il.Emit(OpCodes.Unbox_Any, dic[i].Item2.ParameterType);
             }
         }
-        
+
         il.Emit(OpCodes.Callvirt, handlerMethod);
         il.Emit(OpCodes.Ret);
 
-        return ctx =>
-        {
-
-            dynamicMethod.CreateDelegate(typeof(Action<OneBotContext>)).DynamicInvoke(ctx);
-            return ValueTask.CompletedTask;
-        };
+        return ctx => ValueTask.FromResult(dynamicMethod.CreateDelegate(typeof(Action<OneBotContext>)).DynamicInvoke(ctx));
     }
 }

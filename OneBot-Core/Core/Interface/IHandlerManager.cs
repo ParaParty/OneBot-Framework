@@ -7,5 +7,5 @@ namespace OneBot.Core.Interface;
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IHandlerManager
 {
-    ValueTask Handle(OneBotContext e);
+    ValueTask<object?> Handle(OneBotContext e);
 }

@@ -4,11 +4,10 @@ using OneBot.Core.Interface;
 
 namespace OneBot.CommandRoute.Services.Implements;
 
-public class CommandRouteMiddleware: IOneBotMiddleware
+public class CommandRouteMiddleware : IOneBotMiddleware
 {
-    public async ValueTask Invoke(OneBotContext ctx, OneBotEventDelegate next)
+    public async ValueTask<object?> Invoke(OneBotContext ctx, OneBotEventDelegate next)
     {
-
-        await next(ctx);
+        return await next(ctx);
     }
 }

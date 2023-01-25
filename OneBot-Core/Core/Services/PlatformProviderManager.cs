@@ -31,23 +31,21 @@ public class PlatformProviderManager : IPlatformProviderManager
             _logger.LogError("no platform provider registered");
         }
     }
-    public ValueTask Start()
+    public async ValueTask Start()
     {
         foreach (var item in _providerTypeList)
         {
             var instance = ((IPlatformProvider)_serviceProvider.GetRequiredService(item))!;
-            instance.Start();
+            await instance.Start();
             _providerList.Add(instance);
         }
-        return ValueTask.CompletedTask;
     }
 
-    public ValueTask Stop()
+    public async ValueTask Stop()
     {
         foreach (var item in _providerList)
         {
-            item.Stop();
+            await item.Stop();
         }
-        return ValueTask.CompletedTask;
     }
 }
