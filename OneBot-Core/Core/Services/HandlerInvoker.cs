@@ -110,7 +110,7 @@ public class HandlerInvoker : IHandlerInvoker
 
         var hash = handlerType + "|" + handlerMethod;
 
-        HandlerDictionary.Join(hash, dic);
+        HandlerDictionary.Add(hash, dic);
 
         DynamicMethod dynamicMethod
             = new DynamicMethod(handlerMethod.Name, null, new[] { typeof(OneBotContext) });
