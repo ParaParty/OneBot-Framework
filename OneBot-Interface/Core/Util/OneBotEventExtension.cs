@@ -2,7 +2,7 @@
 using OneBot.Core.Event;
 using OneBot.Core.Model;
 
-namespace OneBot.Core.Extension;
+namespace OneBot.Core.Util;
 
 public static class OneBotEventExtension
 {

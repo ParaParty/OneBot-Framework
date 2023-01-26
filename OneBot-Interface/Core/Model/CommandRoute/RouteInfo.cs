@@ -1,8 +1,20 @@
 ﻿namespace OneBot.Core.Model.CommandRoute;
 
-public struct RouteInfo
+public class RouteInfo
 {
-    public Message.Message Message { get; set; }
+    public RouteInfo(Message.Message message, EventType eventType, int startSegment = 0, int startPosition = 0)
+    {
+        Message = message;
+        EventType = eventType;
+        StartSegment = startSegment;
+        StartPosition = startPosition;
+    }
 
-    public EventType EventType { get; set; }
+    public Message.Message Message { get; init; }
+
+    public EventType EventType { get; init; }
+
+    public int StartSegment { get; init; } = 0;
+
+    public int StartPosition { get; init; } = 0;
 }

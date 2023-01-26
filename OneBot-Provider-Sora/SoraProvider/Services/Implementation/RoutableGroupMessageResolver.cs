@@ -21,12 +21,12 @@ public class RoutableGroupMessageResolver : IRoutableMessageResolver
     {
         if (ctx.Event is SoraGroupMessage e)
         {
-            return new RouteInfo
-            {
-                Message = e.Message,
-                EventType = EventType.GroupMessage,
-            };
+            return new RouteInfo(
+                message: e.Message,
+                eventType: EventType.GroupMessage
+            );
         }
+
         throw new InvalidCastException();
     }
 }

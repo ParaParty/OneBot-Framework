@@ -6,11 +6,16 @@ public class DefaultMessage : List<MessageSegmentRef>, Message
 {
     public DefaultMessage()
     {
-        
+
     }
 
     public DefaultMessage(List<MessageSegmentRef> t) : base(t)
     {
-        
+
+    }
+    
+    public DefaultMessage(MessageSegmentRef t) : base(new List<MessageSegmentRef>() { t })
+    {
+
     }
 }

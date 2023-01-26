@@ -6,7 +6,7 @@ using OneBot.Provider.SoraProvider.Model;
 
 namespace OneBot.Provider.SoraProvider.Services.Implementation;
 
-public class RoutablePrivateMessageResolver: IRoutableMessageResolver
+public class RoutablePrivateMessageResolver : IRoutableMessageResolver
 {
 
     public bool SupportEvent(Type type)
@@ -22,11 +22,10 @@ public class RoutablePrivateMessageResolver: IRoutableMessageResolver
     {
         if (ctx.Event is SoraPrivateMessage e)
         {
-            return new RouteInfo
-            {
-                Message = e.Message,
-                EventType = EventType.PrivateMessage,
-            };
+            return new RouteInfo(
+                message: e.Message,
+                eventType: EventType.PrivateMessage
+            );
         }
         throw new InvalidCastException();
     }
