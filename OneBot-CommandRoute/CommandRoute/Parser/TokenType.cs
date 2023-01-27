@@ -2,11 +2,9 @@
 
 internal enum TokenType
 {
-    String,
-
     Ident,
 
-    Rich,
+    Value,
 
     DoubleDash,
 

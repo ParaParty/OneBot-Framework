@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using OneBot.Core.Model.Message.SimpleMessageSegment;
 using OneBot.Core.Util;
 
@@ -17,6 +18,11 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
         {
             Segment = segment;
             Position = position;
+        }
+
+        public bool IsEmpty()
+        {
+            return Segment <= 0 && Position <= 0;
         }
     }
 
@@ -72,7 +78,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
         {
             throw new ArgumentException();
         }
-        
+
         if (start.Position > 0)
         {
             var startSeg = this[start.Segment];
@@ -99,7 +105,51 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             var str = endSeg.Get<string>("Message") ?? throw new ArgumentException();
             ret.Add(SimpleTextSegment.Build(str.Substring(0, end.Position)));
         }
-        
+
         return ret;
+    }
+
+    public class Builder
+    {
+        private readonly SimpleMessage _buffer = new SimpleMessage();
+
+        private StringBuilder _sb = new StringBuilder();
+
+        public Builder Add(string s)
+        {
+            _sb.Append(s);
+            return this;
+        }
+
+        public Builder Add(MessageSegmentRef seg)
+        {
+            if (seg.GetSegmentType() == "text")
+            {
+                var str = seg.Get<string>("Message") ?? throw new ArgumentException();
+                _sb.Append(str);
+            }
+            else
+            {
+                FlushStringBuilder();
+                _buffer.Add(seg);
+
+            }
+            return this;
+        }
+
+        public Message ToMessage()
+        {
+            FlushStringBuilder();
+            return _buffer;
+        }
+
+        private void FlushStringBuilder()
+        {
+            if (_sb.Length > 0)
+            {
+                _buffer.Add(_sb.ToString());
+            }
+            _sb = new StringBuilder();
+        }
     }
 }
