@@ -62,13 +62,17 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
                     throw new ArgumentException();
                 }
                 var str = seg.Get<string>("Message") ?? throw new ArgumentException();
-
                 ret.Add(SimpleTextSegment.Build(str.Substring(start.Position, end.Position - start.Position)));
             }
 
             throw new ArgumentException();
         }
 
+        if (start.Segment > end.Segment)
+        {
+            throw new ArgumentException();
+        }
+        
         if (start.Position > 0)
         {
             var startSeg = this[start.Segment];
