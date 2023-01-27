@@ -14,11 +14,16 @@ public class SimpleTextSegment : Text, UnderlayModel<string>
 
     public string WrappedModel { get; }
 
+    public static MessageSegmentRef Build(char tData)
+    {
+        return new MessageSegment<Text>(new SimpleTextSegment("" + tData));
+    }
+
     public static MessageSegmentRef Build(string tData)
     {
         return new MessageSegment<Text>(new SimpleTextSegment(tData));
     }
-    
+
     public static MessageSegmentRef Build()
     {
         return new MessageSegment<Text>(new SimpleTextSegment(String.Empty));

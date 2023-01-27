@@ -55,36 +55,58 @@ internal class CommandLexer
         var startPos = _cntPosition;
 
         var str = NowSegment.Get<string>("Message")!;
-        if (str[startPos] == '/')
+        switch (str[startPos])
         {
-            if (StringNext(str, startPos) == '/')
-            {
+            case '#':
+                return NextCommentToken();
+            case '/' when StringNext(str, startPos) == '/':
                 // 注释
-                var end = _routeInfo.Message.MessageLength();
-                var token = _routeInfo.Message.SubMessage(new Message.Index(startSeg, startPos));
-                return new CommandToken(token, TokenType.Comment, startSeg, startPos, end.Segment, end.Position);
-            }
-            else
-            {
-                // 普通字符串
-            }
-        }
-        else if (str[startPos] == '-')
-        {
-            if (StringNext(str, startPos) == '-')
-            {
-                // 完整 flag
-            }
-            else
-            {
-                // 短 flag
-            }
-        }
-        else
-        {
+                return NextCommentToken();
             // 普通字符串
+            case '/':
+                return NextStringToken();
+            case '-':
+            {
+                if (StringNext(str, startPos) == '-')
+                {
+                    return NextFullFlagToken();
+                }
+
+                // 短 flag
+                return NextShortenFlagToken();
+            }
+            case ' ':
+            case '\n':
+            case '\r':
+            case '\t':
+                return new CommandToken(new SimpleMessage(str[startPos]), TokenType.WhiteSpace, startSeg, startPos, startSeg, startPos + 1);
+            default:
+                return NextStringToken();
         }
+    }
+
+    private CommandToken NextShortenFlagToken()
+    {
         throw new NotImplementedException();
+    }
+
+    private CommandToken NextFullFlagToken()
+    {
+        throw new NotImplementedException();
+    }
+
+    private CommandToken NextStringToken()
+    {
+        throw new NotImplementedException();
+    }
+
+    private CommandToken NextCommentToken()
+    {
+        var startSeg = _cntSegment;
+        var startPos = _cntPosition;
+        var end = _routeInfo.Message.MessageLength();
+        var token = _routeInfo.Message.SubMessage(new Message.Index(startSeg, startPos));
+        return new CommandToken(token, TokenType.Comment, startSeg, startPos, end.Segment, end.Position);
     }
 
     private MessageSegmentRef NowSegment => _routeInfo.Message[_cntSegment];
@@ -100,40 +122,4 @@ internal class CommandLexer
         }
         return null;
     }
-}
-
-internal enum TokenType
-{
-    String,
-
-    Ident,
-
-    Rich,
-
-    DoubleDash,
-
-    SingleDash,
-
-    WhiteSpace,
-
-    Comment,
-}
-
-internal class CommandToken
-{
-    public CommandToken(Message token, TokenType tokenType, int startSegment, int startPosition, int endSegment, int endPosition)
-    {
-        Token = token;
-        TokenType = tokenType;
-        Start = new Message.Index(startSegment, startPosition);
-        End = new Message.Index(endSegment, endPosition);
-    }
-
-    public Message Token { get; init; }
-
-    public TokenType TokenType { get; init; }
-
-    public Message.Index Start { get; init; }
-
-    public Message.Index End { get; init; }
 }

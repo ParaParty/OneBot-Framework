@@ -63,7 +63,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
                 }
                 var str = seg.Get<string>("Message") ?? throw new ArgumentException();
 
-                ret.Add(SimpleTextSegment.Build(str.Substring(start.Position, end.Position)));
+                ret.Add(SimpleTextSegment.Build(str.Substring(start.Position, end.Position - start.Position)));
             }
 
             throw new ArgumentException();
