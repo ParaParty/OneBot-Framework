@@ -1,4 +1,5 @@
-﻿using OneBot.CommandRoute.Configuration;
+﻿using System;
+using OneBot.CommandRoute.Configuration;
 using OneBot.Core.Model.CommandRoute;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Util;
@@ -36,7 +37,7 @@ internal class CommandLexer
     private CommandToken NextNonTextRelatedToken()
     {
         var ret = new CommandToken(
-            token: new DefaultMessage(_routeInfo.Message[_cntSegment]),
+            token: new SimpleMessage(_routeInfo.Message[_cntSegment]),
             tokenType: TokenType.Rich,
             startSegment: _cntSegment,
             startPosition: 0,
@@ -54,17 +55,21 @@ internal class CommandLexer
         var startPos = _cntPosition;
 
         var str = NowSegment.Get<string>("Message")!;
-        if (str[startSeg] == '/')
+        if (str[startPos] == '/')
         {
             if (StringNext(str, startPos) == '/')
             {
                 // 注释
+                var end = _routeInfo.Message.MessageLength();
+                var token = _routeInfo.Message.SubMessage(new Message.Index(startSeg, startPos));
+                return new CommandToken(token, TokenType.Comment, startSeg, startPos, end.Segment, end.Position);
             }
             else
             {
                 // 普通字符串
             }
-        } else if (str[startSeg] == '-')
+        }
+        else if (str[startPos] == '-')
         {
             if (StringNext(str, startPos) == '-')
             {
@@ -79,6 +84,7 @@ internal class CommandLexer
         {
             // 普通字符串
         }
+        throw new NotImplementedException();
     }
 
     private MessageSegmentRef NowSegment => _routeInfo.Message[_cntSegment];
@@ -88,7 +94,7 @@ internal class CommandLexer
     private static char? StringNext(string str, int idx)
     {
         var len = str.Length;
-        if (idx+1 < len)
+        if (idx + 1 < len)
         {
             return str[idx + 1];
         }
@@ -119,21 +125,15 @@ internal class CommandToken
     {
         Token = token;
         TokenType = tokenType;
-        StartSegment = startSegment;
-        StartPosition = startPosition;
-        EndSegment = endSegment;
-        EndPosition = endPosition;
+        Start = new Message.Index(startSegment, startPosition);
+        End = new Message.Index(endSegment, endPosition);
     }
 
     public Message Token { get; init; }
 
     public TokenType TokenType { get; init; }
 
-    public int StartSegment { get; init; }
+    public Message.Index Start { get; init; }
 
-    public int StartPosition { get; init; }
-
-    public int EndSegment { get; init; }
-
-    public int EndPosition { get; init; }
+    public Message.Index End { get; init; }
 }

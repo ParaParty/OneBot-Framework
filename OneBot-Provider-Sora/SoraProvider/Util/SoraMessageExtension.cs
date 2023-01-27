@@ -18,7 +18,7 @@ public static class SoraMessageExtension
 
     internal static Message ConvertToOneBotMessage(this MessageBody t)
     {
-        var ret = new DefaultMessage();
+        var ret = new SimpleMessage();
 
         foreach (SoraSegment o in t)
         {
