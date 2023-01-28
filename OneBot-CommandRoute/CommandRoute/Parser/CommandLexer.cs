@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using OneBot.CommandRoute.Configuration;
+using OneBot.CommandRoute.Exceptions;
 using OneBot.Core.Model.CommandRoute;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.SimpleMessageSegment;
@@ -8,7 +9,7 @@ using OneBot.Core.Util;
 
 namespace OneBot.CommandRoute.Parser;
 
-internal class CommandLexer
+public class CommandLexer
 {
     private readonly LexerConfiguration _lexerConfig;
 
@@ -18,7 +19,7 @@ internal class CommandLexer
 
     private int _cntPosition;
 
-    internal CommandLexer(LexerConfiguration lexerConfig, RouteInfo routeInfo)
+    public CommandLexer(LexerConfiguration lexerConfig, RouteInfo routeInfo)
     {
         _lexerConfig = lexerConfig;
         _routeInfo = routeInfo;
@@ -27,13 +28,18 @@ internal class CommandLexer
         _cntPosition = routeInfo.StartPosition;
     }
 
-    internal CommandToken NextToken()
+    public CommandToken NextToken()
     {
-        if (NowSegmentIsText)
+        if (ReachEnd)
         {
-            return NextTextRelatedToken();
+            throw new ReachEndException();
         }
-        return NextNonTextRelatedToken();
+        var ret = NowSegmentIsText ? NextTextRelatedToken() : NextNonTextRelatedToken();
+        if (ret.Token.Count == 0)
+        {
+            throw new ApplicationException();
+        }
+        return ret;
     }
 
     private CommandToken NextNonTextRelatedToken()
@@ -43,7 +49,7 @@ internal class CommandLexer
             tokenType: TokenType.Value,
             startSegment: _cntSegment,
             startPosition: 0,
-            endSegment: _cntSegment,
+            endSegment: _cntSegment + 1,
             endPosition: 0
         );
         _cntSegment++;
@@ -69,34 +75,36 @@ internal class CommandLexer
             {
                 if (NextCharElement() == '-')
                 {
-                    return NextFullFlagToken();
+                    // 长 flag
+                    WalkNextElement();
+                    WalkNextElement();
+                    return new CommandToken(new SimpleMessage("--"), TokenType.DoubleDash, startSeg, startPos, _cntSegment, _cntPosition);
                 }
 
                 // 短 flag
-                return NextShortenFlagToken();
+                WalkNextElement();
+                return new CommandToken(new SimpleMessage('-'), TokenType.SingleDash, startSeg, startPos, _cntSegment, _cntPosition);
+            }
+            case '=':
+            {
+                WalkNextElement();
+                return new CommandToken(new SimpleMessage('='), TokenType.SingleDash, startSeg, startPos, _cntSegment, _cntPosition);
             }
             case ' ':
             case '\n':
             case '\r':
             case '\t':
-                return new CommandToken(new SimpleMessage(str[startPos]), TokenType.WhiteSpace, startSeg, startPos, startSeg, startPos + 1);
+                var ch = str[startPos];
+                WalkNextElement();
+                var ret = new CommandToken(new SimpleMessage(ch), TokenType.WhiteSpace, startSeg, startPos, _cntSegment, _cntPosition);
+                return ret;
             default:
                 // 普通字符串
                 return IdentOrLiteralValue();
         }
     }
 
-    private CommandToken NextShortenFlagToken()
-    {
-        throw new NotImplementedException();
-    }
-
-    private CommandToken NextFullFlagToken()
-    {
-        throw new NotImplementedException();
-    }
-
-    private static readonly Regex _identRegex = new Regex("^[a-zA-Z\u0080-\uffff][a-zA-Z0-9\u0080-\uffff]*$");
+    private static readonly Regex IdentRegex = new Regex("^[a-zA-Z\u0080-\uffff][a-zA-Z0-9\u0080-\uffff]*$");
 
     private CommandToken IdentOrLiteralValue(bool literalValue = false)
     {
@@ -109,19 +117,45 @@ internal class CommandLexer
         switch (str[startPos])
         {
             case '"':
-                throw new NotImplementedException();
+                ret.Add('"');
+                WalkNextElement();
+                while (!ReachEnd)
+                {
+                    if (NowCharElement() != '"')
+                    {
+                        ret.Add(NowElement);
+                        WalkNextElement();
+                    }
+                    else if (NextCharElement() == '"')
+                    {
+                        ret.Add("\"\"");
+                        WalkNextElement();
+                        WalkNextElement();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                ret.Add('"');
+                WalkNextElement();
                 break;
             case '\'':
+                ret.Add('\'');
                 WalkNextElement();
                 while (!ReachEnd && NowCharElement() != '\'')
                 {
                     ret.Add(NowElement);
+                    WalkNextElement();
                 }
+                ret.Add('\'');
+                WalkNextElement();
                 break;
             default:
-                while (!ReachEnd && NextCharElement() is not (' ' or '\n' or '\r' or '\t'))
+                while (!ReachEnd && NowCharElement() is not (' ' or '\n' or '\r' or '\t' or '='))
                 {
                     ret.Add(NowElement);
+                    WalkNextElement();
                 }
                 break;
         }
@@ -130,13 +164,13 @@ internal class CommandLexer
         var type = TokenType.Value;
         if (!literalValue && msg.Count == 1 /* && msg[0].GetSegmentType() == "text" */)
         {
-            var s = msg[0].Get<string>("Message");
-            if (s != null && _identRegex.IsMatch(s))
+            var s = msg[0].Get<string>("Text");
+            if (s != null && IdentRegex.IsMatch(s))
             {
                 type = TokenType.Ident;
             }
         }
-        return new CommandToken(msg, type, startSeg, startPos, startSeg, startPos + 1);
+        return new CommandToken(msg, type, startSeg, startPos, _cntSegment, _cntPosition);
     }
 
     private CommandToken NextCommentToken()
@@ -152,14 +186,14 @@ internal class CommandLexer
 
     private Message.Index NextIndex()
     {
-        var retSegment = 0;
+        var retSegment = _cntSegment;
         var retPosition = 0;
         if (NowSegmentIsText)
         {
             var str = NowSegmentText;
             retPosition = _cntPosition + 1;
 
-            if (_cntPosition >= str.Length)
+            if (retPosition >= str.Length)
             {
                 retSegment++;
                 retPosition = 0;
@@ -184,7 +218,7 @@ internal class CommandLexer
 
     private bool NowSegmentIsText => NowSegment.GetSegmentType() == "text";
 
-    private string NowSegmentText => NowSegment.Get<string>("Message")!;
+    private string NowSegmentText => NowSegment.Get<string>("Text")!;
 
     private bool ReachEnd => _cntSegment >= _routeInfo.Message.Count;
 
@@ -209,7 +243,7 @@ internal class CommandLexer
         {
             return null;
         }
-        var str = seg.Get<string>("Message")!;
+        var str = seg.Get<string>("Text")!;
         return str[t.Position];
     }
 }

@@ -6,7 +6,7 @@ using OneBot.Core.Context;
 namespace OneBot.UnitTest.CommandRoute;
 
 [TestClass]
-public class HandlerInvokerTest
+public class FluentDefinitionTest
 {
     [TestMethod]
     public void CommandRouteConfigFlatTest()

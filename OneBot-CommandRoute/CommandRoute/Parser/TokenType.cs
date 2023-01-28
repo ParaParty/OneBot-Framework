@@ -1,6 +1,6 @@
 ﻿namespace OneBot.CommandRoute.Parser;
 
-internal enum TokenType
+public enum TokenType
 {
     Ident,
 

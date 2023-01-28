@@ -16,7 +16,7 @@ public static class MessageSegmentTool
     );
 
     private static readonly Lazy<MethodInfo> GetSegmentTypeMethod = new Lazy<MethodInfo>(() =>
-        typeof(MessageSegmentTool).GetMethods().First(s => s.ToString() == "T GetSegmentType[T](OneBot.Core.Model.Message.MessageSegment`1[R])")
+        typeof(MessageSegmentTool).GetMethods().First(s => s.ToString() == "System.String GetSegmentType[T](OneBot.Core.Model.Message.IMessageSegment`1[T])")
     );
 
     public static Type? GetSegmentDataType(this MessageSegmentRef it)

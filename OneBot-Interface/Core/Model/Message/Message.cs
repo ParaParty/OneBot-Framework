@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using OneBot.Core.Model.Message.SimpleMessageSegment;
@@ -37,7 +38,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
         // var lastElement = this[seg - 1];
         // if (lastElement.GetSegmentType() == "text")
         // {
-        //     var str = lastElement.Get<string>("Message");
+        //     var str = lastElement.Get<string>("Text");
         //     return new Index(seg - 1, str?.Length ?? 0);
         // }
         return new Index(seg, 0);
@@ -46,8 +47,8 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
     public Message SubMessage(Index start)
     {
         return SubMessage(start, MessageLength());
-
     }
+    
     public Message SubMessage(Index start, Index end)
     {
         var ret = new SimpleMessage();
@@ -67,7 +68,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
                 {
                     throw new ArgumentException();
                 }
-                var str = seg.Get<string>("Message") ?? throw new ArgumentException();
+                var str = seg.Get<string>("Text") ?? throw new ArgumentException();
                 ret.Add(SimpleTextSegment.Build(str.Substring(start.Position, end.Position - start.Position)));
             }
 
@@ -86,11 +87,11 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             {
                 throw new ArgumentException();
             }
-            var str = startSeg.Get<string>("Message") ?? throw new ArgumentException();
+            var str = startSeg.Get<string>("Text") ?? throw new ArgumentException();
             ret.Add(SimpleTextSegment.Build(str.Substring(start.Position)));
         }
 
-        for (int i = start.Segment + 1; i < end.Segment; i++)
+        for (int i = start.Position > 0 ? start.Segment + 1 : start.Segment; i < end.Segment; i++)
         {
             ret.Add(this[i]);
         }
@@ -102,7 +103,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             {
                 throw new ArgumentException();
             }
-            var str = endSeg.Get<string>("Message") ?? throw new ArgumentException();
+            var str = endSeg.Get<string>("Text") ?? throw new ArgumentException();
             ret.Add(SimpleTextSegment.Build(str.Substring(0, end.Position)));
         }
 
@@ -121,11 +122,17 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             return this;
         }
 
+        public Builder Add(char s)
+        {
+            _sb.Append(s);
+            return this;
+        }
+
         public Builder Add(MessageSegmentRef seg)
         {
             if (seg.GetSegmentType() == "text")
             {
-                var str = seg.Get<string>("Message") ?? throw new ArgumentException();
+                var str = seg.Get<string>("Text") ?? throw new ArgumentException();
                 _sb.Append(str);
             }
             else
