@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OneBot.CommandRoute.Configuration;
 using OneBot.CommandRoute.Exceptions;
 using OneBot.CommandRoute.Parser;
-using OneBot.Core.Model;
 using OneBot.Core.Model.CommandRoute;
 using OneBot.Core.Model.Message;
-using OneBot.Core.Model.Message.MessageSegmentData;
 using OneBot.Core.Model.Message.SimpleMessageSegment;
 using OneBot.Core.Util;
 
@@ -274,38 +271,9 @@ public class LexerTest
         for (int i = 1; i <= 10; i++)
         {
             Assert.AreEqual("" + (i * 54321 % 12345), t2.Token[i].Get<string>("UserId"));
-        } 
+        }
         Assert.AreEqual("\"", t2.Token[11].Get<string>("Text"));
-        
+
         Assert.ThrowsException<ReachEndException>(() => lexer.NextToken());
-    }
-
-
-}
-
-public class SimpleMentionSegment : Mention, UnderlayModel<string>
-{
-    public SimpleMentionSegment(string userId)
-    {
-        WrappedModel = userId;
-    }
-
-    public string UserId => WrappedModel;
-
-    public string WrappedModel { get; }
-
-    public static MessageSegmentRef Build(char tData)
-    {
-        return new MessageSegment<Mention>(new SimpleMentionSegment("" + tData));
-    }
-
-    public static MessageSegmentRef Build(string tData)
-    {
-        return new MessageSegment<Mention>(new SimpleMentionSegment(tData));
-    }
-
-    public static MessageSegmentRef Build()
-    {
-        return new MessageSegment<Mention>(new SimpleMentionSegment(String.Empty));
     }
 }

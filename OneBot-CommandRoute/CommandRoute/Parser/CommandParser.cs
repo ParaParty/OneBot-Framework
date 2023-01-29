@@ -16,7 +16,7 @@ internal class CommandParser
 
     private CommandToken? NextToken => _cntTokenIdx + 1 < _tokenList.Count ? _tokenList[_cntTokenIdx + 1] : null;
 
-    private bool ReachEnd => _cntTokenIdx < _tokenList.Count;
+    private bool ReachEnd => _cntTokenIdx >= _tokenList.Count;
 
     private void WalkNextToken()
     {
@@ -96,9 +96,11 @@ internal class CommandParser
         // 来源唯一因此可以直接确定当前 token 为 single dash
         var singleDash = CntToken;
         WalkNextToken();
+
         var ident = CntToken;
         ident.AssertType(TokenType.Ident);
         WalkNextToken();
+
         return new AstNode.FlagShortenName(singleDash, ident);
     }
 
