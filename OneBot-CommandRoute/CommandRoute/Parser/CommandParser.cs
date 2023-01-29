@@ -14,8 +14,6 @@ internal class CommandParser
 
     private CommandToken CntToken => _tokenList[_cntTokenIdx];
 
-    private CommandToken? NextToken => _cntTokenIdx + 1 < _tokenList.Count ? _tokenList[_cntTokenIdx + 1] : null;
-
     private bool ReachEnd => _cntTokenIdx >= _tokenList.Count;
 
     private void WalkNextToken()

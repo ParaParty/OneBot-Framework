@@ -46,7 +46,7 @@ public class LexerTest
         Assert.AreEqual(5, t1.End.Position);
         Assert.AreEqual(TokenType.Ident, t1.TokenType);
         Assert.AreEqual(1, t1.Token.Count);
-        Assert.AreEqual("kick", t1.Token[0].Get<string>("Text"));
+        Assert.AreEqual("kick", t1.Token[0].GetText());
 
         var t2 = lexer.NextToken();
         Assert.AreEqual(0, t2.Start.Segment);
@@ -55,7 +55,7 @@ public class LexerTest
         Assert.AreEqual(0, t2.End.Position);
         Assert.AreEqual(TokenType.WhiteSpace, t2.TokenType);
         Assert.AreEqual(1, t2.Token.Count);
-        Assert.AreEqual(" ", t2.Token[0].Get<string>("Text"));
+        Assert.AreEqual(" ", t2.Token[0].GetText());
 
         var t3 = lexer.NextToken();
         Assert.AreEqual(1, t3.Start.Segment);
@@ -73,7 +73,7 @@ public class LexerTest
         Assert.AreEqual(0, t4.End.Position);
         Assert.AreEqual(TokenType.Comment, t4.TokenType);
         Assert.AreEqual(1, t4.Token.Count);
-        Assert.AreEqual("// 123456", t4.Token[0].Get<string>("Text"));
+        Assert.AreEqual("// 123456", t4.Token[0].GetText());
 
         Assert.ThrowsException<ReachEndException>(() => lexer.NextToken());
     }
@@ -112,7 +112,7 @@ public class LexerTest
         Assert.AreEqual(4, t1.End.Position);
         Assert.AreEqual(TokenType.Ident, t1.TokenType);
         Assert.AreEqual(1, t1.Token.Count);
-        Assert.AreEqual("ban", t1.Token[0].Get<string>("Text"));
+        Assert.AreEqual("ban", t1.Token[0].GetText());
 
         var t2 = lexer.NextToken();
         Assert.AreEqual(0, t2.Start.Segment);
@@ -121,7 +121,7 @@ public class LexerTest
         Assert.AreEqual(0, t2.End.Position);
         Assert.AreEqual(TokenType.WhiteSpace, t2.TokenType);
         Assert.AreEqual(1, t2.Token.Count);
-        Assert.AreEqual(" ", t2.Token[0].Get<string>("Text"));
+        Assert.AreEqual(" ", t2.Token[0].GetText());
 
         var t3 = lexer.NextToken();
         Assert.AreEqual(1, t3.Start.Segment);
@@ -139,7 +139,7 @@ public class LexerTest
         Assert.AreEqual(0, t4.End.Position);
         Assert.AreEqual(TokenType.Value, t4.TokenType);
         Assert.AreEqual(1, t4.Token.Count);
-        Assert.AreEqual("'-*- Let the bass \"kick, =-='", t4.Token[0].Get<string>("Text"));
+        Assert.AreEqual("'-*- Let the bass \"kick, =-='", t4.Token[0].GetText());
 
         var t5 = lexer.NextToken();
         Assert.AreEqual(3, t5.Start.Segment);
@@ -148,7 +148,7 @@ public class LexerTest
         Assert.AreEqual(0, t5.End.Position);
         Assert.AreEqual(TokenType.Value, t5.TokenType);
         Assert.AreEqual(1, t5.Token.Count);
-        Assert.AreEqual("\"Bass bass kick kick bass kick kick\"\"\"", t5.Token[0].Get<string>("Text"));
+        Assert.AreEqual("\"Bass bass kick kick bass kick kick\"\"\"", t5.Token[0].GetText());
 
         var t6 = lexer.NextToken();
         Assert.AreEqual(4, t6.Start.Segment);
@@ -157,7 +157,7 @@ public class LexerTest
         Assert.AreEqual(2, t6.End.Position);
         Assert.AreEqual(TokenType.DoubleDash, t6.TokenType);
         Assert.AreEqual(1, t6.Token.Count);
-        Assert.AreEqual("--", t6.Token[0].Get<string>("Text"));
+        Assert.AreEqual("--", t6.Token[0].GetText());
 
         var t7 = lexer.NextToken();
         Assert.AreEqual(4, t7.Start.Segment);
@@ -166,7 +166,7 @@ public class LexerTest
         Assert.AreEqual(10, t7.End.Position);
         Assert.AreEqual(TokenType.Ident, t7.TokenType);
         Assert.AreEqual(1, t7.Token.Count);
-        Assert.AreEqual("duration", t7.Token[0].Get<string>("Text"));
+        Assert.AreEqual("duration", t7.Token[0].GetText());
 
         var t8 = lexer.NextToken();
         Assert.AreEqual(4, t8.Start.Segment);
@@ -175,7 +175,7 @@ public class LexerTest
         Assert.AreEqual(11, t8.End.Position);
         Assert.AreEqual(TokenType.Equal, t8.TokenType);
         Assert.AreEqual(1, t8.Token.Count);
-        Assert.AreEqual("=", t8.Token[0].Get<string>("Text"));
+        Assert.AreEqual("=", t8.Token[0].GetText());
 
         var t9 = lexer.NextToken();
         Assert.AreEqual(4, t9.Start.Segment);
@@ -184,7 +184,7 @@ public class LexerTest
         Assert.AreEqual(18, t9.End.Position);
         Assert.AreEqual(TokenType.Value, t9.TokenType);
         Assert.AreEqual(1, t9.Token.Count);
-        Assert.AreEqual("123456h", t9.Token[0].Get<string>("Text"));
+        Assert.AreEqual("123456h", t9.Token[0].GetText());
 
         var t10 = lexer.NextToken();
         Assert.AreEqual(4, t10.Start.Segment);
@@ -193,7 +193,7 @@ public class LexerTest
         Assert.AreEqual(19, t10.End.Position);
         Assert.AreEqual(TokenType.WhiteSpace, t10.TokenType);
         Assert.AreEqual(1, t10.Token.Count);
-        Assert.AreEqual(" ", t10.Token[0].Get<string>("Text"));
+        Assert.AreEqual(" ", t10.Token[0].GetText());
 
         var t11 = lexer.NextToken();
         Assert.AreEqual(4, t11.Start.Segment);
@@ -202,7 +202,7 @@ public class LexerTest
         Assert.AreEqual(20, t11.End.Position);
         Assert.AreEqual(TokenType.SingleDash, t11.TokenType);
         Assert.AreEqual(1, t11.Token.Count);
-        Assert.AreEqual("-", t11.Token[0].Get<string>("Text"));
+        Assert.AreEqual("-", t11.Token[0].GetText());
 
         var t12 = lexer.NextToken();
         Assert.AreEqual(4, t12.Start.Segment);
@@ -211,7 +211,7 @@ public class LexerTest
         Assert.AreEqual(0, t12.End.Position);
         Assert.AreEqual(TokenType.Ident, t12.TokenType);
         Assert.AreEqual(1, t12.Token.Count);
-        Assert.AreEqual("FTB", t12.Token[0].Get<string>("Text"));
+        Assert.AreEqual("FTB", t12.Token[0].GetText());
 
         Assert.ThrowsException<ReachEndException>(() => lexer.NextToken());
     }
@@ -267,12 +267,12 @@ public class LexerTest
         Assert.AreEqual(TokenType.Value, t2.TokenType);
         Assert.AreEqual(1 + 10 + 1, t2.Token.Count);
 
-        Assert.AreEqual("\"", t2.Token[0].Get<string>("Text"));
+        Assert.AreEqual("\"", t2.Token[0].GetText());
         for (int i = 1; i <= 10; i++)
         {
             Assert.AreEqual("" + (i * 54321 % 12345), t2.Token[i].Get<string>("UserId"));
         }
-        Assert.AreEqual("\"", t2.Token[11].Get<string>("Text"));
+        Assert.AreEqual("\"", t2.Token[11].GetText());
 
         Assert.ThrowsException<ReachEndException>(() => lexer.NextToken());
     }

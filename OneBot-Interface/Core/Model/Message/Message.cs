@@ -38,7 +38,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
         // var lastElement = this[seg - 1];
         // if (lastElement.GetSegmentType() == "text")
         // {
-        //     var str = lastElement.Get<string>("Text");
+        //     var str = lastElement.GetText();
         //     return new Index(seg - 1, str?.Length ?? 0);
         // }
         return new Index(seg, 0);
@@ -48,7 +48,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
     {
         return SubMessage(start, MessageLength());
     }
-    
+
     public Message SubMessage(Index start, Index end)
     {
         var ret = new SimpleMessage();
@@ -68,7 +68,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
                 {
                     throw new ArgumentException();
                 }
-                var str = seg.Get<string>("Text") ?? throw new ArgumentException();
+                var str = seg.GetText() ?? throw new ArgumentException();
                 ret.Add(SimpleTextSegment.Build(str.Substring(start.Position, end.Position - start.Position)));
             }
 
@@ -87,7 +87,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             {
                 throw new ArgumentException();
             }
-            var str = startSeg.Get<string>("Text") ?? throw new ArgumentException();
+            var str = startSeg.GetText() ?? throw new ArgumentException();
             ret.Add(SimpleTextSegment.Build(str.Substring(start.Position)));
         }
 
@@ -103,7 +103,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             {
                 throw new ArgumentException();
             }
-            var str = endSeg.Get<string>("Text") ?? throw new ArgumentException();
+            var str = endSeg.GetText() ?? throw new ArgumentException();
             ret.Add(SimpleTextSegment.Build(str.Substring(0, end.Position)));
         }
 
@@ -132,7 +132,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
         {
             if (seg.GetSegmentType() == "text")
             {
-                var str = seg.Get<string>("Text") ?? throw new ArgumentException();
+                var str = seg.GetText() ?? throw new ArgumentException();
                 _sb.Append(str);
             }
             else
@@ -158,5 +158,50 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             }
             _sb = new StringBuilder();
         }
+    }
+
+    static readonly Message EmptyMessage = new EmptyMessageType();
+
+    public class EmptyMessageType : Message
+    {
+        private class EmptyMessageEnumerator :IEnumerator<MessageSegmentRef>
+        {
+            public bool MoveNext()
+            {
+                return false;
+            }
+
+            public void Reset()
+            {
+                
+            }
+
+            public MessageSegmentRef Current => throw new NullReferenceException(); 
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+            }
+        }
+        
+        internal EmptyMessageType()
+        {
+
+        }
+
+        public IEnumerator<MessageSegmentRef> GetEnumerator()
+        {
+            return new EmptyMessageEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public int Count => 0;
+
+        public MessageSegmentRef this[int index] => throw new IndexOutOfRangeException();
     }
 }

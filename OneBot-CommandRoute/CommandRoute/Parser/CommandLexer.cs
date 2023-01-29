@@ -104,7 +104,7 @@ internal class CommandLexer
         }
     }
 
-    private static readonly Regex IdentRegex = new Regex("^[a-zA-Z\u0080-\uffff][a-zA-Z0-9\u0080-\uffff]*$");
+    private static readonly Regex IdentRegex = new Regex("^[a-zA-Z\u0080-\uffff][a-zA-Z0-9\u0080-\uffff]*(-[a-zA-Z0-9\u0080-\uffff]+)*$");
 
     private CommandToken IdentOrLiteralValue(bool literalValue = false)
     {
@@ -164,7 +164,7 @@ internal class CommandLexer
         var type = TokenType.Value;
         if (!literalValue && msg.Count == 1 /* && msg[0].GetSegmentType() == "text" */)
         {
-            var s = msg[0].Get<string>("Text");
+            var s = msg[0].GetText();
             if (s != null && IdentRegex.IsMatch(s))
             {
                 type = TokenType.Ident;
@@ -220,7 +220,7 @@ internal class CommandLexer
 
     private bool NowSegmentIsText => NowSegment.GetSegmentType() == "text";
 
-    private string NowSegmentText => NowSegment.Get<string>("Text")!;
+    private string NowSegmentText => NowSegment.GetText()!;
 
     private bool ReachEnd => _cntSegment >= _routeInfo.Message.Count;
 
@@ -245,7 +245,7 @@ internal class CommandLexer
         {
             return null;
         }
-        var str = seg.Get<string>("Text")!;
+        var str = seg.GetText()!;
         return str[t.Position];
     }
 }

@@ -24,7 +24,7 @@ internal class CommandToken
 
     public void AssertType(TokenType expectedTokenType)
     {
-        if (expectedTokenType == TokenType)
+        if (expectedTokenType != TokenType)
         {
             throw new SyntaxErrorException(this, expectedTokenType);
         }
@@ -32,10 +32,9 @@ internal class CommandToken
     
     public void AssertType(params TokenType[] expectedTokenType)
     {
-        if (expectedTokenType.Any(tokenType => TokenType == tokenType))
+        if (expectedTokenType.All(tokenType => TokenType != tokenType))
         {
-            return;
+            throw new SyntaxErrorException(this, expectedTokenType);
         }
-        throw new SyntaxErrorException(this, expectedTokenType);
     }
 }

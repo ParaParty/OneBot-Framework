@@ -1,10 +1,106 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using OneBot.Core.Model.Message;
+using OneBot.Core.Util;
 
 namespace OneBot.CommandRoute.Parser;
 
 internal interface AstNode
 {
-    class Command : AstNode
+    private static Message Unescape(CommandToken token)
+    {
+        if (token.Token.Count == 0)
+        {
+            return Message.EmptyMessage;
+        }
+        if (token.TokenType == TokenType.Ident)
+        {
+            return token.Token;
+        }
+        if (token.TokenType == TokenType.Value)
+        {
+            if (token.Token[0].TypeIsText())
+            {
+                var t = token.Token[0].GetText()!;
+                if (t[0] == '"')
+                {
+                    return UnescapeDoubleQuote(token);
+                }
+                if (t[0] == '\'')
+                {
+                    return UnescapeSingleQuote(token);
+                }
+            }
+            return token.Token;
+        }
+        throw new ArgumentException();
+    }
+
+    static Message UnescapeDoubleQuote(CommandToken token)
+    {
+        var msg = token.Token;
+        if (msg.Count == 1)
+        {
+            return new Message.Builder().Add(msg[0].GetText()![1..^1].Replace("\"\"", "\"")).ToMessage();
+        }
+        
+        var b = new Message.Builder();
+
+        var first = msg[0];
+        // if (!first.TypeIsText())
+        b.Add(first.GetText()![1..].Replace("\"\"", "\""));
+
+        for (int i = 0 + 1; i < msg.Count - 1; i++)
+        {
+            if (msg[i].TypeIsText())
+            {
+                var text = msg[i].GetText()!;
+                b.Add(text.Replace("\"\"", "\""));
+            }
+            else
+            {
+                b.Add(msg[i]);
+            }
+        }
+
+        var last = msg[^1];
+        if (!last.TypeIsText())
+        {
+            throw new ArgumentException();
+        }
+        b.Add(last.GetText()![..^1].Replace("\"\"", "\""));
+        return b.ToMessage();
+    }
+
+    static Message UnescapeSingleQuote(CommandToken token)
+    {
+        var msg = token.Token;
+        if (msg.Count == 1)
+        {
+            return new Message.Builder().Add(msg[0].GetText()![1..^1]).ToMessage();
+        }
+
+        var b = new Message.Builder();
+
+        var first = msg[0];
+        // if (!first.TypeIsText())
+        b.Add(first.GetText()![1..]);
+
+        for (int i = 0 + 1; i < msg.Count - 1; i++)
+        {
+            b.Add(msg[i]);
+        }
+
+        var last = msg[^1];
+        if (!last.TypeIsText())
+        {
+            throw new ArgumentException();
+        }
+        b.Add(last.GetText()![..^1]);
+        return b.ToMessage();
+    }
+
+    internal class Command : AstNode
     {
         public CommandSegments CommandSegments { get; }
 
@@ -18,7 +114,7 @@ internal interface AstNode
 
     }
 
-    class CommandSegments : AstNode
+    internal class CommandSegments : AstNode
     {
         public IReadOnlyList<CommandSegment> CommandSegment { get; }
 
@@ -28,18 +124,20 @@ internal interface AstNode
         }
     }
 
-    class CommandSegment : AstNode
+    internal class CommandSegment : AstNode
     {
-        public CommandToken CommandToken { get; }
+        public CommandToken SegmentToken { get; }
 
-        public CommandSegment(CommandToken commandToken)
+        public Message Segment { get; }
+
+        public CommandSegment(CommandToken segmentToken)
         {
-            CommandToken = commandToken;
-
+            SegmentToken = segmentToken;
+            Segment = Unescape(segmentToken);
         }
     }
 
-    class Flags : AstNode
+    internal class Flags : AstNode
     {
         public List<Flag> Flag { get; }
 
@@ -49,48 +147,58 @@ internal interface AstNode
         }
     }
 
-    abstract class Flag : AstNode
+    internal interface Flag : AstNode
     {
-
+        public string FlagName { get; }
     }
 
-    class FlagFullname : Flag
+    internal class FlagFullname : Flag
     {
-        public CommandToken DoubleDash { get; }
+        public CommandToken DoubleDashToken { get; }
 
-        public CommandToken Key { get; }
+        public CommandToken KeyToken { get; }
 
-        public CommandToken? Equal { get; }
+        public CommandToken? EqualToken { get; }
 
-        public CommandToken? Value { get; }
+        public CommandToken? ValueToken { get; }
+
+        public Message? Value { get; }
 
         public bool HasValue => Value != null;
 
-        public FlagFullname(CommandToken doubleDash, CommandToken key)
+        public string FlagName { get; }
+
+        public FlagFullname(CommandToken doubleDashToken, CommandToken keyToken)
         {
-            DoubleDash = doubleDash;
-            Key = key;
+            DoubleDashToken = doubleDashToken;
+            KeyToken = keyToken;
+            FlagName = keyToken.Token[0].GetText() ?? throw new ArgumentException();
         }
 
-        public FlagFullname(CommandToken doubleDash, CommandToken key, CommandToken equal, CommandToken value)
+        public FlagFullname(CommandToken doubleDashToken, CommandToken keyToken, CommandToken equalToken, CommandToken valueToken)
         {
-            DoubleDash = doubleDash;
-            Key = key;
-            Equal = equal;
-            Value = value;
+            DoubleDashToken = doubleDashToken;
+            KeyToken = keyToken;
+            EqualToken = equalToken;
+            ValueToken = valueToken;
+            FlagName = keyToken.Token[0].GetText() ?? throw new ArgumentException();
+            Value = Unescape(ValueToken);
         }
     }
 
-    class FlagShortenName : Flag
+    internal class FlagShortenName : Flag
     {
         public CommandToken SingleDash { get; }
 
-        public CommandToken Ident { get; }
+        public CommandToken Key { get; }
 
-        public FlagShortenName(CommandToken singleDash, CommandToken ident)
+        public string FlagName { get; }
+
+        public FlagShortenName(CommandToken singleDash, CommandToken key)
         {
             SingleDash = singleDash;
-            Ident = ident;
+            Key = key;
+            FlagName = key.Token[0].GetText() ?? throw new ArgumentException();
         }
     }
 }
