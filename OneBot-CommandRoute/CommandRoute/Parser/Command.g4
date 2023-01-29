@@ -1,6 +1,8 @@
 grammar Command;
 
-command: commandSegment flags;
+command: commandSegments flags;
+
+commandSegments: commandSegment+;
 
 commandSegment: (STRING | IDENT)+;
 

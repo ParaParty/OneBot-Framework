@@ -1,4 +1,6 @@
-﻿using OneBot.Core.Model.Message;
+﻿using System.Linq;
+using OneBot.CommandRoute.Exceptions;
+using OneBot.Core.Model.Message;
 
 namespace OneBot.CommandRoute.Parser;
 
@@ -19,4 +21,21 @@ internal class CommandToken
     public Message.Index Start { get; init; }
 
     public Message.Index End { get; init; }
+
+    public void AssertType(TokenType expectedTokenType)
+    {
+        if (expectedTokenType == TokenType)
+        {
+            throw new SyntaxErrorException(this, expectedTokenType);
+        }
+    }
+    
+    public void AssertType(params TokenType[] expectedTokenType)
+    {
+        if (expectedTokenType.Any(tokenType => TokenType == tokenType))
+        {
+            return;
+        }
+        throw new SyntaxErrorException(this, expectedTokenType);
+    }
 }
