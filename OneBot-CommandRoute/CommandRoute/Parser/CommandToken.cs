@@ -2,7 +2,7 @@
 
 namespace OneBot.CommandRoute.Parser;
 
-public class CommandToken
+internal class CommandToken
 {
     public CommandToken(Message token, TokenType tokenType, int startSegment, int startPosition, int endSegment, int endPosition)
     {

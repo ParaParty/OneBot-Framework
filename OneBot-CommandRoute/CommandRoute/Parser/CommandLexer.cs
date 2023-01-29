@@ -9,7 +9,7 @@ using OneBot.Core.Util;
 
 namespace OneBot.CommandRoute.Parser;
 
-public class CommandLexer
+internal class CommandLexer
 {
     private readonly LexerConfiguration _lexerConfig;
 
@@ -28,7 +28,7 @@ public class CommandLexer
         _cntPosition = routeInfo.StartPosition;
     }
 
-    public CommandToken NextToken()
+    internal CommandToken NextToken()
     {
         if (ReachEnd)
         {
@@ -88,7 +88,7 @@ public class CommandLexer
             case '=':
             {
                 WalkNextElement();
-                return new CommandToken(new SimpleMessage('='), TokenType.SingleDash, startSeg, startPos, _cntSegment, _cntPosition);
+                return new CommandToken(new SimpleMessage('='), TokenType.Equal, startSeg, startPos, _cntSegment, _cntPosition);
             }
             case ' ':
             case '\n':
@@ -179,6 +179,8 @@ public class CommandLexer
         var startPos = _cntPosition;
         var end = _routeInfo.Message.MessageLength();
         var token = _routeInfo.Message.SubMessage(new Message.Index(startSeg, startPos));
+        _cntSegment = end.Segment;
+        _cntPosition = end.Position;
         return new CommandToken(token, TokenType.Comment, startSeg, startPos, end.Segment, end.Position);
     }
 
