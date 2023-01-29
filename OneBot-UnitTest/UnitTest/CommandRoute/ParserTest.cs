@@ -18,7 +18,7 @@ public class ParserTest
 
             b.Add("/kick ");
             b.Add(SimpleMentionSegment.Build("123456"));
-            b.Add("// 123456");
+            b.Add("--duration=30d --all-group -FTB");
 
             return new RouteInfo(
                 b.ToMessage(),
@@ -40,12 +40,15 @@ public class ParserTest
         var tree = parser.ParseCommand();
         
         Assert.AreEqual(2, tree.CommandSegments.CommandSegment.Count);
-        Assert.AreEqual(0, tree.Flags.Flag.Count);
+        Assert.AreEqual(3, tree.Flags.Flag.Count);
         
         Assert.AreEqual(1, tree.CommandSegments.CommandSegment[0].CommandToken.Token.Count);
         Assert.AreEqual("kick", tree.CommandSegments.CommandSegment[0].CommandToken.Token[0].Get<string>("Text"));
         
         Assert.AreEqual(1, tree.CommandSegments.CommandSegment[1].CommandToken.Token.Count);
+        Assert.AreEqual("123456", tree.CommandSegments.CommandSegment[1].CommandToken.Token[0].Get<string>("UserId"));
+        
+        Assert.IsInstanceOfType(tree.Flags.Flag[1], typeof(AstNode.FlagShortenName));
         Assert.AreEqual("123456", tree.CommandSegments.CommandSegment[1].CommandToken.Token[0].Get<string>("UserId"));
     }
 }
