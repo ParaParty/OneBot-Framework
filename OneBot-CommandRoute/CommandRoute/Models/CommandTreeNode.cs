@@ -13,8 +13,9 @@ public class CommandTreeNode
     public KeyValuePair<CommandMatchInfo, CommandTreeNode>? FallbackNode { get; }
 
     public CommandDelegate? Command { get; }
-    
-    public CommandTreeNode(IDictionary<CommandMatchInfo, CommandTreeNode> route, List<Type> middleware, KeyValuePair<CommandMatchInfo, CommandTreeNode>? fallbackNode, CommandDelegate? command)
+
+    public CommandTreeNode(IDictionary<CommandMatchInfo, CommandTreeNode> route, List<Type> middleware, KeyValuePair<CommandMatchInfo, CommandTreeNode>? fallbackNode,
+        CommandDelegate? command)
     {
         Route = route.ToImmutableDictionary();
         Middleware = middleware.ToImmutableList();

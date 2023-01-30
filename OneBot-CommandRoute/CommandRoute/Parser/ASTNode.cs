@@ -43,7 +43,7 @@ internal interface AstNode
         {
             return new Message.Builder().Add(msg[0].GetText()![1..^1].Replace("\"\"", "\"")).ToMessage();
         }
-        
+
         var b = new Message.Builder();
 
         var first = msg[0];

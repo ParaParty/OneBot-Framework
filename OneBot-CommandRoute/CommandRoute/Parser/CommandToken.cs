@@ -29,7 +29,7 @@ internal class CommandToken
             throw new SyntaxErrorException(this, expectedTokenType);
         }
     }
-    
+
     public void AssertType(params TokenType[] expectedTokenType)
     {
         if (expectedTokenType.All(tokenType => TokenType != tokenType))

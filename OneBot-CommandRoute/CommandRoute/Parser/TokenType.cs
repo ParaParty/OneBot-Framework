@@ -9,7 +9,7 @@ internal enum TokenType
     DoubleDash,
 
     SingleDash,
-    
+
     Equal,
 
     WhiteSpace,

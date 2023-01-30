@@ -2,5 +2,9 @@
 
 public enum CommandMatchType
 {
-    Literal, RequiredParameter, OptionalParameter
+    Literal,
+
+    RequiredParameter,
+
+    OptionalParameter
 }
