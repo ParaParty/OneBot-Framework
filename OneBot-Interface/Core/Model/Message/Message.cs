@@ -164,7 +164,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
 
     public class EmptyMessageType : Message
     {
-        private class EmptyMessageEnumerator :IEnumerator<MessageSegmentRef>
+        private class EmptyMessageEnumerator : IEnumerator<MessageSegmentRef>
         {
             public bool MoveNext()
             {
@@ -173,10 +173,10 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
 
             public void Reset()
             {
-                
+
             }
 
-            public MessageSegmentRef Current => throw new NullReferenceException(); 
+            public MessageSegmentRef Current => throw new NullReferenceException();
 
             object IEnumerator.Current => Current;
 
@@ -184,7 +184,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             {
             }
         }
-        
+
         internal EmptyMessageType()
         {
 

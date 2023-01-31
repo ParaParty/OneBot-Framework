@@ -20,4 +20,9 @@ public abstract class OneBotContext
     /// 上下文传递的内容
     /// </summary>
     public abstract IDictionary<object, object?> Items { get; }
+
+    /// <summary>
+    /// 平台服务名
+    /// </summary>
+    public abstract string PlatformProviderName { get; }
 }

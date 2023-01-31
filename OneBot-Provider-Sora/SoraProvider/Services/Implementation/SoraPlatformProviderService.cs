@@ -39,7 +39,7 @@ public class SoraPlatformProviderService : ISoraPlatformProviderService
         ServiceConfig = cfg.SoraConfig;
         SoraService = SoraServiceFactory.CreateService(ServiceConfig);
 
-        SoraHandler = new SoraHandler(SoraService, dispatcher);
+        SoraHandler = new SoraHandler(SoraService, dispatcher, cfg);
     }
 
     public ValueTask Start()

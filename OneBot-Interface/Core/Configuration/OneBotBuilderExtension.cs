@@ -5,11 +5,11 @@ namespace OneBot.Core.Configuration;
 public static class OneBotBuilderExtension
 {
 
-    public static OneBotBuilder AddPlatformProvider<T>(this OneBotBuilder self) where T : class, IPlatformProvider
+    public static OneBotBuilder AddPlatformProvider<T>(this OneBotBuilder self, string name) where T : class, IPlatformProvider
     {
-        return self.AddPlatformProvider(typeof(T));
+        return self.AddPlatformProvider(name, typeof(T));
     }
-    
+
     public static OneBotBuilder AddPreparation<T>(this OneBotBuilder self) where T : class
     {
         return self.AddPreparation(typeof(T));

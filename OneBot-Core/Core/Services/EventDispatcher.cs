@@ -26,10 +26,10 @@ public class EventDispatcher : IEventDispatcher
         _logger = logger;
     }
 
-    public async ValueTask Dispatch(OneBotEvent e)
+    public async ValueTask Dispatch(string platformName, OneBotEvent e)
     {
         using var scope = _scopeFactory.CreateScope();
-        var ctx = new DefaultOneBotContext(scope, e);
+        var ctx = new DefaultOneBotContext(scope,platformName, e);
 
         var ctxHolder = scope.ServiceProvider.GetService<IOneBotContextHolder>();
         ctxHolder?.SetOneBotContext(ctx);

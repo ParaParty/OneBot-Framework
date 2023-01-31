@@ -8,11 +8,11 @@ namespace OneBot.Provider.SoraProvider.Configuration;
 
 public static class SoraConfigurationExtension
 {
-    public static void AddSora(this OneBotBuilder builder, Func<IServiceProvider, SoraConfiguration, SoraConfiguration> closure)
+    public static void AddSora(this OneBotBuilder builder, string name, Func<IServiceProvider, SoraConfiguration, SoraConfiguration> closure)
     {
         var services = builder.Services;
-        builder.AddPlatformProvider<SoraPlatformProviderService>();
-        services.AddSingleton<SoraConfiguration>(s => closure(s, new SoraConfiguration()));
+        builder.AddPlatformProvider<SoraPlatformProviderService>(name);
+        services.AddSingleton<SoraConfiguration>(s => closure(s, new SoraConfiguration(name)));
 
         services.AddSingleton<IRoutableMessageResolver, RoutablePrivateMessageResolver>();
         services.AddSingleton<IRoutableMessageResolver, RoutableGroupMessageResolver>();

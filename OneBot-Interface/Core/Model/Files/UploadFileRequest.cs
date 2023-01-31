@@ -2,19 +2,19 @@
 
 namespace OneBot.Core.Model.Files;
 
-public interface UploadFileRequest
+public interface UploadFileRequest : IOneBotActionRequestParams
 {
     string Type { get; }
 
     string Name { get; }
 
-    string Url { get; }
+    string? Url { get; }
 
-    Dictionary<string, string> headers { get; }
+    IReadOnlyDictionary<string, string>? Headers { get; }
 
-    string Paths { get; }
+    string? Paths { get; }
 
-    byte[] Data { get; }
+    string? Data { get; }
 
-    string Sha256 { get; }
+    string? Sha256 { get; }
 }

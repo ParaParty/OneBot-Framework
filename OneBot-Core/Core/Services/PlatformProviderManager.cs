@@ -15,7 +15,7 @@ public class PlatformProviderManager : IPlatformProviderManager
 
     private readonly ILogger<PlatformProviderManager> _logger;
 
-    private readonly ImmutableArray<Type> _providerTypeList;
+    private readonly ImmutableDictionary<string, Type>  _providerTypeList;
 
     private readonly List<IPlatformProvider> _providerList;
 
@@ -26,7 +26,7 @@ public class PlatformProviderManager : IPlatformProviderManager
         _providerTypeList = oneBotConfiguration.PlatformProviders;
         _providerList = new List<IPlatformProvider>();
 
-        if (_providerTypeList.Length == 0)
+        if (_providerTypeList.Count == 0)
         {
             _logger.LogError("no platform provider registered");
         }
@@ -35,7 +35,7 @@ public class PlatformProviderManager : IPlatformProviderManager
     {
         foreach (var item in _providerTypeList)
         {
-            var instance = ((IPlatformProvider)_serviceProvider.GetRequiredService(item))!;
+            var instance = (IPlatformProvider)_serviceProvider.GetRequiredService(item.Value);
             await instance.Start();
             _providerList.Add(instance);
         }

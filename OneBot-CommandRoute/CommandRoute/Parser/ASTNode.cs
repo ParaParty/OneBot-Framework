@@ -199,6 +199,8 @@ internal interface AstNode
             SingleDash = singleDash;
             Key = key;
             FlagName = key.Token[0].GetText() ?? throw new ArgumentException();
+
+            "1234/5678/t".Split("/", 3);
         }
     }
 }

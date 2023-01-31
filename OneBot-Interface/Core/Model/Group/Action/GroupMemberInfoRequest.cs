@@ -1,7 +1,14 @@
 ﻿namespace OneBot.Core.Model.Group.Action;
 
-public interface GroupMemberInfoRequest : GroupBasicRequest
+public class GroupMemberInfoRequest : IOneBotActionRequestParams
 {
-    string UserId { get; }
+    public GroupMemberInfoRequest(string groupId, string userId)
+    {
+        GroupId = groupId;
+        UserId = userId;
+    }
 
+    string GroupId { get; }
+
+    string UserId { get; }
 }

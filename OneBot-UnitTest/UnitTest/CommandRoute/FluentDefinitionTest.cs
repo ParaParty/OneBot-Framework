@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OneBot.CommandRoute.Configuration;
 using OneBot.Core.Context;
+using OneBot.Core.Model.Message;
+using OneBot.Core.Util;
 
 namespace OneBot.UnitTest.CommandRoute;
 

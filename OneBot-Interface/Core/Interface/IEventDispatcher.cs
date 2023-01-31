@@ -11,5 +11,5 @@ namespace OneBot.Core.Interface;
 [UsedImplicitly(Const.Flags.AllImplicitUseTargetFlags)]
 public interface IEventDispatcher
 {
-    ValueTask Dispatch(OneBotEvent e);
+    ValueTask Dispatch(string platformName, OneBotEvent e);
 }

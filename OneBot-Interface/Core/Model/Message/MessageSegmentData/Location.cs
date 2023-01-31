@@ -3,7 +3,7 @@
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("location")]
-public interface Location: MessageData
+public interface Location : MessageData
 {
     double Latitude { get; }
 

@@ -1,7 +1,13 @@
 ﻿namespace OneBot.Core.Model.Group.Action;
 
-public interface GroupInfoResponse
+public class GroupInfoResponse : IOneBotActionResponseData
 {
+    public GroupInfoResponse(string groupId, string groupName)
+    {
+        GroupId = groupId;
+        GroupName = groupName;
+    }
+
     string GroupId { get; }
 
     string GroupName { get; }

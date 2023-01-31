@@ -10,5 +10,12 @@ public class SoraConfiguration
 {
     public YukariILogService? Logger { get; set; } = null;
 
-    public ISoraConfig SoraConfig { get; set; } = new ServerConfig();
+    public ISoraConfig SoraConfig { get; } = new ServerConfig();
+
+    public string Name { get; } 
+    
+    public SoraConfiguration(string name)
+    {
+        Name = name;
+    }
 }

@@ -3,7 +3,7 @@
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("reply")]
-public interface Reply: MessageData
+public interface Reply : MessageData
 {
     string MessageId { get; }
 

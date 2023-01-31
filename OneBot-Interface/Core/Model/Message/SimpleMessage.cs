@@ -24,18 +24,18 @@ public class SimpleMessage : List<MessageSegmentRef>, Message
     {
 
     }
-    
+
     public SimpleMessage(char str) : base(new List<MessageSegmentRef>() { SimpleTextSegment.Build(str) })
     {
 
     }
-    
+
     public void Add(string str)
     {
         Add(SimpleTextSegment.Build(str));
     }
-    
-    public void Add(char str) 
+
+    public void Add(char str)
     {
         Add(SimpleTextSegment.Build(str));
     }

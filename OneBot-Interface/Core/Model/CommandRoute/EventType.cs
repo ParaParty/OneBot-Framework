@@ -39,7 +39,7 @@ public enum EventType
     /// 频道
     /// </summary>
     ChannelMessage = 0x8,
-    
+
     /// <summary>
     /// 频道
     /// </summary>

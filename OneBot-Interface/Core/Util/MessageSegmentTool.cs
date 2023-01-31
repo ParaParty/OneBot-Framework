@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -68,19 +67,6 @@ public static class MessageSegmentTool
     public static T? Get<T, R>(this MessageSegment<R> it, string key) where R : MessageData
     {
         R data = it.Data;
-        var type = data.GetType();
-        var properties = type.GetProperties();
-        var prop = properties.FirstOrDefault(s => s?.Name == key && s.CanRead, null);
-        if (prop != null)
-        {
-            return (T?)prop.GetValue(data);
-        }
-
-        var dictionaryInterface = type.GetInterfaces().Where(s => s == typeof(IDictionary)).ToList();
-        if (dictionaryInterface.Count > 0)
-        {
-            return (T?)((IDictionary)data)[key];
-        }
-        return default;
+        return (T?)PropertyAccessor.Get(data, key);
     }
 }

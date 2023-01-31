@@ -1,8 +1,14 @@
-﻿using System.Collections.Generic;
+﻿namespace OneBot.Core.Model.Channel.Action;
 
-namespace OneBot.Core.Model.Channel.Action;
-
-public interface GetChannelMemberListRequest
+public class GetChannelMemberListRequest : IOneBotActionRequestParams
 {
-    List<GetChannelMemberInfoResponse> ChannelMemberInfos { get; }
+    public GetChannelMemberListRequest(string guildId, string channelId)
+    {
+        GuildId = guildId;
+        ChannelId = channelId;
+    }
+
+    string GuildId { get; }
+
+    string ChannelId { get; }
 }

@@ -2,17 +2,17 @@
 
 namespace OneBot.Core.Model.Files;
 
-public interface GetFileResponse
+public interface GetFileResponse : IOneBotActionResponseData
 {
     string Name { get; }
 
-    string Url { get; }
+    string? Url { get; }
 
-    Dictionary<string, string> Headers { get; }
+    IReadOnlyDictionary<string, string>? Headers { get; }
 
-    string Path { get; }
+    string? Path { get; }
 
-    byte Data { get; }
+    string? Data { get; }
 
-    string Sha256 { get; }
+    string? Sha256 { get; }
 }

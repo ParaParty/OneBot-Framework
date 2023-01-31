@@ -72,6 +72,8 @@ public class MockOneBotContext : OneBotContext
     public override IServiceScope ServiceScope { get; }
 
     public override IDictionary<object, object?> Items { get; } = new ConcurrentDictionary<object, object?>();
+
+    public override string PlatformProviderName => "test";
 }
 
 public class TestHandlerType

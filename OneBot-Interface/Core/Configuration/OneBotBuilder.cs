@@ -10,7 +10,7 @@ public class OneBotBuilder
 {
     public IServiceCollection Services { get; }
 
-    private List<Type> _platformProviders = new List<Type>();
+    private IDictionary<string, Type> _platformProviders = new Dictionary<string, Type>();
 
     private List<Type> _pipeline = new List<Type>();
 
@@ -21,11 +21,15 @@ public class OneBotBuilder
         Services = services;
     }
 
-    public OneBotBuilder AddPlatformProvider(Type t)
+    public OneBotBuilder AddPlatformProvider(string name, Type t)
     {
-        if (_platformProviders.Contains(t))
+        if (_platformProviders.Values.Contains(t))
         {
-            throw new ArgumentException($"platform provider {t.Name} duplicated");
+            throw new ArgumentException($"platform provider type:{t.Name} duplicated");
+        }
+        if (_platformProviders.Keys.Contains(name))
+        {
+            throw new ArgumentException($"platform provider name:{name} duplicated");
         }
         if (!t.IsAssignableTo(typeof(IPlatformProvider)))
         {
@@ -34,7 +38,7 @@ public class OneBotBuilder
 
         Services.AddSingleton(t);
         Services.AddSingleton(typeof(IPlatformProvider), s => s.GetRequiredService(t));
-        _platformProviders.Add(t);
+        _platformProviders[name] =t;
         return this;
     }
 
@@ -110,7 +114,7 @@ public class OneBotBuilder
     public OneBotConfiguration Build()
     {
         return new OneBotConfiguration(
-            platformProviders: _platformProviders.ToImmutableArray(),
+            platformProviders: _platformProviders.ToImmutableDictionary(),
             pipeline: _pipeline.ToImmutableArray(),
             preparationList: _preparationList.ToImmutableArray()
         );

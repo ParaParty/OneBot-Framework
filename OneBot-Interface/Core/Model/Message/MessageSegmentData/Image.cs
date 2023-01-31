@@ -3,7 +3,7 @@
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("image")]
-public interface Image: MessageData
+public interface Image : MessageData
 {
     string FileId { get; }
 }

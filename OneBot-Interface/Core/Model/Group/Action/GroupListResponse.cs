@@ -1,9 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace OneBot.Core.Model.Group.Action;
 
-public interface GroupListResponse
+public class GroupListResponse : IOneBotActionResponseData, IReadOnlyList<GroupInfoResponse>
 {
-    List<GroupInfoResponse> GroupInfos { get; }
+    public IEnumerator<GroupInfoResponse> GetEnumerator()
+    {
+        throw new System.NotImplementedException();
+    }
 
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public int Count { get; }
+
+    public GroupInfoResponse this[int index] => throw new System.NotImplementedException();
 }

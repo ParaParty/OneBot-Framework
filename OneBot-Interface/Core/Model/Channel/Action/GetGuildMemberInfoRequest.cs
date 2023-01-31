@@ -1,6 +1,14 @@
 ﻿namespace OneBot.Core.Model.Channel.Action;
 
-public interface GetGuildMemberInfoRequest : ChannelActionBasicRequest
+public class GetGuildMemberInfoRequest : IOneBotActionRequestParams
 {
+    public GetGuildMemberInfoRequest(string guildId, string userId)
+    {
+        GuildId = guildId;
+        UserId = userId;
+    }
+
+    string GuildId { get; }
+
     string UserId { get; }
 }

@@ -3,7 +3,7 @@
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("audio")]
-public interface Audio: MessageData
+public interface Audio : MessageData
 {
     string FileId { get; }
 }
