@@ -1,30 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{41DB3D2D-DE48-451D-BB95-EE2F82842A27}") = "OneBot-Interface", "OneBot-Interface\OneBot-Interface.csproj", "{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Interface", "OneBot-Interface\OneBot-Interface.csproj", "{88AD7F7F-3AEC-490C-B9EC-AD8BCF0A9126}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Core", "OneBot-Core\OneBot-Core.csproj", "{64442450-B821-4036-8993-3FC3FFE06CDE}"
 EndProject
-Project("{B45E742E-8FBF-4A3B-B65C-12D8783039E1}") = "OneBot-Provider-Konata", "OneBot-Provider-Konata\OneBot-Provider-Konata.csproj", "{3436604C-42E3-46EA-948C-CE66C503CBDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Provider-Konata", "OneBot-Provider-Konata\OneBot-Provider-Konata.csproj", "{3436604C-42E3-46EA-948C-CE66C503CBDB}"
 EndProject
-Project("{210C2910-3709-41AC-B143-DE0B5D0A2F68}") = "OneBot-Provider-Sora", "OneBot-Provider-Sora\OneBot-Provider-Sora.csproj", "{13AEA574-2E83-4CF0-9375-1D1ED66A8405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Provider-Sora", "OneBot-Provider-Sora\OneBot-Provider-Sora.csproj", "{13AEA574-2E83-4CF0-9375-1D1ED66A8405}"
 EndProject
-Project("{EE6532C9-9C4E-47DB-A487-9200572B7553}") = "OneBot-OpenTelemetry", "OneBot-OpenTelemetry\OneBot-OpenTelemetry.csproj", "{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-OpenTelemetry", "OneBot-OpenTelemetry\OneBot-OpenTelemetry.csproj", "{DD253E2B-F8D3-4893-91D4-4F9ACD89BB99}"
 EndProject
-Project("{4AD52A7F-365F-49B1-8B11-36E3F408488E}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Framework-Demo", "OneBot-Framework-Demo\OneBot-Framework-Demo.csproj", "{AD94F698-0595-469B-8ECE-4D4CD362D81A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneBot-UnitTest", "OneBot-UnitTest\OneBot-UnitTest.csproj", "{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-UnitTest", "OneBot-UnitTest\OneBot-UnitTest.csproj", "{0512F90F-18C2-4BFF-A1A3-3AD52F00EA51}"
 EndProject
-Project("{5845C2B6-57B9-4018-82ED-298EBAF1EFD1}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{111140C3-C58A-415C-A62C-C5C786880180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-CommandRoute", "OneBot-CommandRoute\OneBot-CommandRoute.csproj", "{111140C3-C58A-415C-A62C-C5C786880180}"
 EndProject
-Project("{1BEC648D-4B42-4AC3-AE14-127EB1F0EE7A}") = "OneBot-Platform-QQ", "OneBot-Platform-QQ\OneBot-Platform-QQ.csproj", "{2B56B38B-44C5-496C-A048-00F6D2C378B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Platform-QQ", "OneBot-Platform-QQ\OneBot-Platform-QQ.csproj", "{2B56B38B-44C5-496C-A048-00F6D2C378B4}"
 EndProject
 Project("{19B66EAF-684F-49CA-9635-EAA7441B28F1}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "OneBot-FSharp", "OneBot-FSharp\OneBot-FSharp.fsproj", "{A42143D9-7BCA-4564-A6ED-018FA9C07247}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,10 @@ Global
 		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B56B38B-44C5-496C-A048-00F6D2C378B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A42143D9-7BCA-4564-A6ED-018FA9C07247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42143D9-7BCA-4564-A6ED-018FA9C07247}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A42143D9-7BCA-4564-A6ED-018FA9C07247}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A42143D9-7BCA-4564-A6ED-018FA9C07247}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
