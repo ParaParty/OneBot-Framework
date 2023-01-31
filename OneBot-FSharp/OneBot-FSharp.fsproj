@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Library.fs" />
+    <Compile Include="OneBot.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OneBot-CommandRoute\OneBot-CommandRoute.csproj" />
+    <ProjectReference Include="..\OneBot-Core\OneBot-Core.csproj" />
   </ItemGroup>
 
 </Project>
