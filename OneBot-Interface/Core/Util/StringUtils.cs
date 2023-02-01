@@ -15,7 +15,7 @@ internal static class StringUtils
     {
         Upper, Lower
     }
-    public enum SnakeCaseType
+    public enum CaseType
     {
         Lower, Upper
     }
@@ -49,27 +49,37 @@ internal static class StringUtils
         return cnt;
     }
 
+    public static string SnakeToLowerCamelCase(string s, string[]? lockedWords = null)
+        => ToCamelCase(s, Underline, CamelCaseType.Lower, lockedWords);
+
+    public static string SnakeToUpperCamelCase(string s, string[]? lockedWords = null)
+        => ToCamelCase(s, Underline, CamelCaseType.Upper, lockedWords);
+
+    public static string SnakeToCamelCase(string s, CamelCaseType caseType, string[]? lockedWords = null)
+        => ToCamelCase(s, Underline, caseType, lockedWords);
+
     /// <summary>
     /// 蛇形转驼峰
     /// </summary>
     /// <param name="s">蛇形字符串</param>
+    /// <param name="separator">分隔符</param>
     /// <param name="caseType">驼峰类型</param>
     /// <param name="lockedWords">锁定的单词(例如：QQ，此类整个词为单位需要统一大小写的词，<b>大写传入</b>)</param>
     /// <returns></returns>
-    public static string ToCamelCase(string s, CamelCaseType caseType, string[]? lockedWords = null)
+    public static string ToCamelCase(string s, char separator, CamelCaseType caseType, string[]? lockedWords = null)
     {
         if (IsNullOrEmpty(s))
             return s;
 
         char[] src = s.ToCharArray();
-        int ulCnt = GetCharCount(src, Underline);
+        int ulCnt = GetCharCount(src, separator);
 
         char[] result = new char[src.Length - ulCnt];
         bool fstWord = true, fstLetter = true;
         string tmp = "";
         for (int i = 0, j = 0;i <= src.Length; i++)
         {
-            if (i == src.Length || src[i] == Underline || char.IsSeparator(src[i]))
+            if (i == src.Length || src[i] == separator || char.IsSeparator(src[i]))
             {
                 if (lockedWords != null && lockedWords.Contains(tmp))
                 {
@@ -84,7 +94,7 @@ internal static class StringUtils
                 }
                 if (i < src.Length)
                 {
-                    if (src[i] == Underline)
+                    if (src[i] == separator)
                     {
                         fstLetter = true;
                         tmp = "";
@@ -123,14 +133,24 @@ internal static class StringUtils
         return new string(result);
     }
 
+    public static string ToSnakeCase(string s, CaseType caseType, string[]? lockedWords = null)
+        => ToSeparatedCase(s, Underline, caseType, lockedWords);
+
+    public static string ToLowerSnakeCase(string s, string[]? lockedWords = null)
+        => ToSeparatedCase(s, Underline, CaseType.Lower, lockedWords);
+
+    public static string ToUpperSnakeCase(string s, string[]? lockedWords = null)
+        => ToSeparatedCase(s, Underline, CaseType.Upper, lockedWords);
+
     /// <summary>
     /// 驼峰转蛇形
     /// </summary>
     /// <param name="s">驼峰字符串</param>
-    /// <param name="caseType">蛇形类型</param>
+    /// <param name="separator">分隔符</param>
+    /// <param name="caseType">大小写类型</param>
     /// <param name="lockedWords">锁定的单词(例如：QQ，此类整个词为单位需要统一大小写的词，<b>大写传入</b>)</param>
     /// <returns></returns>
-    public static string ToSnakeCase(string s, SnakeCaseType caseType, string[]? lockedWords = null)
+    public static string ToSeparatedCase(string s, char separator, CaseType caseType, string[]? lockedWords = null)
     {
         StringBuilder sb = new StringBuilder();
         char[] src = s.ToCharArray();
@@ -163,7 +183,7 @@ internal static class StringUtils
                         if (match)
                         {
                             if (!fstWord)
-                                sb.Append("_");
+                                sb.Append(separator);
                             else
                                 fstWord = false;
                             for (int k = 0; k < lockedWords[j].Length; k++)
@@ -183,7 +203,7 @@ internal static class StringUtils
                         continue;
                 }
                 if (!fstWord)
-                    sb.Append("_");
+                    sb.Append(separator);
                 else
                     fstWord = false;
             }
