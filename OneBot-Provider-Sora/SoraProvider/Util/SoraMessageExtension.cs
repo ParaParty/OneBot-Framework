@@ -1,5 +1,6 @@
 ﻿using System;
 using OneBot.Core.Model.Message;
+using OneBot.Core.Util;
 using OneBot.Provider.SoraProvider.Exceptions;
 using OneBot.Provider.SoraProvider.Model.MessageSegment;
 using Sora.Entities;
@@ -58,6 +59,33 @@ public static class SoraMessageExtension
             SegmentType.CardImage => SoraCardImageSegment.Build((CardImageSegment)t.Data),
             SegmentType.TTS => SoraTtsSegment.Build((TtsSegment)t.Data),
             SegmentType.RPS => SoraRpsSegment.Build(t.Data),
+            _ => throw new ArgumentException()
+        };
+    }
+
+    internal static MessageBody ConvertToSoraMessage(this Message t)
+    {
+        var ret = new MessageBody();
+
+        foreach (var i in t)
+        {
+            ret.Add(i.ConvertToSoraMessageSegment());
+        }
+
+        return ret;
+    }
+
+    internal static SoraSegment ConvertToSoraMessageSegment(this MessageSegmentRef t)
+    {
+        var type = t.GetSegmentType();
+        if (type == null)
+        {
+            throw new ArgumentException();
+        }
+        return type switch
+        {
+            "text" => SoraSegment.Text(t.GetText()),
+            "face" => SoraSegment.Face(int.Parse(t.Get<string>("face")!)),
             _ => throw new ArgumentException()
         };
     }
