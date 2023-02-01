@@ -1,4 +1,4 @@
-namespace Onebot_FSharp
+namespace Onebot
 
 open OneBot.CommandRoute.Configuration
 open OneBot.Core.Context

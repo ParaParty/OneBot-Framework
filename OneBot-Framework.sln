@@ -21,11 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-CommandRoute", "OneB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBot-Platform-QQ", "OneBot-Platform-QQ\OneBot-Platform-QQ.csproj", "{2B56B38B-44C5-496C-A048-00F6D2C378B4}"
 EndProject
-Project("{19B66EAF-684F-49CA-9635-EAA7441B28F1}") = "Solution Items", "Solution Items", "{E1F29AC3-B85B-42F2-B535-71D7E401F034}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "OneBot-FSharp", "OneBot-FSharp\OneBot-FSharp.fsproj", "{A42143D9-7BCA-4564-A6ED-018FA9C07247}"
 EndProject
 Global
