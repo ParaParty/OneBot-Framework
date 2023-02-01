@@ -1,14 +1,33 @@
-namespace Onebot
+namespace Onebot.FSharp
 
 open OneBot.CommandRoute.Configuration
 open OneBot.Core.Context
+open OneBot.Core.Util
+open OneBot.Core.Model
 
-module OneBot =
+
+module FBot =
     type Context = OneBotContext
+
+    type FileId = string
+    type UserId = int
+
+    type Message = 
+        | Complex of Message List
+        | Text of string
+        | Audio of FileId
+        | File of FileId
+        | Image of FileId
+        | Location of double * double * string * string
+        | Mention of UserId
+        | MentionAll
+        | Reply of UserId * string
+        | Video of FileId
+        | Voice of FileId
+
     
     type Reaction = 
-        | Reply of string
-        | Message of string
+        | Message of Message
         | Mute of int
         | WaitFor of string * int * (Context -> Reaction)
         | Reactions of Reaction List
@@ -23,24 +42,23 @@ module OneBot =
         | Command of string * Handler
         | Fallback of Handler
 
-
-    let callback (handler : Handler) (context : OneBotContext) : Unit = 
-        match handler context with 
-            | Reply text -> ()
-
-
-
-    let rec configure (builder : CommandRouteNodeBuilder) (rule : Rule) : Unit = 
-        match rule with
-        | Command (pattern,handler) -> builder.Command (pattern, OneBotCallback(callback handler))
-        | SubRule (pattern,rule) -> builder.Group (pattern, fun newBuilder -> configure newBuilder rule); ()
-        | Fallback handler -> builder.Command (OneBotCallback(callback handler)); ()
-        | Group rules -> List.map (configure builder) rules; ()
-        ()
-        
-
     
-    let openBot (rule : Rule) : Unit = 
+    let bot (rule : Rule) : Unit = 
+
+        let callback (handler : Handler) (context : OneBotContext) : Unit = 
+            match handler context with 
+                | Reply text -> context.Reply (new Message.SimpleMessage(text)) |> ignore //暂时忽略ActionRespone
+                
+
+        let rec configure (builder : CommandRouteNodeBuilder) (rule : Rule) : Unit = 
+            match rule with
+            | Command (pattern,handler) -> builder.Command (pattern, OneBotCallback(callback handler))
+            | SubRule (pattern,rule) -> builder.Group (pattern, fun newBuilder -> configure newBuilder rule) |> ignore
+            | Fallback handler -> builder.Command (OneBotCallback(callback handler)) |> ignore
+            | Group rules -> List.map (configure builder) rules |> ignore
+            ()
+
+
         ()
 
   

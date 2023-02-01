@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Messages.fs" />
     <Compile Include="OneBot.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OneBot-CommandRoute\OneBot-CommandRoute.csproj" />
     <ProjectReference Include="..\OneBot-Core\OneBot-Core.csproj" />
+    <ProjectReference Include="..\OneBot-Interface\OneBot-Interface.csproj" />
   </ItemGroup>
 
 </Project>
