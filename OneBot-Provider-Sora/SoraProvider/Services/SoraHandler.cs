@@ -6,6 +6,7 @@ using OneBot.Provider.SoraProvider.Configuration;
 using OneBot.Provider.SoraProvider.Model;
 using Sora.Enumeration.EventParamsType;
 using Sora.EventArgs.SoraEvent;
+using Sora.EventArgs.WebsocketEvent;
 using Sora.Interfaces;
 
 namespace OneBot.Provider.SoraProvider.Services.Implementation;
@@ -18,11 +19,16 @@ public class SoraHandler
 
     private readonly string _name;
 
-    public SoraHandler(ISoraService soraService, IEventDispatcher dispatcher, SoraConfiguration cfg)
+    private SoraConnectionManager _soraConnMgr;
+
+    public SoraHandler(ISoraService soraService, IEventDispatcher dispatcher, SoraConfiguration cfg, SoraConnectionManager soraConnMgr)
     {
         _dispatcher = dispatcher;
         _cfg = cfg;
+        _soraConnMgr = soraConnMgr;
         _name = cfg.Name;
+
+        soraService.ConnManager.OnCloseConnectionAsync += OnCloseConnectionAsync;
 
         var eventManager = soraService.Event;
         eventManager.OnClientConnect += OnClientConnect;
@@ -49,28 +55,49 @@ public class SoraHandler
         eventManager.OnTitleUpdate += OnTitleUpdate;
     }
 
+    private string GenerateName(Guid guid)
+    {
+        return $"{_name}:{guid.ToString()}";
+    }
+
+    private ValueTask OnCloseConnectionAsync(Guid guid, ConnectionEventArgs eventArgs)
+    {
+        _soraConnMgr.DeleteClient(eventArgs.ConnectionId);
+        return ValueTask.CompletedTask;
+    }
+
     private async ValueTask OnClientConnect(string eventType, ConnectEventArgs eventArgs)
     {
+        _soraConnMgr.AddClient(eventArgs.ConnId, eventArgs.SoraApi);
         var args = new SoraConnect(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnClientStatusChangeEvent(string eventType, ClientStatusChangeEventArgs eventArgs)
     {
+        if (eventArgs.Online)
+        {
+            _soraConnMgr.AddClient(eventArgs.ConnId, eventArgs.SoraApi);
+        }
+        else
+        {
+            _soraConnMgr.DeleteClient(eventArgs.ConnId);
+        }
+
         var args = new SoraClientStatusChange(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnFriendAdd(string eventType, FriendAddEventArgs eventArgs)
     {
         var args = new SoraFriendAdd(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnFriendRecall(string eventType, FriendRecallEventArgs eventArgs)
     {
         var args = new SoraFriendRecall(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupMemberChange(string eventType, GroupMemberChangeEventArgs eventArgs)
@@ -86,108 +113,108 @@ public class SoraHandler
             MemberChangeType.Invite => new SoraGroupMemberIncrease(eventArgs),
             _ => throw new ArgumentOutOfRangeException()
         };
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupRecall(string eventType, GroupRecallEventArgs eventArgs)
     {
         var args = new SoraGroupRecall(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupMessage(string eventType, GroupMessageEventArgs eventArgs)
     {
         var args = new SoraGroupMessage(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnPrivateMessage(string eventType, PrivateMessageEventArgs eventArgs)
     {
         var args = new SoraPrivateMessage(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnEssenceChange(string eventType, EssenceChangeEventArgs eventArgs)
     {
         var args = new SoraEssenceChange(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnFileUpload(string eventType, FileUploadEventArgs eventArgs)
     {
         var args = new SoraFileUpload(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnFriendRequest(string eventType, FriendRequestEventArgs eventArgs)
     {
         var args = new SoraFriendRequest(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupAdminChange(string eventType, GroupAdminChangeEventArgs eventArgs)
     {
         var args = new SoraGroupAdminChange(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupCardUpdate(string eventType, GroupCardUpdateEventArgs eventArgs)
     {
         var args = new SoraGroupCardUpdate(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupMemberMute(string eventType, GroupMuteEventArgs eventArgs)
     {
         var args = new SoraGroupMemberMute(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupPoke(string eventType, GroupPokeEventArgs eventArgs)
     {
         var args = new SoraGroupPoke(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnGroupRequest(string eventType, AddGroupRequestEventArgs eventArgs)
     {
         var args = new SoraGroupRequest(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnHonorEvent(string eventType, HonorEventArgs eventArgs)
     {
         var args = new SoraHonorEvent(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnLuckyKingEvent(string eventType, LuckyKingEventArgs eventArgs)
     {
         var args = new SoraLuckyKingEvent(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnOfflineFileEvent(string eventType, OfflineFileEventArgs eventArgs)
     {
         var args = new SoraOfflineFileEvent(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnSelfGroupMessage(string eventType, GroupMessageEventArgs eventArgs)
     {
         var args = new SoraSelfGroupMessage(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnSelfPrivateMessage(string eventType, PrivateMessageEventArgs eventArgs)
     {
         var args = new SoraSelfPrivateMessage(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 
     private async ValueTask OnTitleUpdate(string eventType, TitleUpdateEventArgs eventArgs)
     {
         var args = new SoraTitleUpdate(eventArgs);
-        await _dispatcher.Dispatch(_name, args);
+        await _dispatcher.Dispatch(GenerateName(eventArgs.ConnId), args);
     }
 }

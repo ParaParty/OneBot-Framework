@@ -1,5 +1,8 @@
+using System;
 using System.Threading.Tasks;
+using OneBot.Core.Context;
 using OneBot.Core.Interface;
+using OneBot.Core.Model;
 using OneBot.Provider.SoraProvider.Configuration;
 using Sora;
 using Sora.Interfaces;
@@ -28,6 +31,13 @@ public class SoraPlatformProviderService : ISoraPlatformProviderService
     /// </summary>
     public SoraHandler SoraHandler { get; }
 
+    /// <summary>
+    /// Sora 连接管理器
+    /// </summary>
+    public SoraConnectionManager ConnectionManager { get; }
+
+    public SoraActionManager ActionManager { get; }
+
     public SoraPlatformProviderService(SoraConfiguration cfg, IEventDispatcher dispatcher)
     {
         YukariLog.LogConfiguration.DisableConsoleOutput();
@@ -39,7 +49,9 @@ public class SoraPlatformProviderService : ISoraPlatformProviderService
         ServiceConfig = cfg.SoraConfig;
         SoraService = SoraServiceFactory.CreateService(ServiceConfig);
 
-        SoraHandler = new SoraHandler(SoraService, dispatcher, cfg);
+        ConnectionManager = new SoraConnectionManager();
+        SoraHandler = new SoraHandler(SoraService, dispatcher, cfg, ConnectionManager);
+        ActionManager = new SoraActionManager();
     }
 
     public ValueTask Start()
@@ -50,5 +62,22 @@ public class SoraPlatformProviderService : ISoraPlatformProviderService
     public ValueTask Stop()
     {
         return SoraService.StopService();
+    }
+
+    public async ValueTask<OneBotActionResponse> DoAction(IServiceProvider sp, string name, OneBotActionRequest request)
+    {
+        var nameStep = name.Split(":", 2);
+        if (nameStep.Length != 2)
+        {
+            throw new ArgumentOutOfRangeException(nameof(name));
+        }
+
+        var soraApi = ConnectionManager.GetClient(nameStep[1]);
+        if (soraApi == null)
+        {
+            throw new ArgumentOutOfRangeException(nameof(name));
+        }
+
+        return await ActionManager.DoAction(sp, soraApi, request);
     }
 }
