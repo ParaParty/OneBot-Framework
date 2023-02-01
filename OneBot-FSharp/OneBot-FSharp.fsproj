@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Messages.fs" />
+    <Compile Include="Segments.fs" />
     <Compile Include="OneBot.fs" />
   </ItemGroup>
 
