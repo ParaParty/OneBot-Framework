@@ -16,7 +16,7 @@ public class StringUtilsTest
     [TestMethod]
     public void ToSnakeCaseTest()
     {
-        var lowerSnake = StringNamingStrategy.LowerSnake;
+        var lowerSnake = PropertyNamingStrategy.LowerSnake;
         lowerSnake.LockedWords = lockedWords;
 
         Assert.AreEqual("qq", lowerSnake.Convert("QQ"));

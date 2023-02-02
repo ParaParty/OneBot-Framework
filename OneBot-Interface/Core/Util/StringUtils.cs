@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,15 +9,21 @@ namespace OneBot.Core.Util;
 internal static class StringUtils
 {
     public const char Underline = '_';
+
     public const char Dash = '-';
 
     public enum CamelCaseType
     {
-        Upper, Lower
+        Upper,
+
+        Lower
     }
+
     public enum CaseType
     {
-        Lower, Upper
+        Lower,
+
+        Upper
     }
 
 
@@ -51,10 +55,10 @@ internal static class StringUtils
         return cnt;
     }
 
-    public static string ToLowerCamelCase(string s, ImmutableArray<string>? lockedWords = null)
+    public static string ToLowerCamelCase(string s, string[]? lockedWords = null)
         => ToCamelCase(s, CamelCaseType.Lower, lockedWords);
 
-    public static string ToUpperCamelCase(string s, ImmutableArray<string>? lockedWords = null)
+    public static string ToUpperCamelCase(string s, string[]? lockedWords = null)
         => ToCamelCase(s, CamelCaseType.Upper, lockedWords);
 
 
@@ -65,7 +69,7 @@ internal static class StringUtils
     /// <param name="caseType">驼峰类型</param>
     /// <param name="lockedWords">锁定的单词(例如：QQ，此类整个词为单位需要统一大小写的词，<b>大写传入</b>)</param>
     /// <returns></returns>
-    public static string ToCamelCase(string s, CamelCaseType caseType, ImmutableArray<string>? lockedWords = null)
+    public static string ToCamelCase(string s, CamelCaseType caseType, string[]? lockedWords = null)
     {
         if (IsNullOrEmpty(s))
             return s;
@@ -76,7 +80,7 @@ internal static class StringUtils
         char[] result = new char[src.Length - ulCnt];
         bool fstWord = true, fstLetter = true;
         string tmp = "";
-        for (int i = 0, j = 0;i <= src.Length; i++)
+        for (int i = 0, j = 0; i <= src.Length; i++)
         {
             if (i == src.Length || src[i] == Underline || src[i] == Dash || char.IsSeparator(src[i]))
             {
@@ -132,22 +136,22 @@ internal static class StringUtils
         return new string(result);
     }
 
-    public static string ToKebabCase(string s, CaseType caseType, ImmutableArray<string>? lockedWords = null)
-    => ToSeparatedCase(s, Dash, caseType, lockedWords);
+    public static string ToKebabCase(string s, CaseType caseType, string[]? lockedWords = null)
+        => ToSeparatedCase(s, Dash, caseType, lockedWords);
 
-    public static string ToLowerKebabCase(string s, ImmutableArray<string>? lockedWords = null)
+    public static string ToLowerKebabCase(string s, string[]? lockedWords = null)
         => ToSeparatedCase(s, Dash, CaseType.Lower, lockedWords);
 
-    public static string ToUpperKebabCase(string s, ImmutableArray<string>? lockedWords = null)
+    public static string ToUpperKebabCase(string s, string[]? lockedWords = null)
         => ToSeparatedCase(s, Dash, CaseType.Upper, lockedWords);
 
-    public static string ToSnakeCase(string s, CaseType caseType, ImmutableArray<string>? lockedWords = null)
+    public static string ToSnakeCase(string s, CaseType caseType, string[]? lockedWords = null)
         => ToSeparatedCase(s, Underline, caseType, lockedWords);
 
-    public static string ToLowerSnakeCase(string s, ImmutableArray<string>? lockedWords = null)
+    public static string ToLowerSnakeCase(string s, string[]? lockedWords = null)
         => ToSeparatedCase(s, Underline, CaseType.Lower, lockedWords);
 
-    public static string ToUpperSnakeCase(string s, ImmutableArray<string>? lockedWords = null)
+    public static string ToUpperSnakeCase(string s, string[]? lockedWords = null)
         => ToSeparatedCase(s, Underline, CaseType.Upper, lockedWords);
 
     /// <summary>
@@ -158,13 +162,13 @@ internal static class StringUtils
     /// <param name="caseType">大小写类型</param>
     /// <param name="lockedWords">锁定的单词(例如：QQ，此类整个词为单位需要统一大小写的词，<b>大写传入</b>)</param>
     /// <returns></returns>
-    public static string ToSeparatedCase(string s, char separator, CaseType caseType, ImmutableArray<string>? lockedWords = null)
+    public static string ToSeparatedCase(string s, char separator, CaseType caseType, string[]? lockedWords = null)
     {
         StringBuilder sb = new StringBuilder();
         char[] src = s.ToCharArray();
 
         bool fstWord = true;
-        for(int i = 0; i < src.Length; i++)
+        for (int i = 0; i < src.Length; i++)
         {
             if (char.IsSeparator(src[i]))
             {
@@ -223,56 +227,4 @@ internal static class StringUtils
 
         return sb.ToString();
     }
-}
-
-public abstract class StringNamingStrategy
-{
-    public static StringNamingStrategy UpperCamel { get; } = new UpperCamelNamingStrategy();
-    public static StringNamingStrategy LowerCamel { get; } = new LowerCamelNamingStrategy();
-
-    public static StringNamingStrategy UpperSnake { get; } = new UpperSnakeNamingStrategy();
-    public static StringNamingStrategy LowerSnake { get; } = new LowerSnakeNamingStrategy();
-
-    public static StringNamingStrategy UpperKebab { get; } = new UpperKebabNamingStrategy();
-    public static StringNamingStrategy LowerKebab { get; } = new LowerKebabNamingStrategy();
-
-    public ImmutableArray<string>? LockedWords;
-
-    public abstract string Convert(string src);
-}
-
-internal class UpperCamelNamingStrategy : StringNamingStrategy
-{
-    public override string Convert(string src)
-        => StringUtils.ToCamelCase(src, StringUtils.CamelCaseType.Upper, LockedWords);
-}
-
-internal class LowerCamelNamingStrategy : StringNamingStrategy
-{
-    public override string Convert(string src)
-        => StringUtils.ToCamelCase(src, StringUtils.CamelCaseType.Lower, LockedWords);
-}
-
-internal class UpperSnakeNamingStrategy : StringNamingStrategy
-{
-    public override string Convert(string src)
-        => StringUtils.ToSeparatedCase(src, StringUtils.Underline, StringUtils.CaseType.Upper, LockedWords);
-}
-
-internal class LowerSnakeNamingStrategy : StringNamingStrategy
-{
-    public override string Convert(string src)
-        => StringUtils.ToSeparatedCase(src, StringUtils.Underline, StringUtils.CaseType.Lower, LockedWords);
-}
-
-internal class UpperKebabNamingStrategy : StringNamingStrategy
-{
-    public override string Convert(string src)
-        => StringUtils.ToSeparatedCase(src, StringUtils.Dash, StringUtils.CaseType.Upper, LockedWords);
-}
-
-internal class LowerKebabNamingStrategy : StringNamingStrategy
-{
-    public override string Convert(string src)
-        => StringUtils.ToSeparatedCase(src, StringUtils.Dash, StringUtils.CaseType.Lower, LockedWords);
 }
