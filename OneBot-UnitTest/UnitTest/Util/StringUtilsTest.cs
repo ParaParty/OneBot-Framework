@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using OneBot.Core.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Immutable;
 
 namespace OneBot.UnitTest.Util;
 
@@ -11,11 +12,11 @@ public class StringUtilsTest
     /// <summary>
     /// 摆烂，干脆先把常用的单词列出来吧
     /// </summary>
-    public readonly static string[] lockedWords = { "QQ", "ID" };
+    public static ImmutableArray<string> lockedWords = ImmutableArray.Create("QQ", "ID");
     [TestMethod]
     public void ToSnakeCaseTest()
     {
-        var lowerSnake = StringNamingPolicy.LowerSnake;
+        var lowerSnake = StringNamingStrategy.LowerSnake;
         lowerSnake.LockedWords = lockedWords;
 
         Assert.AreEqual("qq", lowerSnake.Convert("QQ"));
@@ -24,7 +25,7 @@ public class StringUtilsTest
         Assert.AreEqual("qq_qq_id qq_id_id_qq", StringUtils.ToSnakeCase("QQQQID QQIDIDQQ", StringUtils.CaseType.Lower, lockedWords));
         Assert.AreEqual("user_qq_token", StringUtils.ToSnakeCase("UserQQToken", StringUtils.CaseType.Lower, lockedWords));
         Assert.AreEqual("sweet_icelolly_id", StringUtils.ToSnakeCase("SweetIcelollyID", StringUtils.CaseType.Lower, lockedWords));
-        Assert.AreEqual("wey_sun+ice_eric_vancheng_dresses", StringUtils.ToSnakeCase("WeySun+IceEricVanChengDresses", StringUtils.CaseType.Lower, new string[] { "SUN+ICE", "VANCHENG" }));
+        Assert.AreEqual("wey_sun+ice_eric_vancheng_dresses", StringUtils.ToSnakeCase("WeySun+IceEricVanChengDresses", StringUtils.CaseType.Lower, ImmutableArray.Create("SUN+ICE", "VANCHENG")));
 
         Assert.AreEqual("QQ", StringUtils.ToSnakeCase("QQ", StringUtils.CaseType.Upper, lockedWords));
         Assert.AreEqual("ID", StringUtils.ToSnakeCase("ID", StringUtils.CaseType.Upper, lockedWords));
@@ -32,7 +33,7 @@ public class StringUtilsTest
         Assert.AreEqual("QQ_QQ_ID QQ_ID_ID_QQ", StringUtils.ToSnakeCase("QQQQID QQIDIDQQ", StringUtils.CaseType.Upper, lockedWords));
         Assert.AreEqual("USER_QQ_TOKEN", StringUtils.ToSnakeCase("UserQQToken", StringUtils.CaseType.Upper, lockedWords));
         Assert.AreEqual("SWEET_ICELOLLY_ID", StringUtils.ToSnakeCase("SweetIcelollyID", StringUtils.CaseType.Upper, lockedWords));
-        Assert.AreEqual("WEY_SUN+ICE_ERIC_VANCHENG_DRESSES", StringUtils.ToSnakeCase("WeySun+IceEricVanChengDresses", StringUtils.CaseType.Upper, new string[] { "SUN+ICE", "VANCHENG" }));
+        Assert.AreEqual("WEY_SUN+ICE_ERIC_VANCHENG_DRESSES", StringUtils.ToSnakeCase("WeySun+IceEricVanChengDresses", StringUtils.CaseType.Upper, ImmutableArray.Create("SUN+ICE", "VANCHENG")));
     }
     [TestMethod]
     public void ToLowerCamelTest()
