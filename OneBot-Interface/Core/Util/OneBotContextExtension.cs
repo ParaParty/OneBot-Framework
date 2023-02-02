@@ -21,7 +21,7 @@ public static class OneBotContextExtension
         var emitter = self.ServiceScope.ServiceProvider.GetRequiredService<IPlatformActionEmitter>();
         return emitter.Emit(self.PlatformProviderName, action, args);
     }
-    
+
     public static ValueTask<OneBotActionResponse> Reply(this OneBotContext self, Message msg)
     {
         throw new NotImplementedException();
