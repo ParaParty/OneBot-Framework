@@ -10,6 +10,7 @@ namespace OneBot.Core.Util;
 internal static class StringUtils
 {
     public const char Underline = '_';
+    public const char Dash = '-';
 
     public enum CamelCaseType
     {
@@ -49,37 +50,34 @@ internal static class StringUtils
         return cnt;
     }
 
-    public static string SnakeToLowerCamelCase(string s, string[]? lockedWords = null)
-        => ToCamelCase(s, Underline, CamelCaseType.Lower, lockedWords);
+    public static string ToLowerCamelCase(string s, string[]? lockedWords = null)
+        => ToCamelCase(s, CamelCaseType.Lower, lockedWords);
 
-    public static string SnakeToUpperCamelCase(string s, string[]? lockedWords = null)
-        => ToCamelCase(s, Underline, CamelCaseType.Upper, lockedWords);
+    public static string ToUpperCamelCase(string s, string[]? lockedWords = null)
+        => ToCamelCase(s, CamelCaseType.Upper, lockedWords);
 
-    public static string SnakeToCamelCase(string s, CamelCaseType caseType, string[]? lockedWords = null)
-        => ToCamelCase(s, Underline, caseType, lockedWords);
 
     /// <summary>
     /// 蛇形转驼峰
     /// </summary>
     /// <param name="s">蛇形字符串</param>
-    /// <param name="separator">分隔符</param>
     /// <param name="caseType">驼峰类型</param>
     /// <param name="lockedWords">锁定的单词(例如：QQ，此类整个词为单位需要统一大小写的词，<b>大写传入</b>)</param>
     /// <returns></returns>
-    public static string ToCamelCase(string s, char separator, CamelCaseType caseType, string[]? lockedWords = null)
+    public static string ToCamelCase(string s, CamelCaseType caseType, string[]? lockedWords = null)
     {
         if (IsNullOrEmpty(s))
             return s;
 
         char[] src = s.ToCharArray();
-        int ulCnt = GetCharCount(src, separator);
+        int ulCnt = GetCharCount(src, Underline) + GetCharCount(src, Dash);
 
         char[] result = new char[src.Length - ulCnt];
         bool fstWord = true, fstLetter = true;
         string tmp = "";
         for (int i = 0, j = 0;i <= src.Length; i++)
         {
-            if (i == src.Length || src[i] == separator || char.IsSeparator(src[i]))
+            if (i == src.Length || src[i] == Underline || src[i] == Dash || char.IsSeparator(src[i]))
             {
                 if (lockedWords != null && lockedWords.Contains(tmp))
                 {
@@ -94,7 +92,7 @@ internal static class StringUtils
                 }
                 if (i < src.Length)
                 {
-                    if (src[i] == separator)
+                    if (src[i] == Underline || src[i] == Dash)
                     {
                         fstLetter = true;
                         tmp = "";
@@ -132,6 +130,15 @@ internal static class StringUtils
 
         return new string(result);
     }
+
+    public static string ToKebabCase(string s, CaseType caseType, string[]? lockedWords = null)
+    => ToSeparatedCase(s, Dash, caseType, lockedWords);
+
+    public static string ToLowerKebabCase(string s, string[]? lockedWords = null)
+        => ToSeparatedCase(s, Dash, CaseType.Lower, lockedWords);
+
+    public static string ToUpperKebabCase(string s, string[]? lockedWords = null)
+        => ToSeparatedCase(s, Dash, CaseType.Upper, lockedWords);
 
     public static string ToSnakeCase(string s, CaseType caseType, string[]? lockedWords = null)
         => ToSeparatedCase(s, Underline, caseType, lockedWords);
@@ -188,7 +195,7 @@ internal static class StringUtils
                                 fstWord = false;
                             for (int k = 0; k < lockedWords[j].Length; k++)
                             {
-                                if (caseType == SnakeCaseType.Upper)
+                                if (caseType == CaseType.Upper)
                                     sb.Append(char.ToUpper(src[i]));
                                 else
                                     sb.Append(char.ToLower(src[i]));
@@ -207,7 +214,7 @@ internal static class StringUtils
                 else
                     fstWord = false;
             }
-            if (caseType == SnakeCaseType.Upper)
+            if (caseType == CaseType.Upper)
                 sb.Append(char.ToUpper(src[i]));
             else
                 sb.Append(char.ToLower(src[i]));
@@ -217,3 +224,54 @@ internal static class StringUtils
     }
 }
 
+public abstract class StringNamingPolicy
+{
+    public static StringNamingPolicy UpperCamel { get; } = new UpperCamelNamingPolicy();
+    public static StringNamingPolicy LowerCamel { get; } = new LowerCamelNamingPolicy();
+
+    public static StringNamingPolicy UpperSnake { get; } = new UpperSnakeNamingPolicy();
+    public static StringNamingPolicy LowerSnake { get; } = new LowerSnakeNamingPolicy();
+
+    public static StringNamingPolicy UpperKebab { get; } = new UpperKebabNamingPolicy();
+    public static StringNamingPolicy LowerKebab { get; } = new LowerKebabNamingPolicy();
+
+    public string[]? LockedWords { get; set; }
+
+    public abstract string Convert(string src);
+}
+
+internal class UpperCamelNamingPolicy : StringNamingPolicy
+{
+    public override string Convert(string src)
+        => StringUtils.ToCamelCase(src, StringUtils.CamelCaseType.Upper, LockedWords);
+}
+
+internal class LowerCamelNamingPolicy : StringNamingPolicy
+{
+    public override string Convert(string src)
+        => StringUtils.ToCamelCase(src, StringUtils.CamelCaseType.Lower, LockedWords);
+}
+
+internal class UpperSnakeNamingPolicy : StringNamingPolicy
+{
+    public override string Convert(string src)
+        => StringUtils.ToSeparatedCase(src, StringUtils.Underline, StringUtils.CaseType.Upper, LockedWords);
+}
+
+internal class LowerSnakeNamingPolicy : StringNamingPolicy
+{
+    public override string Convert(string src)
+        => StringUtils.ToSeparatedCase(src, StringUtils.Underline, StringUtils.CaseType.Lower, LockedWords);
+}
+
+internal class UpperKebabNamingPolicy : StringNamingPolicy
+{
+    public override string Convert(string src)
+        => StringUtils.ToSeparatedCase(src, StringUtils.Dash, StringUtils.CaseType.Upper, LockedWords);
+}
+
+internal class LowerKebabNamingPolicy : StringNamingPolicy
+{
+    public override string Convert(string src)
+        => StringUtils.ToSeparatedCase(src, StringUtils.Dash, StringUtils.CaseType.Lower, LockedWords);
+}
