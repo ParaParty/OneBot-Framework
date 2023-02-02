@@ -2,7 +2,7 @@
 
 namespace OneBot.Core.Util;
 
-public static class IOneBotActionExtension
+public static class OneBotActionExtension
 {
     public static T? Get<T>(this OneBotActionRequest self, string key)
     {
