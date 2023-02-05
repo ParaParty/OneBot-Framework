@@ -5,7 +5,7 @@ open OneBot.CommandRoute.Configuration
 open OneBot.Core.Context
 open OneBot.Core.Util
 open OneBot.Core.Model
-open OneBot.Core
+open OneBot.Core.Model.Message
 open OneBot.FSharp
 
 module FBot =
@@ -13,6 +13,7 @@ module FBot =
 
     type FileId = string
     type UserId = string
+    type MessageId = string
 
     type Message = 
         | Complex of Message List
@@ -23,7 +24,7 @@ module FBot =
         | Location of double * double * string * string
         | Mention of UserId
         | MentionAll
-        | Reply of UserId * string
+        | Reply of MessageId * UserId
         | Video of FileId
         | Voice of FileId
 
@@ -51,17 +52,19 @@ module FBot =
     let deploy (rule : Rule) : Unit = 
         let createMessage (msg : Message) : OneBot.Core.Model.Message.SimpleMessage =
             let messageModel (msg : Message) : Message.IMessageSegment = 
-                let f = Message.MessageSegment in match msg with
-                | Text x -> f(Segments.Text(x))
-                | Audio x -> f(Segments.Audio(x))
-                | File x -> f(Segments.File(x))
-                | Image x -> f(Segments.Image(x))
-                | Location (la,lo,t,c) -> f(Segments.Location(la,lo,t,c))
-                | Mention u -> f(Segments.Mention(u))
-                | MentionAll -> f(Segments.MentionAll())
-                | Reply (u,s) -> f(Segments.Reply(u,s))
-                | Video x -> f(Segments.Video(x))
-                | Voice x -> f(Segments.Voice(x))
+                let dict : System.Collections.Generic.Dictionary<_,_> = 
+                    match msg with
+                    | Text x -> MessageSegmentData.Text(x) 
+                    | Audio x -> MessageSegmentData.Audio(x)
+                    | File x -> MessageSegmentData.File(x)
+                    | Image x -> MessageSegmentData.Image(x)
+                    | Location (la,lo,t,c) -> MessageSegmentData.Location(la,lo,t,c)
+                    | Mention u -> MessageSegmentData.Mention(u)
+                    | MentionAll -> MessageSegmentData.MentionAll()
+                    | Reply (m,u) -> MessageSegmentData.Reply(m,u)
+                    | Video x -> MessageSegmentData.Video(x)
+                    | Voice x -> MessageSegmentData.Voice(x)
+                in Message.MessageSegment dict
 
             match msg with
             | Complex xs -> List.map messageModel xs |> System.Collections.Generic.List |> Message.SimpleMessage
