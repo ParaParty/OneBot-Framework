@@ -7,7 +7,7 @@ using OneBot.Core.Util;
 
 namespace OneBot.Core.Model.Message;
 
-public interface Message : IReadOnlyList<MessageSegmentRef>
+public interface Message : IReadOnlyList<IMessageSegment>
 {
     public struct Index
     {
@@ -128,7 +128,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
             return this;
         }
 
-        public Builder Add(MessageSegmentRef seg)
+        public Builder Add(IMessageSegment seg)
         {
             if (seg.GetSegmentType() == "text")
             {
@@ -164,7 +164,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
 
     public class EmptyMessageType : Message
     {
-        private class EmptyMessageEnumerator : IEnumerator<MessageSegmentRef>
+        private class EmptyMessageEnumerator : IEnumerator<IMessageSegment>
         {
             public bool MoveNext()
             {
@@ -176,7 +176,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
 
             }
 
-            public MessageSegmentRef Current => throw new NullReferenceException();
+            public IMessageSegment Current => throw new NullReferenceException();
 
             object IEnumerator.Current => Current;
 
@@ -190,7 +190,7 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
 
         }
 
-        public IEnumerator<MessageSegmentRef> GetEnumerator()
+        public IEnumerator<IMessageSegment> GetEnumerator()
         {
             return new EmptyMessageEnumerator();
         }
@@ -202,6 +202,6 @@ public interface Message : IReadOnlyList<MessageSegmentRef>
 
         public int Count => 0;
 
-        public MessageSegmentRef this[int index] => throw new IndexOutOfRangeException();
+        public IMessageSegment this[int index] => throw new IndexOutOfRangeException();
     }
 }

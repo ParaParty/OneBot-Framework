@@ -41,7 +41,6 @@ public class Program
                         {
                             route.Middleware(typeof(TestMiddleware2)); 
                             shopRoute.Command("page [page]", typeof(ShopController), "ListGood");
-                            // shopRoute.Command("help", typeof(ShopController), "Help");
                             shopRoute.Command<ShopController>("help", c => c.Help);
                             shopRoute.Command("buy <name>", (OneBotContext ctx) =>
                             {

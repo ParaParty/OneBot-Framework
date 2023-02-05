@@ -1,10 +1,13 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("json")]
-public interface Json : MessageData
+public class Json : Dictionary<string, object?>
 {
-    string Content { get; }
+    public Json(string content)
+    {
+        Add("content", content);
+    }
 }

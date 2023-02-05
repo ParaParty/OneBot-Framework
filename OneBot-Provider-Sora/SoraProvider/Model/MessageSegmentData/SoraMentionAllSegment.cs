@@ -3,7 +3,7 @@ using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.MessageSegmentData;
 using Sora.Entities.Segment.DataModel;
 
-namespace OneBot.Provider.SoraProvider.Model.MessageSegment;
+namespace OneBot.Provider.SoraProvider.Model.MessageSegmentData;
 
 public class SoraMentionAllSegment : MentionAll, UnderlayModel<AtSegment>
 {
@@ -14,8 +14,8 @@ public class SoraMentionAllSegment : MentionAll, UnderlayModel<AtSegment>
 
     public AtSegment WrappedModel { get; }
 
-    public static MessageSegmentRef Build(AtSegment tData)
+    public static IMessageSegment Build(AtSegment tData)
     {
-        return new MessageSegment<MentionAll>(new SoraMentionAllSegment(tData));
+        return new MessageSegment(new SoraMentionAllSegment(tData));
     }
 }

@@ -3,7 +3,7 @@ using OneBot.Core.Model.Message;
 using OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 using Sora.Entities.Segment.DataModel;
 
-namespace OneBot.Provider.SoraProvider.Model.MessageSegment;
+namespace OneBot.Provider.SoraProvider.Model.MessageSegmentData;
 
 public class SoraRpsSegment : Rps, UnderlayModel<BaseSegment>
 {
@@ -11,10 +11,11 @@ public class SoraRpsSegment : Rps, UnderlayModel<BaseSegment>
     {
         WrappedModel = data;
     }
+
     public BaseSegment WrappedModel { get; }
 
-    public static MessageSegmentRef Build(BaseSegment tData)
+    public static IMessageSegment Build(BaseSegment tData)
     {
-        return new MessageSegment<Rps>(new SoraRpsSegment(tData));
+        return new MessageSegment(new SoraRpsSegment(tData));
     }
 }

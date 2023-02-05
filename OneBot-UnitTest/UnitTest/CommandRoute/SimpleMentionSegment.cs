@@ -7,27 +7,25 @@ namespace OneBot.UnitTest.CommandRoute;
 
 public class SimpleMentionSegment : Mention, UnderlayModel<string>
 {
-    public SimpleMentionSegment(string userId)
+    public SimpleMentionSegment(string userId):base(userId)
     {
         WrappedModel = userId;
     }
 
-    public string UserId => WrappedModel;
-
     public string WrappedModel { get; }
 
-    public static MessageSegmentRef Build(char tData)
+    public static IMessageSegment Build(char tData)
     {
-        return new MessageSegment<Mention>(new SimpleMentionSegment("" + tData));
+        return new MessageSegment(new SimpleMentionSegment("" + tData));
     }
 
-    public static MessageSegmentRef Build(string tData)
+    public static IMessageSegment Build(string tData)
     {
-        return new MessageSegment<Mention>(new SimpleMentionSegment(tData));
+        return new MessageSegment(new SimpleMentionSegment(tData));
     }
 
-    public static MessageSegmentRef Build()
+    public static IMessageSegment Build()
     {
-        return new MessageSegment<Mention>(new SimpleMentionSegment(String.Empty));
+        return new MessageSegment(new SimpleMentionSegment(String.Empty));
     }
 }

@@ -3,21 +3,19 @@ using OneBot.Core.Model.Message;
 using OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 using Sora.Entities.Segment.DataModel;
 
-namespace OneBot.Provider.SoraProvider.Model.MessageSegment;
+namespace OneBot.Provider.SoraProvider.Model.MessageSegmentData;
 
 public class SoraPokeSegment : Poke, UnderlayModel<PokeSegment>
 {
-    public SoraPokeSegment(PokeSegment data)
+    public SoraPokeSegment(PokeSegment data) : base(data.Uid.ToString())
     {
         WrappedModel = data;
     }
 
-    public string UserId => WrappedModel.Uid.ToString();
-
     public PokeSegment WrappedModel { get; }
 
-    public static MessageSegmentRef Build(PokeSegment tData)
+    public static IMessageSegment Build(PokeSegment tData)
     {
-        return new MessageSegment<Poke>(new SoraPokeSegment(tData));
+        return new MessageSegment(new SoraPokeSegment(tData));
     }
 }

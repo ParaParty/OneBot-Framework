@@ -1,9 +1,13 @@
-﻿using OneBot.Core.Attributes;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("text")]
-public interface Text : MessageData
+public class Text : Dictionary<string, object?>
 {
-    string Text { get; }
+    public Text(string text)
+    {
+        Add("text", text);
+    }
 }

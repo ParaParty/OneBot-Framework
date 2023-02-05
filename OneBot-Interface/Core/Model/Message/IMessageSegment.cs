@@ -1,12 +1,13 @@
-﻿namespace OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+
+namespace OneBot.Core.Model.Message;
 
 /// <summary>
-/// 一个消息，可以使用普通实现 <see cref="MessageSegment{T}"/>
+/// 一个消息段
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public interface IMessageSegment<T> : MessageSegmentRef where T : MessageData
+public interface IMessageSegment
 {
-    string Type { get; }
+    public string Type { get; }
 
-    T Data { get; }
+    public IReadOnlyDictionary<string, object?> Data { get; }
 }

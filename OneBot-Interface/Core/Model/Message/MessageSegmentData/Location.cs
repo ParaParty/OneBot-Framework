@@ -1,15 +1,16 @@
-﻿using OneBot.Core.Attributes;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("location")]
-public interface Location : MessageData
+public class Location : Dictionary<string, object?>
 {
-    double Latitude { get; }
-
-    double Longitude { get; }
-
-    string Title { get; }
-
-    string Content { get; }
+    public Location(double latitude, double longitude, string title, string content)
+    {
+        Add("latitude", latitude);
+        Add("longitude", longitude);
+        Add("title", title);
+        Add("content", content);
+    }
 }

@@ -5,7 +5,7 @@ namespace OneBot.Core.Model.Message.SimpleMessageSegment;
 
 public class SimpleTextSegment : Text, UnderlayModel<string>
 {
-    public SimpleTextSegment(string data)
+    public SimpleTextSegment(string data) : base(data)
     {
         WrappedModel = data;
     }
@@ -14,18 +14,18 @@ public class SimpleTextSegment : Text, UnderlayModel<string>
 
     public string WrappedModel { get; }
 
-    public static MessageSegmentRef Build(char tData)
+    public static IMessageSegment Build(char tData)
     {
-        return new MessageSegment<Text>(new SimpleTextSegment("" + tData));
+        return new MessageSegment(new SimpleTextSegment("" + tData));
     }
 
-    public static MessageSegmentRef Build(string tData)
+    public static IMessageSegment Build(string tData)
     {
-        return new MessageSegment<Text>(new SimpleTextSegment(tData));
+        return new MessageSegment(new SimpleTextSegment(tData));
     }
 
-    public static MessageSegmentRef Build()
+    public static IMessageSegment Build()
     {
-        return new MessageSegment<Text>(new SimpleTextSegment(String.Empty));
+        return new MessageSegment(new SimpleTextSegment(String.Empty));
     }
 }

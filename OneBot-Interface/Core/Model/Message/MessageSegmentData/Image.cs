@@ -1,9 +1,13 @@
-﻿using OneBot.Core.Attributes;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("image")]
-public interface Image : MessageData
+public class Image : Dictionary<string, object?>
 {
-    string FileId { get; }
+    public Image(string fileId)
+    {
+        Add("file_id", fileId);
+    }
 }

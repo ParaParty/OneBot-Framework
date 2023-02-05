@@ -64,7 +64,7 @@ public class LexerTest
         Assert.AreEqual(0, t3.End.Position);
         Assert.AreEqual(TokenType.Value, t3.TokenType);
         Assert.AreEqual(1, t3.Token.Count);
-        Assert.AreEqual("123456", t3.Token[0].Get<string>("UserId"));
+        Assert.AreEqual("123456", t3.Token[0].Get<string>("user_id"));
 
         var t4 = lexer.NextToken();
         Assert.AreEqual(2, t4.Start.Segment);
@@ -82,7 +82,7 @@ public class LexerTest
     {
         get
         {
-            var b = new List<MessageSegmentRef>
+            var b = new List<IMessageSegment>
             {
                 SimpleTextSegment.Build("/ban "),
                 SimpleMentionSegment.Build("123456"),
@@ -130,7 +130,7 @@ public class LexerTest
         Assert.AreEqual(0, t3.End.Position);
         Assert.AreEqual(TokenType.Value, t3.TokenType);
         Assert.AreEqual(1, t3.Token.Count);
-        Assert.AreEqual("123456", t3.Token[0].Get<string>("UserId"));
+        Assert.AreEqual("123456", t3.Token[0].Get<string>("user_id"));
 
         var t4 = lexer.NextToken();
         Assert.AreEqual(2, t4.Start.Segment);
@@ -256,7 +256,7 @@ public class LexerTest
             Assert.AreEqual(0, t.End.Position);
             Assert.AreEqual(TokenType.Value, t.TokenType);
             Assert.AreEqual(1, t.Token.Count);
-            Assert.AreEqual("" + (i * 12345 % 54321), t.Token[0].Get<string>("UserId"));
+            Assert.AreEqual("" + (i * 12345 % 54321), t.Token[0].Get<string>("user_id"));
         }
 
         var t2 = lexer.NextToken();
@@ -270,7 +270,7 @@ public class LexerTest
         Assert.AreEqual("\"", t2.Token[0].GetText());
         for (int i = 1; i <= 10; i++)
         {
-            Assert.AreEqual("" + (i * 54321 % 12345), t2.Token[i].Get<string>("UserId"));
+            Assert.AreEqual("" + (i * 54321 % 12345), t2.Token[i].Get<string>("user_id"));
         }
         Assert.AreEqual("\"", t2.Token[11].GetText());
 

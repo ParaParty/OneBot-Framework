@@ -1,12 +1,14 @@
 ﻿using System;
 using OneBot.Core.Model.Message;
 using OneBot.Core.Util;
+using OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 using OneBot.Provider.SoraProvider.Exceptions;
-using OneBot.Provider.SoraProvider.Model.MessageSegment;
+using OneBot.Provider.SoraProvider.Model.MessageSegmentData;
 using Sora.Entities;
 using Sora.Entities.Segment;
 using Sora.Entities.Segment.DataModel;
 using Sora.Enumeration;
+using Sora.Enumeration.EventParamsType;
 
 namespace OneBot.Provider.SoraProvider.Util;
 
@@ -36,7 +38,7 @@ public static class SoraMessageExtension
         return ret;
     }
 
-    internal static MessageSegmentRef ConvertToOneBotMessageSegment(this SoraSegment t)
+    internal static IMessageSegment ConvertToOneBotMessageSegment(this SoraSegment t)
     {
         return t.MessageType switch
         {
@@ -75,7 +77,7 @@ public static class SoraMessageExtension
         return ret;
     }
 
-    internal static SoraSegment ConvertToSoraMessageSegment(this MessageSegmentRef t)
+    internal static SoraSegment ConvertToSoraMessageSegment(this IMessageSegment t)
     {
         var type = t.GetSegmentType();
         if (type == null)
@@ -85,8 +87,32 @@ public static class SoraMessageExtension
         return type switch
         {
             "text" => SoraSegment.Text(t.GetText()),
-            "face" => SoraSegment.Face(int.Parse(t.Get<string>("face")!)),
+            "face" => SoraSegment.Face(t.GetInt("face_id")),
+            "audio" or "record" => SoraSegment.Record(t.GetString("file")!, t.Get<bool>("is_magic", false)),
+            "video" => SoraSegment.Record(t.GetFileId()!, t.Get<bool>("is_magic", false)),
+            "music" => ConvertMusicShare(t),
+            "mention" or "at" => SoraSegment.At(Convert.ToInt64(t.GetUserId())),
+            "mention_all" or "at_all" => SoraSegment.AtAll(),
+            "share" => SoraSegment.Share(url: t.GetString("url")!, title: t.GetString("title")!, content: t.GetString("content"), imageUrl: t.GetString("image_url")),
+            "reply" => SoraSegment.Reply(t.GetInt("message_id")),
+            // "forward" =>,
+            "poke" => SoraSegment.Poke(Convert.ToInt64(t.GetUserId())),
+            "xml" => SoraSegment.Xml(t.GetString("content")),
+            "json" => SoraSegment.Json(t.GetString("content")),
+            // "red_bag" =>,
+            "card_image" => SoraSegment.CardImage(t.GetFileId()), // TODO
+            "tts" => SoraSegment.TTS(t.GetString("content")),
+            "rps" => SoraSegment.RPS(),
             _ => throw new ArgumentException()
         };
+    }
+
+    private static SoraSegment ConvertMusicShare(IMessageSegment t)
+    {
+        if (Enum.TryParse(t.GetString("music_type")!, out MusicShareType type))
+        {
+            throw new ArgumentException();
+        }
+        return SoraSegment.Music(type, t.GetLong("music_id"));
     }
 }

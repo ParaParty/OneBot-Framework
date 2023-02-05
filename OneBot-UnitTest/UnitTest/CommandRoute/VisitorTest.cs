@@ -54,7 +54,7 @@ public class VisitorTest
         Assert.AreEqual(1, command.Command[0].Count);
         Assert.AreEqual("kick", command.Command[0][0].GetText());
         Assert.AreEqual(1, command.Command[1].Count);
-        Assert.AreEqual("123456", command.Command[1][0].Get<string>("UserId"));
+        Assert.AreEqual("123456", command.Command[1][0].Get<string>("user_id"));
 
         Assert.IsTrue(command.FullNameFlags.ContainsKey("duration"));
         Assert.IsTrue(command.FullNameFlags.TryGetValue("duration", out var tryDuration));

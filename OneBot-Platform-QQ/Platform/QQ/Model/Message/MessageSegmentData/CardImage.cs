@@ -1,10 +1,13 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("card_image")]
-public interface CardImage : MessageData
+public class CardImage : Dictionary<string, object?>
 {
-    string File { get; }
+    public CardImage(string fileId)
+    {
+        Add("file_id", fileId);
+    }
 }

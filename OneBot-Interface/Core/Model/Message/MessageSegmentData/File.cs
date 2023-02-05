@@ -1,9 +1,13 @@
-﻿using OneBot.Core.Attributes;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("file")]
-public interface File : MessageData
+public class File : Dictionary<string, object?>
 {
-    string FileId { get; }
+    public File(string fileId)
+    {
+        Add("file_id", fileId);
+    }
 }

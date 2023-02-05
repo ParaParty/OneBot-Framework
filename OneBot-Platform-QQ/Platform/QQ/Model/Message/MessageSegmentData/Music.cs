@@ -1,12 +1,14 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("music")]
-public interface Music : MessageData
+public class Music : Dictionary<string, object?>
 {
-    string MusicType { get; }
-
-    string MusicId { get; }
+    public Music(string musicType, string musicId)
+    {
+        Add("music_type", musicType);
+        Add("music_id", musicId);
+    }
 }

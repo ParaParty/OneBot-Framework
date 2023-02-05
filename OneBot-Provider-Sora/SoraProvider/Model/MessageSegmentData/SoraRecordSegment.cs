@@ -3,21 +3,19 @@ using OneBot.Core.Model.Message;
 using OneBot.Core.Model.Message.MessageSegmentData;
 using Sora.Entities.Segment.DataModel;
 
-namespace OneBot.Provider.SoraProvider.Model.MessageSegment;
+namespace OneBot.Provider.SoraProvider.Model.MessageSegmentData;
 
 public class SoraRecordSegment : Audio, UnderlayModel<RecordSegment>
 {
-    public SoraRecordSegment(RecordSegment data)
+    public SoraRecordSegment(RecordSegment data) : base(data.RecordFile)
     {
         WrappedModel = data;
     }
 
-    public string FileId => WrappedModel.RecordFile;
-
     public RecordSegment WrappedModel { get; }
 
-    public static MessageSegmentRef Build(RecordSegment tData)
+    public static IMessageSegment Build(RecordSegment tData)
     {
-        return new MessageSegment<Audio>(new SoraRecordSegment(tData));
+        return new Core.Model.Message.MessageSegment(new SoraRecordSegment(tData));
     }
 }

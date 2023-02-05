@@ -1,10 +1,13 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("face")]
-public interface Face : MessageData
+public class Face : Dictionary<string, object?>
 {
-    string FaceId { get; }
+    public Face(string faceId)
+    {
+        Add("face_id", faceId);
+    }
 }

@@ -52,7 +52,7 @@ public class ParserTest
         Assert.AreEqual("kick", tree.CommandSegments.CommandSegment[0].Segment[0].GetText());
 
         Assert.AreEqual(1, tree.CommandSegments.CommandSegment[1].Segment.Count);
-        Assert.AreEqual("123456", tree.CommandSegments.CommandSegment[1].Segment[0].Get<string>("UserId"));
+        Assert.AreEqual("123456", tree.CommandSegments.CommandSegment[1].Segment[0].Get<string>("user_id"));
 
         Assert.IsInstanceOfType(tree.Flags.Flag[0], typeof(AstNode.FlagFullname));
         Assert.IsInstanceOfType(tree.Flags.Flag[1], typeof(AstNode.FlagFullname));
@@ -78,9 +78,9 @@ public class ParserTest
         Assert.AreEqual(true, op.HasValue);
         Assert.AreEqual(5, op.Value!.Count);
         Assert.AreEqual("Any question, contact", op.Value![0].GetText());
-        Assert.AreEqual("654321", op.Value[1].Get<string>("UserId"));
+        Assert.AreEqual("654321", op.Value[1].Get<string>("user_id"));
         Assert.AreEqual(" \"\" ", op.Value[2].GetText());
-        Assert.AreEqual("654321", op.Value[3].Get<string>("UserId"));
+        Assert.AreEqual("654321", op.Value[3].Get<string>("user_id"));
         Assert.AreEqual("\"-123 \"\" ", op.Value[4].GetText());
 
         var description = (tree.Flags.Flag[4] as AstNode.FlagFullname)!;
@@ -88,7 +88,7 @@ public class ParserTest
         Assert.AreEqual(true, description.HasValue);
         Assert.AreEqual(2, description.Value!.Count);
         Assert.AreEqual("\"Let the bass kick\"", description.Value![0].GetText());
-        Assert.AreEqual("654321", description.Value[1].Get<string>("UserId"));
+        Assert.AreEqual("654321", description.Value[1].Get<string>("user_id"));
     }
 
     private RouteInfo TestMsg2
@@ -126,7 +126,7 @@ public class ParserTest
         Assert.AreEqual("kick", tree.CommandSegments.CommandSegment[0].Segment[0].GetText());
 
         Assert.AreEqual(1, tree.CommandSegments.CommandSegment[1].Segment.Count);
-        Assert.AreEqual("123456", tree.CommandSegments.CommandSegment[1].Segment[0].Get<string>("UserId"));
+        Assert.AreEqual("123456", tree.CommandSegments.CommandSegment[1].Segment[0].Get<string>("user_id"));
 
         Assert.IsInstanceOfType(tree.Flags.Flag[0], typeof(AstNode.FlagFullname));
         Assert.IsInstanceOfType(tree.Flags.Flag[1], typeof(AstNode.FlagFullname));

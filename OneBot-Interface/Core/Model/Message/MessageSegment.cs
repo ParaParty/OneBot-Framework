@@ -1,29 +1,47 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using OneBot.Core.Attributes;
 using OneBot.Core.Util;
 
 namespace OneBot.Core.Model.Message;
 
 /// <summary>
-/// 一个消息段
+/// 消息段
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public class MessageSegment<T> : IMessageSegment<T> where T : MessageData
+public class MessageSegment : IMessageSegment
 {
-    // ReSharper disable once StaticMemberInGenericType
     private static readonly ConcurrentDictionary<Type, string> TypeCache = new ConcurrentDictionary<Type, string>();
 
-    public MessageSegment(string type, T data)
+    public string Type { get; }
+
+    public IReadOnlyDictionary<string, object?> Data { get; }
+
+    public MessageSegment(IReadOnlyDictionary<string, object?> data)
+    {
+        Type = TypeCache.GetOrAdd(data.GetType(), GeneratedType);
+        Data = data;
+    }
+
+    public MessageSegment(string type, IReadOnlyDictionary<string, object?> data)
     {
         Type = type;
         Data = data;
     }
 
-    public MessageSegment(T data)
+    [Obsolete("不保证 data 不丢信息")]
+    public MessageSegment(IReadOnlyCollection<KeyValuePair<string, object?>> data)
     {
         Type = TypeCache.GetOrAdd(data.GetType(), GeneratedType);
-        Data = data;
+        Data = data.ToImmutableDictionary();
+    }
+
+    [Obsolete("不保证 data 不丢信息")]
+    public MessageSegment(string type, IReadOnlyCollection<KeyValuePair<string, object?>> data)
+    {
+        Type = type;
+        Data = data.ToImmutableDictionary();
     }
 
     private static string GeneratedType(Type start)
@@ -39,8 +57,4 @@ public class MessageSegment<T> : IMessageSegment<T> where T : MessageData
 
         throw new ArgumentException("message segment type not acceptable");
     }
-
-    public string Type { get; }
-
-    public T Data { get; }
 }

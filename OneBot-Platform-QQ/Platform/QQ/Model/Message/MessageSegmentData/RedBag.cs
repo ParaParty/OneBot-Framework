@@ -1,10 +1,13 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("red_bag")]
-public interface RedBag : MessageData
+public class RedBag : Dictionary<string, object?>
 {
-    string Title { get; }
+    public RedBag(string title)
+    {
+        Add("title", title)
+    }
 }

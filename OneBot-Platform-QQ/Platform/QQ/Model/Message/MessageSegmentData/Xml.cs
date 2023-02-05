@@ -1,10 +1,13 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("xml")]
-public interface Xml : MessageData
+public class Xml : Dictionary<string, object?>
 {
-    string Content { get; }
+    public Xml(string content)
+    {
+        Add("content", content);
+    }
 }

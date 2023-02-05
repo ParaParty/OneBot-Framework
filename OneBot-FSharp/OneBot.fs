@@ -50,7 +50,7 @@ module FBot =
     
     let deploy (rule : Rule) : Unit = 
         let createMessage (msg : Message) : OneBot.Core.Model.Message.SimpleMessage =
-            let messageModel (msg : Message) : Message.MessageSegmentRef = 
+            let messageModel (msg : Message) : Message.IMessageSegment = 
                 let f = Message.MessageSegment in match msg with
                 | Text x -> f(Segments.Text(x))
                 | Audio x -> f(Segments.Audio(x))

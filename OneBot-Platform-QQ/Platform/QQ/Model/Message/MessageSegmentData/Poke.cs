@@ -1,10 +1,13 @@
-﻿using OneBot.Core.Attributes;
-using OneBot.Core.Model.Message;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("poke")]
-public interface Poke : MessageData
+public class Poke : Dictionary<string, object?>
 {
-    string UserId { get; }
+    public Poke(string userId)
+    {
+        Add("user_id", userId);
+    }
 }

@@ -1,9 +1,13 @@
-﻿using OneBot.Core.Attributes;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("video")]
-public interface Video : MessageData
+public class Video : Dictionary<string, object?>
 {
-    string FileId { get; }
+    public Video(string fileId)
+    {
+        Add("file_id", fileId);
+    }
 }

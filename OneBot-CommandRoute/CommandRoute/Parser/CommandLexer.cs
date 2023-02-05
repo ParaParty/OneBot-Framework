@@ -184,7 +184,7 @@ internal class CommandLexer
         return new CommandToken(token, TokenType.Comment, startSeg, startPos, end.Segment, end.Position);
     }
 
-    private MessageSegmentRef NowElement => NowSegmentIsText ? SimpleTextSegment.Build(NowSegmentText[_cntPosition]) : NowSegment;
+    private IMessageSegment NowElement => NowSegmentIsText ? SimpleTextSegment.Build(NowSegmentText[_cntPosition]) : NowSegment;
 
     private Message.Index NextIndex()
     {
@@ -216,7 +216,7 @@ internal class CommandLexer
         _cntPosition = t.Position;
     }
 
-    private MessageSegmentRef NowSegment => _routeInfo.Message[_cntSegment];
+    private IMessageSegment NowSegment => _routeInfo.Message[_cntSegment];
 
     private bool NowSegmentIsText => NowSegment.GetSegmentType() == "text";
 

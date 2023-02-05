@@ -3,21 +3,19 @@ using OneBot.Core.Model.Message;
 using OneBot.Platform.QQ.Model.Message.MessageSegmentData;
 using Sora.Entities.Segment.DataModel;
 
-namespace OneBot.Provider.SoraProvider.Model.MessageSegment;
+namespace OneBot.Provider.SoraProvider.Model.MessageSegmentData;
 
 public class SoraTtsSegment : Tts, UnderlayModel<TtsSegment>
 {
-    public SoraTtsSegment(TtsSegment data)
+    public SoraTtsSegment(TtsSegment data) : base(data.Content)
     {
         WrappedModel = data;
     }
 
-    public string Content => WrappedModel.Content;
-
     public TtsSegment WrappedModel { get; }
 
-    public static MessageSegmentRef Build(TtsSegment tData)
+    public static IMessageSegment Build(TtsSegment tData)
     {
-        return new MessageSegment<Tts>(new SoraTtsSegment(tData));
+        return new MessageSegment(new SoraTtsSegment(tData));
     }
 }

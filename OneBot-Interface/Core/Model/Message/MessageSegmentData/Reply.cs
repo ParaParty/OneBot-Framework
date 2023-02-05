@@ -1,11 +1,14 @@
-﻿using OneBot.Core.Attributes;
+﻿using System.Collections.Generic;
+using OneBot.Core.Attributes;
 
 namespace OneBot.Core.Model.Message.MessageSegmentData;
 
 [OneBotTypeProperty("reply")]
-public interface Reply : MessageData
+public class Reply : Dictionary<string, object?>
 {
-    string MessageId { get; }
-
-    string UserId { get; }
+    public Reply(string messageId, string userId)
+    {
+        Add("message_id", messageId);
+        Add("user_id", userId);
+    }
 }
