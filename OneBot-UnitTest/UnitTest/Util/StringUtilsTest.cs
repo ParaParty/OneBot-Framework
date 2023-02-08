@@ -36,6 +36,9 @@ public class StringUtilsTest
         Assert.AreEqual("SWEET_ICELOLLY_ID", StringUtils.ToSnakeCase("SweetIcelollyID", StringUtils.CaseType.Upper, lockedWords));
         Assert.AreEqual("WEY_SUN+ICE_ERIC_VANCHENG_DRESSES",
             StringUtils.ToSnakeCase("WeySun+IceEricVanChengDresses", StringUtils.CaseType.Upper, new[] { "SUN+ICE", "VANCHENG" }));
+        
+        Assert.AreEqual("one_another", StringUtils.ToSnakeCase("oneAnother", StringUtils.CaseType.Lower, lockedWords));
+        Assert.AreEqual("ONE_ANOTHER", StringUtils.ToSnakeCase("oneAnother", StringUtils.CaseType.Upper, lockedWords));
     }
     
     [TestMethod]
