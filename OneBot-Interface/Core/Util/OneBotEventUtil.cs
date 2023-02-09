@@ -36,7 +36,7 @@ public static class OneBotEventUtil
 
     private static readonly ConcurrentDictionary<Type, NameCacheEntry> TypeCache = new ConcurrentDictionary<Type, NameCacheEntry>();
 
-    public static Dictionary<string, object?> GetType(this OneBotEvent e)
+    public static Dictionary<string, string?> GetEventType(this OneBotEvent e)
     {
         var entry = TypeCache.GetOrAdd(e.GetType(), s =>
         {
@@ -93,7 +93,7 @@ public static class OneBotEventUtil
         });
 
 
-        var ret = new Dictionary<string, object?>();
+        var ret = new Dictionary<string, string?>();
 
         switch (entry.Type)
         {

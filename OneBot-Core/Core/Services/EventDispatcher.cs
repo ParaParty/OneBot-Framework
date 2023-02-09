@@ -37,7 +37,7 @@ public class EventDispatcher : IEventDispatcher
         var act = _eventActivitySource.CreateActivity("onebot-event", ActivityKind.Server);
         using (act?.Start())
         {
-            var tags = OneBotEventUtil.GetType(e);
+            var tags = OneBotEventUtil.GetEventType(e);
             if (act != null)
             {
                 foreach (var (k, v) in tags)
