@@ -166,14 +166,14 @@ internal static class StringUtils
     {
         StringBuilder sb = new StringBuilder();
         char[] src = s.ToCharArray();
-
-        bool fstWord = true;
-        for (int i = 0; i < src.Length; i++)
+        
+        int t = 0;
+        for (int i = 0; i < src.Length; i++, t++)
         {
             if (char.IsSeparator(src[i]))
             {
                 sb.Append(src[i]);
-                fstWord = true;
+                t = -1;
                 continue;
             }
             if (char.IsUpper(src[i]))
@@ -194,10 +194,8 @@ internal static class StringUtils
                         }
                         if (match)
                         {
-                            if (!fstWord)
+                            if (t != 0)
                                 sb.Append(separator);
-                            else
-                                fstWord = false;
                             for (int k = 0; k < word.Length; k++)
                             {
                                 if (caseType == CaseType.Upper)
@@ -214,10 +212,8 @@ internal static class StringUtils
                     if (skip)
                         continue;
                 }
-                if (!fstWord)
+                if (t != 0)
                     sb.Append(separator);
-                else
-                    fstWord = false;
             }
             if (caseType == CaseType.Upper)
                 sb.Append(char.ToUpper(src[i]));
